@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorSplashScreen">#01131D</color>
+
+    <color name="colorPrimary">#05677c</color>
+    <color name="colorPrimaryDark">#03334e</color>
+    <color name="colorAccent">#369fda</color>
+
+    <color name="colorListItemBG">#2176a6</color>
+    <color name="colorProgressBarText">#def3ff</color>
+</resources>
