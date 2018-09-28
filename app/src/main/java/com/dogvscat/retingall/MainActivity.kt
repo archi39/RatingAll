@@ -1,14 +1,17 @@
 package com.dogvscat.retingall
 
+import android.annotation.SuppressLint
+import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.util.AttributeSet
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.util.Log
+import android.view.*
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,9 +19,13 @@ import at.grabner.circleprogress.CircleProgressView
 
 
 class MainActivity : AppCompatActivity() {
+    //специальное поле для отлавливания логов
+    private val LOGDEBUGTAG:String = "POINT"
+    //получаем ссылки на элементы формы
     private lateinit var layoutMain: View
     private lateinit var viewLinearCard: LinearLayout
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,23 +37,35 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             //создаем CardView пустышку
-           // val viewCardItem = CardView(this)
-            //val viewTextItem = TextView(this)
+            val viewCardItem = CardView(this)
+            viewCardItem.radius = 15F
+            viewCardItem.setCardBackgroundColor(R.color.colorAccent)
 
-            //val attrItem: AttributeSet
-//Нужно разобраться с Атрибутами
-            //val viewCircleProgressItem = CircleProgressView(this,)
+            //Создаем текстовое поле с названием позиции
+            val viewTextItem = TextView(this)
+            viewTextItem.text = R.string.string_test_short_rus.toString()
 
+            //Создаем красивый прогресс бар
+            val attr : AttributeSet? = null
+            val viewCircleProgressItem = CircleProgressView(this,attr)
+            viewCircleProgressItem.isAutoTextSize = true
+            viewCircleProgressItem.setBarColor(R.color.colorPrimary)
+            viewCircleProgressItem.barWidth = 4
 
+            //создаем параметры вставки для CardView
+            val paramsViewWC: FrameLayout.LayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+            paramsViewWC.setMargins(15,15,15,15)
 
-            Snackbar.make(layoutMain, "Test", Snackbar.LENGTH_SHORT).show()
+            //Наполняем CardView
+            viewCardItem.addView(viewTextItem,ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
+            viewCardItem.addView(viewCircleProgressItem,ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
+
+            //выводим на экран cardView
+            viewLinearCard.addView(viewCardItem,paramsViewWC)
+
+            Log.d(LOGDEBUGTAG,"Добавили новую карточку")
         }
     }
-
-    fun addNewCard() {
-
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -67,4 +86,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //функция приеобразования Px to Dp
+    fun Int.toDp():Int = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+    //функция преобразования Dp to Px
+    fun Int.toPx():Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 }

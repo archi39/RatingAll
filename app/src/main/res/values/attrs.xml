@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleProgressViewAttrs">
+        <attr name="cpv_barColor" format="color" />
+    </declare-styleable>
+</resources>
