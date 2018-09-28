@@ -23,4 +23,5 @@
 
     <!--переменные описания-->
     <string name="image_desc">Изображение</string>
+    <string name="title_activity_study">StudyActivity</string>
 </resources>

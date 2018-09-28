@@ -1,6 +1,7 @@
 package com.dogvscat.retingall
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
@@ -64,6 +65,11 @@ class MainActivity : AppCompatActivity() {
             viewLinearCard.addView(viewCardItem,paramsViewWC)
 
             Log.d(LOGDEBUGTAG,"Добавили новую карточку")
+        }
+
+        findViewById<FloatingActionButton>(R.id.fab_learn).setOnClickListener {
+            startActivity(Intent(this,StudyActivity::class.java))
+            Log.d(LOGDEBUGTAG,"Перешли на страницу для тестов")
         }
     }
 
