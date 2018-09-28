@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/toast_container"
+    android:id="@+id/layout_toast_container"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -8,13 +8,14 @@
     android:background="#DAAA"
     >
     <ImageView
-        android:id="@+id/imageToast"
+        android:id="@+id/image_toast"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@string/image_desc"
         />
 
-    <TextView android:id="@+id/textToast"
+    <TextView android:id="@+id/text_view_toast"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:textColor="#FFF"
