@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.View
+import com.dogvscat.retingall.R.id.but_date
+import com.dogvscat.retingall.R.id.but_time
 import kotlinx.android.synthetic.main.activity_study.*
 import kotlinx.android.synthetic.main.app_bar.*
 
@@ -18,12 +20,6 @@ class StudyActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        but_time.setOnClickListener {
-            startActivity(Intent("info.fandroid.intent.action.time"))
-        }
-        but_date.setOnClickListener {
-            startActivity(Intent("info.fandroid.intent.action.date"))
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

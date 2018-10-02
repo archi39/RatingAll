@@ -29,18 +29,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dogvscat.retingall.MainActivity" />
         </activity>
-        <activity android:name=".StudyActivityTime">
-            <intent-filter>
-                <action android:name="info.fandroid.intent.action.time" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".StudyActivityDate">
-            <intent-filter>
-                <action android:name="info.fandroid.intent.action.date" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
