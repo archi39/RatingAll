@@ -8,6 +8,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_study.*
 import kotlinx.android.synthetic.main.app_bar.*
 
+//Добавим комментарий для тестирования новой созданной ветки
 class StudyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

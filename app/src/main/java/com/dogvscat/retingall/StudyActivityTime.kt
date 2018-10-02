@@ -13,7 +13,7 @@ class StudyActivityTime : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_study_time)
 
-        val dateFormat = SimpleDateFormat("HH:mm:ss")
+        val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val string = dateFormat.format(Date(System.currentTimeMillis()))
 
         findViewById<TextView>(R.id.view_text_time).text = string
