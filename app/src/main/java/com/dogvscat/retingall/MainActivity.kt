@@ -17,11 +17,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import at.grabner.circleprogress.CircleProgressView
+import com.dogvscat.retingall.R.id.toolbar
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.app_bar.*
 
 
 class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG:String = "POINT"
+
     //получаем ссылки на элементы формы
     private lateinit var layoutMain: View
     private lateinit var viewLinearCard: LinearLayout
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //add toolbar to the activity
         setSupportActionBar(toolbar)
 
         //получаем ссылки на элементы графического интерфейса
@@ -40,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             //создаем CardView пустышку
             val viewCardItem = CardView(this)
             viewCardItem.radius = 15F
-            viewCardItem.setCardBackgroundColor(R.color.colorAccent)
+            viewCardItem.setCardBackgroundColor(Color.RED)
 
             //Создаем текстовое поле с названием позиции
             val viewTextItem = TextView(this)
@@ -50,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             val attr : AttributeSet? = null
             val viewCircleProgressItem = CircleProgressView(this,attr)
             viewCircleProgressItem.isAutoTextSize = true
-            viewCircleProgressItem.setBarColor(R.color.colorPrimary)
+            viewCircleProgressItem.setBarColor(Color.RED)
             viewCircleProgressItem.barWidth = 4
 
             //создаем параметры вставки для CardView
