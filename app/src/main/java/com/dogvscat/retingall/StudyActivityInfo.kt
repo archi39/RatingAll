@@ -13,21 +13,25 @@ class StudyActivityInfo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_study_info)
 
+
+        /*из урока про обработку action
         val action: String? = intent.action
         var formatT = ""
         var textinfo = ""
 
-        if (action.equals("info.fandroid.intent.action.time")){
+        if (action.equals("info.fandroid.intent.action.time")) {
             formatT = "HH:mm:ss"
             textinfo = "time: "
-        } else if(action.equals("info.fandroid.intent.action.date")){
+        } else if (action.equals("info.fandroid.intent.action.date")) {
             formatT = "dd.MM.yyyy"
             textinfo = "Date: "
         }
 
         val dateTime = SimpleDateFormat(formatT).format(Date(System.currentTimeMillis()))
-        val displayText : String = textinfo + dateTime
-        view_text_info.text = displayText
+        val displayText: String = textinfo + dateTime
+        view_text_info.text = displayText*/
 
+        val str = intent.getStringExtra("data") + "!!!"
+        view_text_info.text = str
     }
 }

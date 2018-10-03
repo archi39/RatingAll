@@ -25,6 +25,10 @@ class StudyActivity : AppCompatActivity() {
         but_date.setOnClickListener {
             startActivity(Intent("info.fandroid.intent.action.date"))
         }
+
+        but_submit.setOnClickListener {
+            startActivity(Intent(this,StudyActivityInfo::class.java).putExtra("data",edit_text.text.toString()))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
