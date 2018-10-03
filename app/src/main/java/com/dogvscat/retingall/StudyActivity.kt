@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.View
+import kotlinx.android.synthetic.main.activity_custom_toast.*
 import kotlinx.android.synthetic.main.activity_study.*
 import kotlinx.android.synthetic.main.app_bar.*
 
@@ -27,8 +28,18 @@ class StudyActivity : AppCompatActivity() {
         }
 
         but_submit.setOnClickListener {
-            startActivity(Intent(this,StudyActivityInfo::class.java).putExtra("data",edit_text.text.toString()))
+            //startActivity(Intent(this,StudyActivityInfo::class.java).putExtra("data",edit_text.text.toString()))
+
+            startActivityForResult(Intent(this,StudyActivityInfo::class.java).putExtra("data",edit_text.text.toString()),1)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val name = data!!.getStringExtra("data") + "!!!"
+        view_text.text = name
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
