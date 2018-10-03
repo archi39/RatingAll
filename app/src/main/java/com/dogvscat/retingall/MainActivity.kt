@@ -3,22 +3,17 @@ package com.dogvscat.retingall
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
-import android.util.AttributeSet
 import android.util.Log
-import android.view.*
-import android.widget.FrameLayout
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_main.*
-import at.grabner.circleprogress.CircleProgressView
-import com.dogvscat.retingall.R.id.toolbar
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.app_bar.*
 
 
@@ -45,30 +40,33 @@ class MainActivity : AppCompatActivity() {
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             //создаем CardView пустышку
             val viewCardItem = CardView(this)
-            viewCardItem.radius = 15F
-            viewCardItem.setCardBackgroundColor(Color.RED)
+            // Initialize a new LayoutParams instance, CardView width and height
+            val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, // CardView width
+                    LinearLayout.LayoutParams.WRAP_CONTENT // CardView height
+            )
+            layoutParams.setMargins(10,5,10,5)
+            viewCardItem.layoutParams = layoutParams
+            viewCardItem.radius = 5F
+            // Set the card view content padding
+            viewCardItem.setContentPadding(5,5,5,5)
+            // Set the card view background color
+            viewCardItem.setCardBackgroundColor(getColor(R.color.colorListItemBG))
 
             //Создаем текстовое поле с названием позиции
             val viewTextItem = TextView(this)
-            viewTextItem.text = R.string.string_test_short_rus.toString()
+            viewTextItem.text = getString(R.string.string_test_short_rus)
+            viewCardItem.addView(viewTextItem)
 
             //Создаем красивый прогресс бар
-            val attr : AttributeSet? = null
-            val viewCircleProgressItem = CircleProgressView(this,attr)
-            viewCircleProgressItem.isAutoTextSize = true
-            viewCircleProgressItem.setBarColor(Color.RED)
-            viewCircleProgressItem.barWidth = 4
+//            val viewCircleProgressItem = CircleProgressView(this)
+//            viewCircleProgressItem.isAutoTextSize = true
+//            viewCircleProgressItem.setBarColor(Color.RED)
+//            viewCircleProgressItem.barWidth = 4
 
-            //создаем параметры вставки для CardView
-            val paramsViewWC: FrameLayout.LayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-            paramsViewWC.setMargins(15,15,15,15)
-
-            //Наполняем CardView
-            viewCardItem.addView(viewTextItem,ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
-            viewCardItem.addView(viewCircleProgressItem,ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
 
             //выводим на экран cardView
-            viewLinearCard.addView(viewCardItem,paramsViewWC)
+            viewLinearCard.addView(viewCardItem)
 
             Log.d(LOGDEBUGTAG,"Добавили новую карточку")
         }
