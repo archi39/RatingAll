@@ -33,6 +33,13 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     //сторонние библиотеки для компонентов
     implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
+    //библиотека позволяющая вызывать запрос на права во время работы приложения
+    implementation 'com.karumi:dexter:5.0.0'
+    //Библиотека которая должна очень удобно подгружать изображения
+    implementation 'com.facebook.fresco:fresco:1.10.0'
+    //специальная штука для связывания переменных и констант, как я понял аналог kotlin synthetic
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     //ниже подключаются зависисмости для тестирования
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
