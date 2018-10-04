@@ -1,25 +1,30 @@
 package com.dogvscat.retingall
 
+import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
+import android.app.ActionBar
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
+import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
+import at.grabner.circleprogress.CircleProgressView
+import at.grabner.circleprogress.UnitPosition
 import kotlinx.android.synthetic.main.app_bar.*
 
 
 class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
-    private val LOGDEBUGTAG:String = "POINT"
+    private val LOGDEBUGTAG: String = "POINT"
 
     //получаем ссылки на элементы формы
     private lateinit var layoutMain: View
@@ -45,35 +50,77 @@ class MainActivity : AppCompatActivity() {
                     LinearLayout.LayoutParams.MATCH_PARENT, // CardView width
                     LinearLayout.LayoutParams.WRAP_CONTENT // CardView height
             )
-            layoutParams.setMargins(10,5,10,5)
+            layoutParams.setMargins(5.toPx(), 5.toPx(), 5.toPx(), 5.toPx())
             viewCardItem.layoutParams = layoutParams
-            viewCardItem.radius = 5F
+            viewCardItem.radius = 5.toPx().toFloat()
             // Set the card view content padding
-            viewCardItem.setContentPadding(5,5,5,5)
+            viewCardItem.setContentPadding(5.toPx(), 5.toPx(), 5.toPx(), 5.toPx())
             // Set the card view background color
             viewCardItem.setCardBackgroundColor(getColor(R.color.colorListItemBG))
 
-            //Создаем текстовое поле с названием позиции
+            //Делаем Layout для корректного добавления элементов
+            val lineralLayout = LinearLayout(this)
+            lineralLayout.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, // width
+                    LinearLayout.LayoutParams.WRAP_CONTENT // height
+            )
+            lineralLayout.orientation = LinearLayout.HORIZONTAL
+
+            //Создаем текстовое поле с названием позиции и добавляем его на карточку
             val viewTextItem = TextView(this)
+            val layoutParamsText = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, // width
+                    LinearLayout.LayoutParams.MATCH_PARENT, // height
+                    1F
+            )
+            viewTextItem.layoutParams = layoutParamsText
+            viewTextItem.gravity = Gravity.START or Gravity.CENTER
             viewTextItem.text = getString(R.string.string_test_short_rus)
-            viewCardItem.addView(viewTextItem)
 
-            //Создаем красивый прогресс бар
-//            val viewCircleProgressItem = CircleProgressView(this)
-//            viewCircleProgressItem.isAutoTextSize = true
-//            viewCircleProgressItem.setBarColor(Color.RED)
-//            viewCircleProgressItem.barWidth = 4
+            //Создаем красивый прогресс бар и добавляем его на карточку
+            val viewCircleProgressItem = CircleProgressView(this, null)
+            // Initialize a new LayoutParams instance, CircleProgressView width and height
+            val layoutParamsCircle = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, // width
+                    LinearLayout.LayoutParams.WRAP_CONTENT // height
+            )
+            //layoutParamsCircle.setMargins(5.toPx(), 5.toPx(), 5.toPx(), 5.toPx())
+            layoutParamsCircle.height = 50.toPx()
+            viewCircleProgressItem.layoutParams = layoutParamsCircle
 
+            //специфичные стили
+            viewCircleProgressItem.isAutoTextSize = true
+            viewCircleProgressItem.setBarColor(getColor(R.color.colorPrimary))
+            viewCircleProgressItem.barWidth = 4.toPx()
+            viewCircleProgressItem.innerContourSize = 0F
+            viewCircleProgressItem.maxValue = 100F
+            viewCircleProgressItem.outerContourSize = 0F
+            viewCircleProgressItem.rimColor = getColor(R.color.colorAccent)
+            viewCircleProgressItem.rimWidth = 4.toPx()
+            viewCircleProgressItem.isSeekModeEnabled = true
+            viewCircleProgressItem.setSpinBarColor(getColor(R.color.colorPrimary))
+            viewCircleProgressItem.setTextColor(getColor(R.color.colorProgressBarText))
+            viewCircleProgressItem.textScale = 1F
+            viewCircleProgressItem.unit = "rp"
+            viewCircleProgressItem.setUnitColor(getColor(R.color.colorProgressBarText))
+            viewCircleProgressItem.setUnitPosition(UnitPosition.RIGHT_TOP)
+            viewCircleProgressItem.unitScale = 1F
+            viewCircleProgressItem.isUnitVisible = true
+            viewCircleProgressItem.setValue(25F)
+
+            //набрасываем созданное на наши view
+            lineralLayout.addView(viewTextItem)
+            lineralLayout.addView(viewCircleProgressItem)
+            viewCardItem.addView(lineralLayout)
 
             //выводим на экран cardView
             viewLinearCard.addView(viewCardItem)
-
-            Log.d(LOGDEBUGTAG,"Добавили новую карточку")
+            Log.d(LOGDEBUGTAG, "Добавили новую карточку")
         }
 
         findViewById<FloatingActionButton>(R.id.fab_learn).setOnClickListener {
-            startActivity(Intent(this,StudyActivity::class.java))
-            Log.d(LOGDEBUGTAG,"Перешли на страницу для тестов")
+            startActivity(Intent(this, StudyActivity::class.java))
+            Log.d(LOGDEBUGTAG, "Перешли на страницу для тестов")
         }
     }
 
@@ -97,8 +144,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     //функция приеобразования Px to Dp
-    fun Int.toDp():Int = (this / Resources.getSystem().displayMetrics.density).toInt()
+    fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
     //функция преобразования Dp to Px
-    fun Int.toPx():Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+    fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 }
