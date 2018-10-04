@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 import at.grabner.circleprogress.UnitPosition
+import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.app_bar.*
 
 
@@ -32,6 +33,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Инициализируем библотеку для работы с фото
+        Fresco.initialize(this);
+
         setContentView(R.layout.activity_main)
 
         //add toolbar to the activity

@@ -30,7 +30,6 @@ class AddActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fresco.initialize(this)
         setContentView(R.layout.activity_add)
 
         //включаем toolbar
@@ -107,7 +106,7 @@ class AddActivity : AppCompatActivity() {
                         values)
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent.resolveActivity(packageManager) != null) {
-            mCurrentPhotoPath = fileUri.toString()
+            mCurrentPhotoPath = fileUri!!.toString()
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
                     or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
@@ -135,7 +134,7 @@ class AddActivity : AppCompatActivity() {
         val cursor = contentResolver.query(Uri.parse(mCurrentPhotoPath),
                 Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
                 null, null, null)
-        cursor.moveToFirst()
+        cursor!!.moveToFirst()
         val photoPath = cursor.getString(0)
         cursor.close()
         val file = File(photoPath)
