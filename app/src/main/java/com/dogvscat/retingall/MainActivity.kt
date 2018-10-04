@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         viewCircleProgressItem.outerContourSize = 0F
         viewCircleProgressItem.rimColor = getColor(R.color.colorAccent)
         viewCircleProgressItem.rimWidth = 4.toPx()
-        viewCircleProgressItem.isSeekModeEnabled = true
+        viewCircleProgressItem.isSeekModeEnabled = false
         viewCircleProgressItem.setSpinBarColor(getColor(R.color.colorPrimary))
         viewCircleProgressItem.setTextColor(getColor(R.color.colorProgressBarText))
         viewCircleProgressItem.textScale = 1F

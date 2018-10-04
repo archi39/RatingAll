@@ -26,7 +26,6 @@ class AddActivity : AppCompatActivity() {
             intent.putExtra("title",edit_text_title.text.toString())
             intent.putExtra("respect",edit_text_number.text.toString().toFloat())
             setResult(Activity.RESULT_OK,intent)
-            Log.d(LOGDEBUGTAG,"Возвращаем значения введенные пользователем")
             finish()
         }
     }
