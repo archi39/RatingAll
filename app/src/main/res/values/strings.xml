@@ -22,5 +22,6 @@
     <string name="title_activity_add">Новый элемент</string>
     <string name="title_button_add">Добавить</string>
     <string name="title_menu_settings">Настройки</string>
-    <string name="title_edit_text_add">Наименование</string>
+    <string name="title_view_text_add">Наименование</string>
+    <string name="title_view_text_respect">Оценка</string>
 </resources>
