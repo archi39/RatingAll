@@ -67,20 +67,17 @@ class AddActivity : AppCompatActivity() {
                                         R.string.storage_permission_rationale_title)
                                 .setMessage(
                                         R.string.storage_permition_rationale_message)
-                                .setNegativeButton(
-                                        android.R.string.cancel,
-                                        { dialog, _ ->
-                                            dialog.dismiss()
-                                            token?.cancelPermissionRequest()
-                                        })
-                                .setPositiveButton(android.R.string.ok,
-                                        { dialog, _ ->
-                                            dialog.dismiss()
-                                            token?.continuePermissionRequest()
-                                        })
-                                .setOnDismissListener({
+                                .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                                    dialog.dismiss()
                                     token?.cancelPermissionRequest()
-                                })
+                                }
+                                .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                                    dialog.dismiss()
+                                    token?.continuePermissionRequest()
+                                }
+                                .setOnDismissListener {
+                                    token?.cancelPermissionRequest()
+                                }
                                 .show()
                     }
 
