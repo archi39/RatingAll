@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="457dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
@@ -34,10 +34,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:ems="10"
+                android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:labelFor="@id/edit_text_title"
-                android:importantForAutofill="no"
-                tools:targetApi="o"/>
+                tools:targetApi="o" />
 
         </LinearLayout>
 
@@ -62,16 +62,16 @@
                 android:importantForAutofill="no"
                 android:inputType="number"
                 android:labelFor="@id/edit_text_number"
-                tools:text="@string/default_view_text_number"
-                tools:targetApi="o" />
+                tools:targetApi="o"
+                tools:text="@string/default_view_text_number" />
 
         </LinearLayout>
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/view_simple_image"
-            android:layout_gravity="center"
             android:layout_width="@dimen/photo_width"
             android:layout_height="@dimen/photo_height"
+            android:layout_gravity="center"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="24dp"
             android:layout_marginRight="0dp"
