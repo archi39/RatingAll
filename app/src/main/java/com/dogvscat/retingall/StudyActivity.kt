@@ -18,6 +18,7 @@ class StudyActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

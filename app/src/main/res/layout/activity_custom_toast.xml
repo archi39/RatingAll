@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginEnd="10dp"
-        android:contentDescription="@string/image_desc"
+        android:contentDescription="@string/title_image_desc"
         />
 
     <TextView android:id="@+id/text_view_toast"

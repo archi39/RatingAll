@@ -1,21 +1,16 @@
 package com.dogvscat.retingall
 
-import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
-import android.app.ActionBar
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
-import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 import at.grabner.circleprogress.UnitPosition
@@ -25,6 +20,7 @@ import kotlinx.android.synthetic.main.app_bar.*
 class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
+    private val REQUESTCODEADD: Int = 0
 
     //получаем ссылки на элементы формы
     private lateinit var layoutMain: View
@@ -43,9 +39,8 @@ class MainActivity : AppCompatActivity() {
         viewLinearCard = findViewById(R.id.view_linear_card)
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
-            //выводим на экран cardView
-            viewLinearCard.addView(createCardViewItem(getString(R.string.string_test_short_eng),20F))
-            Log.d(LOGDEBUGTAG, "Добавили новую карточку")
+            startActivityForResult(Intent(this, AddActivity::class.java), REQUESTCODEADD)
+            Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления элемента")
         }
 
         findViewById<FloatingActionButton>(R.id.fab_learn).setOnClickListener {
@@ -61,7 +56,7 @@ class MainActivity : AppCompatActivity() {
      * @param title указывает наименование добавляемой позиции
      * @param respect указывает текущий уровень рейтинга
      */
-    private fun createCardViewItem(title: String, respect: Float) : CardView{
+    private fun createCardViewItem(title: String, respect: Float): CardView {
 
         //создаем CardView пустышку
         val viewCardItem = CardView(this)
@@ -148,11 +143,23 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.menu_item_settings -> {
-                Snackbar.make(layoutMain, getString(R.string.menu_settings), Snackbar.LENGTH_SHORT).setAction("Action", null).show()
+                Snackbar.make(layoutMain, getString(R.string.title_menu_settings), Snackbar.LENGTH_SHORT).setAction("Action", null).show()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d(LOGDEBUGTAG, "Вернулись с результатом")
+        super.onActivityResult(requestCode, resultCode, data)
+
+        //выводим на экран cardView
+        viewLinearCard.addView(createCardViewItem(
+                data!!.getStringExtra("title"),
+                data.getFloatExtra("respect", 0F)
+        ))
+        Log.d(LOGDEBUGTAG, "Добавили новую карточку")
     }
 
     //функция приеобразования Px to Dp
