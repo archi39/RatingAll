@@ -9,7 +9,10 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
@@ -41,11 +44,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             startActivityForResult(Intent(this, AddActivity::class.java), REQUESTCODEADD)
             Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления элемента")
-        }
-
-        findViewById<FloatingActionButton>(R.id.fab_learn).setOnClickListener {
-            startActivity(Intent(this, StudyActivity::class.java))
-            Log.d(LOGDEBUGTAG, "Перешли на страницу для тестов")
         }
     }
 
@@ -99,7 +97,6 @@ class MainActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT, // width
                 LinearLayout.LayoutParams.WRAP_CONTENT // height
         )
-        //layoutParamsCircle.setMargins(5.toPx(), 5.toPx(), 5.toPx(), 5.toPx())
         layoutParamsCircle.height = 50.toPx()
         viewCircleProgressItem.layoutParams = layoutParamsCircle
 
