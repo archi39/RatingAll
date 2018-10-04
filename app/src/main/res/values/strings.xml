@@ -15,11 +15,14 @@
                 Царь сидит в своем венце
     </string>
 
+    <string name="default_view_text_number">0</string>
+
     <!--переменные описания-->
     <string name="title_app_name">Рейтинги</string>
     <string name="title_image_desc">Изображение</string>
     <string name="title_activity_add">Новый элемент</string>
     <string name="title_button_add">Добавить</string>
+    <string name="title_button_snapshot">Добавить фото</string>
     <string name="title_menu_settings">Настройки</string>
     <string name="title_view_text_add">Наименование</string>
     <string name="title_view_text_respect">Оценка</string>

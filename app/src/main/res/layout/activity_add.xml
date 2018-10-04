@@ -18,14 +18,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="64dp">
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/title_view_text_add" />
 
             <EditText
@@ -34,7 +33,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:labelFor="@id/edit_text_title"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
 
         </LinearLayout>
 
@@ -44,9 +46,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/title_view_text_respect" />
 
             <EditText
@@ -55,10 +58,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:ems="10"
+                android:importantForAutofill="no"
                 android:inputType="number"
-                android:text="0" />
+                android:labelFor="@id/edit_text_number"
+                tools:text="@string/default_view_text_number"
+                tools:targetApi="o" />
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/view_image"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:contentDescription="@string/title_image_desc"
+            app:srcCompat="@drawable/test" />
+
+        <Button
+            android:id="@+id/but_snapshot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_button_snapshot" />
 
         <Button
             android:id="@+id/but_submit"

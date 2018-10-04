@@ -2,12 +2,10 @@ package com.dogvscat.retingall
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import kotlinx.android.synthetic.main.activity_add.*
-
 import kotlinx.android.synthetic.main.app_bar.*
 
 class AddActivity : AppCompatActivity() {
@@ -27,6 +25,10 @@ class AddActivity : AppCompatActivity() {
             intent.putExtra("respect",edit_text_number.text.toString().toFloat())
             setResult(Activity.RESULT_OK,intent)
             finish()
+        }
+
+        but_snapshot.setOnClickListener{
+
         }
     }
 
