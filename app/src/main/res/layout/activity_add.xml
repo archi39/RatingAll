@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddActivity">
+    tools:context=".AddActivity"
+    android:id="@+id/layout_add_main">
 
     <include
         layout="@layout/app_bar" />
@@ -66,12 +67,24 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/view_image"
-            android:layout_width="wrap_content"
-            android:layout_height="250dp"
-            android:contentDescription="@string/title_image_desc"
-            app:srcCompat="@drawable/test" />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/view_simple_image"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/photo_width"
+            android:layout_height="@dimen/photo_height"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="8dp"
+            app:failureImage="@drawable/ic_error_outline"
+            app:failureImageScaleType="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@drawable/ic_image"
+            app:placeholderImageScaleType="center" />
+
 
         <Button
             android:id="@+id/but_snapshot"
