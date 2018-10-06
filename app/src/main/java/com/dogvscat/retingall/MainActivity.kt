@@ -1,6 +1,5 @@
 package com.dogvscat.retingall
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
@@ -30,20 +29,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutMain: View
     private lateinit var viewLinearCard: LinearLayout
 
-    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Инициализируем библотеку для работы с фото
         Fresco.initialize(this);
-
         setContentView(R.layout.activity_main)
-
         //add toolbar to the activity
         setSupportActionBar(toolbar)
 
         //получаем ссылки на элементы графического интерфейса
         layoutMain = findViewById(R.id.layout_activity_main)
         viewLinearCard = findViewById(R.id.view_linear_card)
+
+
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             startActivityForResult(Intent(this, AddActivity::class.java), REQUESTCODEADD)

@@ -63,7 +63,7 @@
                 android:inputType="number"
                 android:labelFor="@id/edit_text_number"
                 tools:targetApi="o"
-                tools:text="@string/default_view_text_number" />
+                android:text="@string/default_view_text_number" />
 
         </LinearLayout>
 
