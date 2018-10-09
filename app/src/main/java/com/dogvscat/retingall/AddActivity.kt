@@ -3,12 +3,14 @@ package com.dogvscat.retingall
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import butterknife.ButterKnife
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -27,6 +29,7 @@ class AddActivity : AppCompatActivity() {
     private val LOGDEBUGTAG: String = "POINT"
     private val TAKE_PHOTO_REQUEST: Int = 0
     lateinit var mCurrentPhotoPath: String
+    //lateinit var dbHelper: DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,16 +41,56 @@ class AddActivity : AppCompatActivity() {
 
         //не особо представляю зачем это взято из примера
         ButterKnife.bind(this)
+        //работаем с базой данных
+       // dbHelper = DBHelper(this)
+        val database: SQLiteDatabase = DBHelper(this).writableDatabase
+        val contentValues = ContentValues()
+
+        but_snapshot.setOnClickListener { validatePermissions() }
 
         but_submit.setOnClickListener {
-            val intent = Intent()
+
+
+            contentValues.put(DBHelper.KEY_TITLE, edit_text_title.text.toString())
+            contentValues.put(DBHelper.KEY_RATING, edit_text_number.text.toString().toFloat())
+            contentValues.put(DBHelper.KEY_IMAGE, mCurrentPhotoPath)
+
+            database.insert(DBHelper.TABLE_ITEMS, null, contentValues)
+
+           /* val intent = Intent()
             intent.putExtra("title", edit_text_title.text.toString())
             intent.putExtra("respect", edit_text_number.text.toString().toFloat())
             setResult(Activity.RESULT_OK, intent)
-            finish()
+            finish()*/
         }
 
-        but_snapshot.setOnClickListener { validatePermissions() }
+        but_read.setOnClickListener {
+            val cursor = database.query(DBHelper.TABLE_ITEMS,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)
+
+            if (cursor.moveToFirst()) {
+                val idIndex = cursor.getColumnIndex(DBHelper.KEY_ID)
+                val titleIndex = cursor.getColumnIndex(DBHelper.KEY_TITLE)
+                val ratingIndex = cursor.getColumnIndex(DBHelper.KEY_RATING)
+                val imageIndex = cursor.getColumnIndex(DBHelper.KEY_IMAGE)
+                do {
+                    Log.d(LOGDEBUGTAG, "ID = ${cursor.getInt(idIndex)}," +
+                            "title = ${cursor.getString(titleIndex)}," +
+                            "rating = ${cursor.getFloat(ratingIndex)}," +
+                            "imagePath = ${cursor.getString(imageIndex)}")
+                } while (cursor.moveToNext())
+            } else Log.d(LOGDEBUGTAG, "в таблице нет строк")
+            cursor.close()
+        }
+
+        btn_clear.setOnClickListener {
+            database.delete(DBHelper.TABLE_ITEMS,null,null)
+        }
     }
 
     /**
