@@ -50,18 +50,16 @@ class AddActivity : AppCompatActivity() {
 
         but_submit.setOnClickListener {
 
-
             contentValues.put(DBHelper.KEY_TITLE, edit_text_title.text.toString())
             contentValues.put(DBHelper.KEY_RATING, edit_text_number.text.toString().toFloat())
             contentValues.put(DBHelper.KEY_IMAGE, mCurrentPhotoPath)
-
             database.insert(DBHelper.TABLE_ITEMS, null, contentValues)
 
-           /* val intent = Intent()
+            val intent = Intent()
             intent.putExtra("title", edit_text_title.text.toString())
             intent.putExtra("respect", edit_text_number.text.toString().toFloat())
             setResult(Activity.RESULT_OK, intent)
-            finish()*/
+            finish()
         }
 
         but_read.setOnClickListener {
