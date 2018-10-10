@@ -1,2 +1,2 @@
-![Лого приложения](.gitimage/logo_frame_text.png | width=100)
+![Лого приложения](.gitimage/logo_frame_text.png =100x100)
 <p align="center">Здесь буду размещать описание программы и ключевые моменты в использовании</p>
