@@ -88,6 +88,7 @@ class AddActivity : AppCompatActivity() {
 
         btn_clear.setOnClickListener {
             database.delete(DBHelper.TABLE_ITEMS,null,null)
+            Snackbar.make(layout_add_main,"База очищена", Snackbar.LENGTH_SHORT).show()
         }
     }
 

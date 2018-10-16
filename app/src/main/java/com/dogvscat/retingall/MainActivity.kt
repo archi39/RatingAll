@@ -3,8 +3,10 @@ package com.dogvscat.retingall
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
+import android.support.design.widget.SwipeDismissBehavior
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.util.Log
@@ -155,6 +157,8 @@ class MainActivity : AppCompatActivity() {
         lineralLayout.addView(viewTextItem)
         lineralLayout.addView(viewCircleProgressItem)
         viewCardItem.addView(lineralLayout)
+        //делаем карточку свайпной
+        implementSwipeDismiss(viewCardItem)
 
         return viewCardItem
     }
@@ -188,6 +192,18 @@ class MainActivity : AppCompatActivity() {
                 data.getFloatExtra("respect", 0F)
         ))
         Log.d(LOGDEBUGTAG, "Добавили новую карточку")
+    }
+
+    /**
+     * method to implement swipe dismiss feature over card view
+     **/
+    private fun implementSwipeDismiss(cardView: CardView) {
+        val swipeDismissBehavior = SwipeDismissBehavior<View>()
+        //Swipe direction i.e any direction, here you can put any direction LEFT or RIGHT
+        swipeDismissBehavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_ANY)
+        val layoutParams: CoordinatorLayout.LayoutParams = cardView.layoutParams as CoordinatorLayout.LayoutParams
+        //set swipe behaviour to Coordinator layout
+        layoutParams.behavior = swipeDismissBehavior
     }
 
     //функция приеобразования Px to Dp
