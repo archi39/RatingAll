@@ -27,7 +27,7 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         const val KEY_ID = "_id"
         const val KEY_RATING = "rating"
         const val KEY_IMAGE = "path_to_image"
-        const val TABLE_ITEMS: String = "items"
+        const val TABLE_ITEMS = "items"
         //Объявляем константы для базы данных
         const val DATABASE_VERSION: Int = 1
         const val DATABASE_NAME: String = "itemsDb"

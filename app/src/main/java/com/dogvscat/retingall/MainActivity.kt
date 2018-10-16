@@ -1,9 +1,7 @@
 package com.dogvscat.retingall
 
-import android.content.ContentValues
 import android.content.Intent
 import android.content.res.Resources
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -75,9 +73,7 @@ class MainActivity : AppCompatActivity() {
                 ))
             } while (cursor.moveToNext())
         } else {
-            Snackbar.make(layoutMain,
-                    getString(R.string.title_menu_settings),
-                    Snackbar.LENGTH_SHORT).setAction("В таблице нет строк", null).show()
+            Snackbar.make(layoutMain, "В таблице нет строк", Snackbar.LENGTH_SHORT).show()
         }
         cursor.close()
     }

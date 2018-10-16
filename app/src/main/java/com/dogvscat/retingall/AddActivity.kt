@@ -28,7 +28,7 @@ import java.io.File
 class AddActivity : AppCompatActivity() {
     private val LOGDEBUGTAG: String = "POINT"
     private val TAKE_PHOTO_REQUEST: Int = 0
-    lateinit var mCurrentPhotoPath: String
+    private var mCurrentPhotoPath: String = "none"
     //lateinit var dbHelper: DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
