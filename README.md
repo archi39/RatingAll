@@ -15,13 +15,14 @@ $ npm install github-markdown-css
 удобным и интуитивно понятным. </p>
 
 ***
- 
+
+<h1>Roadmap:</h1>
+
+<div><b>Тестовый заголовок задачи:</b></div>
 - [ ] Mercury
 - [x] Venus
 - [x] Earth (Orbit/Moon)
 
-
-<h1>Roadmap:</h1>
 <dl>
   <dt>Оснастка</dt>
   <dd>всё что относится к работоспособности приложения
@@ -34,7 +35,7 @@ $ npm install github-markdown-css
 
   <dt>Визуальные плюхи</dt>
   <dd>
-    <div><img src=".gitimage/chkbx_unchecked.png" height="15" width="15">
+    <div><img src=".gitimage/chkbx_checked.png" height="15" width="15">
             Сделать возможность удаления swype`ом</div>
     <div>
         <img src=".gitimage/chkbx_unchecked.png" height="15" width="15">
