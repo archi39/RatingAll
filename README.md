@@ -25,17 +25,9 @@ $ npm install github-markdown-css
 <dl>
   <dt>Оснастка</dt>
   <dd>всё что относится к работоспособности приложения
-  
- - [ ] Mercury
- - [x] Venus
- - [x] Earth (Orbit/Moon)
-   
-    <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
-        Обеспечить работоспособность базы данных (далее - БД)</div>
-    <div><img src=".gitimage/chkbx_unchecked.png" height="13" width="13"> 
-        Обеспечить возможность добавления записей в БД</div>
-    <div><img src=".gitimage/chkbx_unchecked.png" height="13" width="13"> 
-        Обеспечить возможность добавления записей в БД</div>
+    - [x] Обеспечить работоспособность базы данных (далее - БД)
+    - [ ] Обеспечить возможность добавления записей в БД
+    - [ ] Обеспечить возможность удаления записей в БД
   </dd>
 
   <dt>Визуальные плюхи</dt>
