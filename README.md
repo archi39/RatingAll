@@ -15,19 +15,18 @@
 
 <h2>  Roadmap:  </h2>
 
-<div> <b> Оснастка: </b> </div>
-
-<ul>
-    <li>
+<dl>
+    <dt><b> Оснастка: </b></dt>
+    <dd>
         <img src=".gitimage/chkbx_checked.png" href=# height="14" width="14"> 
-        Сделать возможность удаления swype`ом
-    </li>
-</ul>
-- [X] Подключить базу данных (далее - БД) к проекту 
-- * [x] Обеспечить возможность добавления записей в БД
-- * [ ] Обеспечить возможность удаления записей в БД
+            Подключить базу данных (далее - БД) к проекту
+        <img src=".gitimage/chkbx_checked.png" href=# height="14" width="14"> 
+            Обеспечить возможность добавления записей в БД
+        <img src=".gitimage/chkbx_unchecked.png" href=# height="14" width="14"> 
+            Обеспечить возможность удаления записей в БД        
+    </dd>
+</dl>
 
-<div><b> Визуальные плюхи: </b></div> 
-    
+<div><b> Визуальные плюхи: </b></div>    
 <img src=".gitimage/chkbx_unchecked.png" href=# height="14" width="14"> Сделать возможность удаления swype`ом
 
