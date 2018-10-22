@@ -25,8 +25,10 @@
         <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
             Обеспечить возможность удаления записей в БД</div>        
     </dd>
+    <dt><b> Визуальные плюхи: </b></dt>
+    <dd>
+        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Сделать возможность удаления swype`ом</div>    
+    </dd>
 </dl>
 
-<div><b> Визуальные плюхи: </b></div>    
-<div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Сделать возможность удаления swype`ом</div>
 
