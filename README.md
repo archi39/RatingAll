@@ -25,7 +25,8 @@
 
   <dt>Визуальные плюхи</dt>
   <dd>
-    <p><img src=".gitimage/chkbx_unchecked.png" height="12" width="12"> Сделать возможность удаления swype`ом</p>
+    <table><tr><td><img src=".gitimage/chkbx_unchecked.png" height="15" width="15"></td>
+    <td> Сделать возможность удаления swype`ом</td></tr></table>
   </dd>
 </dl>
 
