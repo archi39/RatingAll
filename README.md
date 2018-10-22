@@ -19,13 +19,13 @@
   <dd>всё что относится к работоспособности приложения
     <p><img src=".gitimage/chkbx_checked.png" height="12" width="12"> 
     Обеспечить работоспособность базы данных (далее - БД)</p>
-    <p><img src=".gitimage/chkbx_unchecked.png"> Обеспечить возможность добавления записей в БД</p>
-    <p><img src=".gitimage/chkbx_unchecked.png"> Обеспечить возможность добавления записей в БД</p>
+    <p><img src=".gitimage/chkbx_unchecked.png" height="12" width="12"> Обеспечить возможность добавления записей в БД</p>
+    <p><img src=".gitimage/chkbx_unchecked.png" height="12" width="12"> Обеспечить возможность добавления записей в БД</p>
   </dd>
 
   <dt>Визуальные плюхи</dt>
   <dd>
-    <p><img src=".gitimage/chkbx_unchecked.png"> Сделать возможность удаления swype`ом</p>
+    <p><img src=".gitimage/chkbx_unchecked.png" height="12" width="12"> Сделать возможность удаления swype`ом</p>
   </dd>
 </dl>
 
