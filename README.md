@@ -18,15 +18,15 @@
 <dl>
     <dt><b> Оснастка: </b></dt>
     <dd>
-        <img src=".gitimage/chkbx_checked.png" href=# height="14" width="14"> 
-            Подключить базу данных (далее - БД) к проекту
-        <img src=".gitimage/chkbx_checked.png" href=# height="14" width="14"> 
-            Обеспечить возможность добавления записей в БД
-        <img src=".gitimage/chkbx_unchecked.png" href=# height="14" width="14"> 
-            Обеспечить возможность удаления записей в БД        
+        <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
+            Подключить базу данных (далее - БД) к проекту</div>
+        <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
+            Обеспечить возможность добавления записей в БД</div>
+        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
+            Обеспечить возможность удаления записей в БД</div>        
     </dd>
 </dl>
 
 <div><b> Визуальные плюхи: </b></div>    
-<img src=".gitimage/chkbx_unchecked.png" href=# height="14" width="14"> Сделать возможность удаления swype`ом
+<div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Сделать возможность удаления swype`ом</div>
 
