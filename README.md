@@ -17,9 +17,7 @@ $ npm install github-markdown-css
 ***
  
  - [ ] Mercury
- 
  - [x] Venus
- 
  - [x] Earth (Orbit/Moon)
 
 
