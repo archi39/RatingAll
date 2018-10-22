@@ -23,5 +23,5 @@
 
 <div><b> Визуальные плюхи: </b></div> 
     
-<img src=".gitimage/chkbx_unchecked.png" height="15" width="15">Сделать возможность удаления swype`ом
+<img src=".gitimage/chkbx_unchecked.png" href=# height="15" width="15"> Сделать возможность удаления swype`ом
 
