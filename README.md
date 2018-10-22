@@ -19,9 +19,9 @@ $ npm install github-markdown-css
 <h1>Roadmap:</h1>
 
 <div><b>Тестовый заголовок задачи:</b></div>
-[ ] Mercury
-[x] Venus
-[x] Earth (Orbit/Moon)
+- [ ] Mercury
+- [x] Venus
+- [x] Earth (Orbit/Moon)
 
 <dl>
   <dt>Оснастка</dt>
