@@ -17,11 +17,17 @@
 
 <div> <b> Оснастка: </b> </div>
 
+<ul>
+    <li>
+        <img src=".gitimage/chkbx_checked.png" href=# height="14" width="14"> 
+        Сделать возможность удаления swype`ом
+    </li>
+</ul>
 - [X] Подключить базу данных (далее - БД) к проекту 
 - * [x] Обеспечить возможность добавления записей в БД
 - * [ ] Обеспечить возможность удаления записей в БД
 
 <div><b> Визуальные плюхи: </b></div> 
     
-<img src=".gitimage/chkbx_unchecked.png" href=# height="15" width="15"> Сделать возможность удаления swype`ом
+<img src=".gitimage/chkbx_unchecked.png" href=# height="14" width="14"> Сделать возможность удаления swype`ом
 
