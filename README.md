@@ -1,5 +1,7 @@
 <p align="center"><img src=".gitimage/logo_frame_text.png" height="200" width="200"></p>
+
 ---
+
 #Краткая анотация:
 
 ##О чём проект
@@ -14,7 +16,7 @@
 <dl>
   <dt>Оснастка</dt>
   <dd>всё что относится к работоспособности приложения
-    <p><img src=".gitimage/chkbx_checked.png" height="25" width="25"> 
+    <p><img src=".gitimage/chkbx_checked.png" height="15" width="15"> 
     Обеспечить работоспособность базы данных (далее - БД)</p>
     <p><img src=".gitimage/chkbx_unchecked.png"> Обеспечить возможность добавления записей в БД</p>
     <p><img src=".gitimage/chkbx_unchecked.png"> Обеспечить возможность добавления записей в БД</p>
