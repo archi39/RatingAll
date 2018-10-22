@@ -35,6 +35,9 @@ $ npm install github-markdown-css
     <div>
         <img src=".gitimage/chkbx_unchecked.png" height="15" width="15">
         Сделать возможность удаления swype`ом</div>
+        - [ ] Mercury
+        - [x] Venus
+        - [x] Earth (Orbit/Moon)
   </dd>
 </dl>
 
