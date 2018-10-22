@@ -17,10 +17,10 @@
 <dl>
   <dt>Оснастка</dt>
   <dd>всё что относится к работоспособности приложения
-    <p><img src=".gitimage/chkbx_checked.png" height="12" width="12"> 
+    <p><img src=".gitimage/chkbx_checked.png" height="13" width="13"> 
     Обеспечить работоспособность базы данных (далее - БД)</p>
-    <p><img src=".gitimage/chkbx_unchecked.png" height="12" width="12"> Обеспечить возможность добавления записей в БД</p>
-    <p><img src=".gitimage/chkbx_unchecked.png" height="12" width="12"> Обеспечить возможность добавления записей в БД</p>
+    <p><img src=".gitimage/chkbx_unchecked.png" height="13" width="13"> Обеспечить возможность добавления записей в БД</p>
+    <p><img src=".gitimage/chkbx_unchecked.png" height="13" width="13"> Обеспечить возможность добавления записей в БД</p>
   </dd>
 
   <dt>Визуальные плюхи</dt>
