@@ -102,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         Log.d(LOGDEBUGTAG, "Вернулись с результатом")
         super.onActivityResult(requestCode, resultCode, data)
 
+        //необходимо реализовать функцию пересчёта базы
+
         Log.d(LOGDEBUGTAG, "Добавили новую карточку")
     }
 
