@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -15,6 +16,8 @@ import android.view.MenuItem
 import android.view.View
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.app_bar.*
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +41,16 @@ class MainActivity : AppCompatActivity() {
         layoutMain = findViewById(R.id.layout_activity_main)
         viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
         val linerlLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false )
+
+        //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
+        //https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
+        val itemAnimator = DefaultItemAnimator()
+        itemAnimator.addDuration = 500
+        itemAnimator.removeDuration = 500
+        viewRecyclerView.setItemAnimator(itemAnimator)
+
         viewRecyclerView.layoutManager = linerlLayoutManager
+
 
         //наполняем экран данными из базы
         refreshBD()
