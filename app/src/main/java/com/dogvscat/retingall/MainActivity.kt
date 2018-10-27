@@ -49,11 +49,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Функиция обновляет список карточек на главном экране
+     * Функиция перечитывает БД и присваивает новый адаптер для recyclerView
      */
     private fun refreshBD() {
         //Создаем изменяемый список в который будем помещать элементы из базы
-        val items = mutableListOf<String>()
+        val itemsTitle = mutableListOf<String>()
+        val itemsRating = mutableListOf<Float>()
 
         //создаем курсор для просмотра БД
         val cursor = DBHelper(this).writableDatabase.query(DBHelper.TABLE_ITEMS,
@@ -68,13 +69,16 @@ class MainActivity : AppCompatActivity() {
         if (cursor.moveToFirst()) {
             do {
                 //наполняем наш список элементами
-                items.add(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)))
+                itemsTitle.add(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)))
+                itemsRating.add(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_RATING)).toFloat())
+
             } while (cursor.moveToNext())
         } else {
             Snackbar.make(layoutMain, "В таблице нет строк", Snackbar.LENGTH_SHORT).show()
         }
 
-        viewRecyclerView.adapter = MyAdapter(items.toTypedArray(),this)
+        //устанвливаем адаптер для RecyclerView с значениями из базы данных
+        viewRecyclerView.adapter = MyAdapter(itemsTitle.toTypedArray(), itemsRating.toTypedArray(),this)
 
         cursor.close()
     }
@@ -102,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(LOGDEBUGTAG, "Вернулись с результатом")
         super.onActivityResult(requestCode, resultCode, data)
 
-        //необходимо реализовать функцию пересчёта базы
+        refreshBD()
 
         Log.d(LOGDEBUGTAG, "Добавили новую карточку")
     }

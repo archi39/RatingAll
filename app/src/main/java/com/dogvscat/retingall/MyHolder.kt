@@ -6,6 +6,9 @@ import android.view.View
 import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 
+/**
+ * Класс описывающий элемент RecyclerView, в нашем случае это карточки
+ */
 class MyHolder(itemView: View, private val mContent: Context) : RecyclerView.ViewHolder(itemView){
     private val view_text_card: TextView
     private val circle_view_card: CircleProgressView
@@ -15,7 +18,13 @@ class MyHolder(itemView: View, private val mContent: Context) : RecyclerView.Vie
         circle_view_card = itemView.findViewById<View>(R.id.circle_view_card) as CircleProgressView
     }
 
-    fun index(str: String){
+    /**
+     * Функция усланавливает значения элементов каточки - из данных переданных адаптером
+     */
+    fun index(str: String, rating: Float){
         view_text_card.text = str
+        circle_view_card.setValue(rating)
+//        отключаем возможность редактирования прогрессбара
+        circle_view_card.isSeekModeEnabled = false
     }
 }

@@ -21,7 +21,7 @@
         <div><div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Подключить базу данных (далее - БД) к проекту</div>
             <div> <ul>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Перейти на использование RecyclerView </li>
-                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Реализовать изменение респекта заново </li>                
+                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Реализовать изменение "рейтинга" заново </li>                
             </ul></div>
         </div>
         <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
