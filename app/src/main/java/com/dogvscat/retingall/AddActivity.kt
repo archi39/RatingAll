@@ -10,7 +10,6 @@ import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import butterknife.ButterKnife
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -60,35 +59,6 @@ class AddActivity : AppCompatActivity() {
             intent.putExtra("respect", edit_text_number.text.toString().toFloat())
             setResult(Activity.RESULT_OK, intent)
             finish()
-        }
-
-        but_read.setOnClickListener {
-            val cursor = database.query(DBHelper.TABLE_ITEMS,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null)
-
-            if (cursor.moveToFirst()) {
-                val idIndex = cursor.getColumnIndex(DBHelper.KEY_ID)
-                val titleIndex = cursor.getColumnIndex(DBHelper.KEY_TITLE)
-                val ratingIndex = cursor.getColumnIndex(DBHelper.KEY_RATING)
-                val imageIndex = cursor.getColumnIndex(DBHelper.KEY_IMAGE)
-                do {
-                    Log.d(LOGDEBUGTAG, "ID = ${cursor.getInt(idIndex)}," +
-                            "title = ${cursor.getString(titleIndex)}," +
-                            "rating = ${cursor.getFloat(ratingIndex)}," +
-                            "imagePath = ${cursor.getString(imageIndex)}")
-                } while (cursor.moveToNext())
-            } else Log.d(LOGDEBUGTAG, "в таблице нет строк")
-            cursor.close()
-        }
-
-        btn_clear.setOnClickListener {
-            database.delete(DBHelper.TABLE_ITEMS,null,null)
-            Snackbar.make(layout_add_main,"База очищена", Snackbar.LENGTH_SHORT).show()
         }
     }
 

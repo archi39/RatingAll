@@ -27,7 +27,9 @@
         <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
             Обеспечить возможность добавления записей в БД</div>
         <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
-            Обеспечить возможность удаления записей в БД</div>        
+            Обеспечить возможность удаления записей в БД</div>
+        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
+            Обеспечить возможность редактирования записей в БД</div>         
     </dd>
     <dt><b> Визуальные плюхи: </b></dt>
     <dd>

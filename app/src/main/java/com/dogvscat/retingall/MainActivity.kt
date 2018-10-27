@@ -2,6 +2,7 @@ package com.dogvscat.retingall
 
 import android.content.Intent
 import android.content.res.Resources
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -94,8 +95,14 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.menu_item_settings -> {
-                Snackbar.make(layoutMain, getString(R.string.title_menu_settings), Snackbar.LENGTH_SHORT).setAction("Action", null).show()
+            R.id.menu_item_clear_db -> {
+                val database: SQLiteDatabase = DBHelper(this).writableDatabase
+                database.delete(DBHelper.TABLE_ITEMS,null,null)
+                //подобным образом происходит перерисовка view т.к. adapter = null -соответственно
+                //на экране ничего не отобразится
+                viewRecyclerView.adapter = null
+
+                Snackbar.make(layoutMain, getString(R.string.action_clear_db), Snackbar.LENGTH_SHORT).show()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
