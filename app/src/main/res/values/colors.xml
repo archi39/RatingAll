@@ -7,6 +7,10 @@
     <color name="colorAccent">#369fda</color>
 
     <color name="colorListItemBG">#2176a6</color>
+    <color name="colorListItemEdit">#FFC527</color>
+    <color name="colorListItemDelete">#FF5B27</color>
+
+
     <color name="colorProgressBarText">#def3ff</color>
     <color name="btn_delete">#47c6ca</color>
 </resources>
