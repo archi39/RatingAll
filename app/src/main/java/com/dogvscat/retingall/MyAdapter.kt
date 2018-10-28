@@ -1,6 +1,8 @@
 package com.dogvscat.retingall
 
 import android.content.Context
+import android.support.design.widget.Snackbar
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,10 @@ import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
+
+
+
+
 
 
 
@@ -34,19 +40,27 @@ class MyAdapter(private val items: MutableList<Item>,
         return MyHolder(view, mContext)
     }
 
+    /**
+     * адаптер пробегает по списку элементов и вызывает метод указанный ниже для каждого элемента
+     */
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-
-//для того чтобы получить список объектов описывающих карточки - нужно создать класс карточек
         // get your data object first.
         val item = itemsList[position]
 
         // Save/restore the open/close state.
         // You need to provide a String id which uniquely defines the data object.
-        // временно в качестве ID использую имя - в будующем нужно предусмотреть программный ID
         viewBinderHelper.bind(holder.swipeLayout, item.item_id)
 
-        // do your regular binding stuff here
+        // Меняем значения элементов шаблона в соответствии с данными для элемента адаптера
         holder.index(item.item_title, item.item_rating)
+
+        holder.cardDelete.setOnClickListener {
+            val database = DBHelper(mContext).writableDatabase
+
+            database.delete(DBHelper.TABLE_ITEMS, DBHelper.KEY_ID + "=" + item.item_id, null);
+            Snackbar.make(it, "Запись ${item.item_id} удалена", Snackbar.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun getItemCount(): Int = itemsList.size
@@ -56,6 +70,7 @@ class MyAdapter(private val items: MutableList<Item>,
      */
     class MyHolder(itemView: View, private val mContent: Context) : RecyclerView.ViewHolder(itemView) {
         val swipeLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout)
+        val cardDelete: CardView = itemView.findViewById(R.id.card_delete)
         private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card) as TextView
         private val circleViewCard: CircleProgressView = itemView.findViewById<View>(R.id.circle_view_card) as CircleProgressView
 

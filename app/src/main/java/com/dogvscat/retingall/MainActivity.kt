@@ -82,13 +82,13 @@ class MainActivity : AppCompatActivity() {
             do {
 
                 //наполняем наш список элементами
-                items.add(Item(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)) + cursor.position,
+                items.add(Item(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_ID)),
                         cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)),
                         cursor.getString(cursor.getColumnIndex(DBHelper.KEY_RATING)).toFloat()))
 
             } while (cursor.moveToNext())
         } else {
-            Snackbar.make(layoutMain, "В таблице нет строк", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(layoutMain, getString(R.string.action_empty_db) , Snackbar.LENGTH_SHORT).show()
         }
 
         //устанвливаем адаптер для RecyclerView с значениями из базы данных

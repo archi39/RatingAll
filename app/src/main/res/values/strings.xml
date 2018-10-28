@@ -32,6 +32,7 @@
     <string name="title_view_text_respect">Оценка</string>
 
     <string name="action_clear_db">Записи в базе данных удалены</string>
+    <string name="action_empty_db">В базе данных нет записей</string>
 
     <string name="storage_permission_rationale_title">Получение прав на карту</string>
     <string name="storage_permition_rationale_message">Разрешить доступ к карте памяти?</string>

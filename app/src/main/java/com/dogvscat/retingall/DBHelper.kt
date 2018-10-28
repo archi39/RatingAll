@@ -8,7 +8,6 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("drop table if exists $TABLE_ITEMS")
-
         onCreate(db)
     }
 

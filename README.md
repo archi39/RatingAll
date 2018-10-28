@@ -30,9 +30,9 @@
             Обеспечить возможность удаления записей в БД</div>
         <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
             Обеспечить возможность редактирования записей в БД</div>
-        <div><div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Разобраться с подключением сторонних библиотек из GitHub Fork репозиториев</div>
+        <div><div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Разобраться с подключением сторонних библиотек из GitHub Fork репозиториев</div>
             <div> <ul>
-                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Разобраться с использованием JitPack </li>                
+                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Разобраться с использованием JitPack </li>                
             </ul></div>
         </div>       
     </dd>
