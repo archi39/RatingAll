@@ -34,7 +34,6 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
 
         val view = LayoutInflater.from(p0.context).inflate(R.layout.activity_main_card_tmpl,
                 p0, false)
-
         return MyHolder(view, mContext)
     }
 
@@ -64,6 +63,13 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
             Snackbar.make(viewRecyclerView, "Запись ${item.item_title} удалена", Snackbar.LENGTH_SHORT).show()
         }
 
+        //редактирование карточки
+        holder.cardEdit.setOnClickListener {
+
+            Log.d(LOGDEBUGTAG, "Карточка id:${item.item_id},title:${item.item_title} отредактирована")
+            Snackbar.make(viewRecyclerView, "Запись ${item.item_title} отредактирована", Snackbar.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun getItemCount(): Int = itemsList.size
@@ -74,6 +80,7 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
     class MyHolder(itemView: View, private val mContent: Context) : RecyclerView.ViewHolder(itemView) {
         val swipeLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout)
         val cardDelete: CardView = itemView.findViewById(R.id.card_delete)
+        val cardEdit: CardView = itemView.findViewById(R.id.card_edit)
         private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card) as TextView
         private val circleViewCard: CircleProgressView = itemView.findViewById<View>(R.id.circle_view_card) as CircleProgressView
 
