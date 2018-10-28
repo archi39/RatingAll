@@ -17,9 +17,6 @@ import android.view.View
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.app_bar.*
 
-
-
-
 class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
@@ -92,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //устанвливаем адаптер для RecyclerView с значениями из базы данных
-        viewRecyclerView.adapter = MyAdapter(items,this)
+        viewRecyclerView.adapter = MyAdapter(viewRecyclerView,items,this)
 
         cursor.close()
     }

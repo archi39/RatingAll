@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +13,11 @@ import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 
-
-
-
-
-
-
-
-class MyAdapter(private val items: MutableList<Item>,
+class MyAdapter(private val viewRecyclerView: RecyclerView,
+                private val items: MutableList<Item>,
                 private val mContext: Context) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
-
+    //специальное поле для отлавливания логов
+    private val LOGDEBUGTAG: String = "POINT"
     private val itemsList: MutableList<Item> = items
 
     // добавил код со страницы swypelayout
@@ -30,13 +26,15 @@ class MyAdapter(private val items: MutableList<Item>,
 
     init {
         // uncomment the line below if you want to open only one row at a time
-        viewBinderHelper.setOpenOnlyOne(true);
+        viewBinderHelper.setOpenOnlyOne(true)
     }
 
     //раздули элемент из макета и вернули в адаптер ссылку на элемент
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): MyHolder {
+
         val view = LayoutInflater.from(p0.context).inflate(R.layout.activity_main_card_tmpl,
                 p0, false)
+
         return MyHolder(view, mContext)
     }
 
@@ -54,11 +52,16 @@ class MyAdapter(private val items: MutableList<Item>,
         // Меняем значения элементов шаблона в соответствии с данными для элемента адаптера
         holder.index(item.item_title, item.item_rating)
 
+        //реализуем удаление карточки
         holder.cardDelete.setOnClickListener {
             val database = DBHelper(mContext).writableDatabase
 
-            database.delete(DBHelper.TABLE_ITEMS, DBHelper.KEY_ID + "=" + item.item_id, null);
-            Snackbar.make(it, "Запись ${item.item_id} удалена", Snackbar.LENGTH_SHORT).show()
+            database.delete(DBHelper.TABLE_ITEMS, DBHelper.KEY_ID + "=" + item.item_id, null)
+            itemsList.remove(item)
+            viewRecyclerView.adapter = MyAdapter(viewRecyclerView, itemsList, mContext)
+
+            Log.d(LOGDEBUGTAG, "Карточка id:${item.item_id},title:${item.item_title} удалена")
+            Snackbar.make(viewRecyclerView, "Запись ${item.item_title} удалена", Snackbar.LENGTH_SHORT).show()
         }
 
     }

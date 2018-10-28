@@ -26,7 +26,7 @@
         </div>
         <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
             Обеспечить возможность добавления записей в БД</div>
-        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
+        <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
             Обеспечить возможность удаления записей в БД</div>
         <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
             Обеспечить возможность редактирования записей в БД</div>
@@ -39,7 +39,7 @@
     <dt><b> Визуальные плюхи: </b></dt>
     <dd>
         <div>
-            <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Сделать возможность удаления swype`ом</div>
+            <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Сделать возможность удаления swype`ом</div>
             <div> <ul>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить строковый ID для элементов списка </li>                
             </ul></div>
