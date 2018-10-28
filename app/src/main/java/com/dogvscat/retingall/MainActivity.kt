@@ -66,8 +66,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun refreshBD() {
         //Создаем изменяемый список в который будем помещать элементы из базы
-        val itemsTitle = mutableListOf<String>()
-        val itemsRating = mutableListOf<Float>()
+        val items = mutableListOf<Item>()
 
         //создаем курсор для просмотра БД
         val cursor = DBHelper(this).writableDatabase.query(DBHelper.TABLE_ITEMS,
@@ -81,9 +80,11 @@ class MainActivity : AppCompatActivity() {
         //пробегаем по курсору (по базе - построчно)
         if (cursor.moveToFirst()) {
             do {
+
                 //наполняем наш список элементами
-                itemsTitle.add(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)))
-                itemsRating.add(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_RATING)).toFloat())
+                items.add(Item(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)) + cursor.position,
+                        cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(DBHelper.KEY_RATING)).toFloat()))
 
             } while (cursor.moveToNext())
         } else {
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //устанвливаем адаптер для RecyclerView с значениями из базы данных
-        viewRecyclerView.adapter = MyAdapter(itemsTitle.toTypedArray(), itemsRating.toTypedArray(),this)
+        viewRecyclerView.adapter = MyAdapter(items,this)
 
         cursor.close()
     }

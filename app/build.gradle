@@ -21,15 +21,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     //подключаемся к библиотекам Material design от Google
     //обязательно версия должна совпадать с версией appcompat
     implementation 'com.android.support:design:28.0.0'
+
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     //сторонние библиотеки для компонентов
     implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
@@ -41,6 +44,9 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
+    //добавляем красивый swipelayout из своей GitHub fork
+    implementation 'com.github.archi39:swipe-reveal-layout:1.4.1'
+    //implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 
     //ниже подключаются зависисмости для тестирования
     androidTestImplementation 'junit:junit:4.12'

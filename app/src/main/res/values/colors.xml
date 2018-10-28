@@ -8,4 +8,5 @@
 
     <color name="colorListItemBG">#2176a6</color>
     <color name="colorProgressBarText">#def3ff</color>
+    <color name="btn_delete">#47c6ca</color>
 </resources>
