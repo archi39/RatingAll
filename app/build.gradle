@@ -45,7 +45,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //добавляем красивый swipelayout из своей GitHub fork
-    implementation 'com.github.archi39:swipe-reveal-layout:1.4.1'
+    implementation 'com.github.archi39:SwipeRevealLayout:b22264722f'
     //implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 
     //ниже подключаются зависисмости для тестирования
