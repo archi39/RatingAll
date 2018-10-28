@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_add_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddActivity">
+    tools:context=".EditActivity">
 
     <include layout="@layout/app_bar" />
 
@@ -66,40 +66,16 @@
 
         </LinearLayout>
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/view_simple_image"
-            android:layout_width="@dimen/photo_width"
-            android:layout_height="203dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="8dp"
-            app:failureImage="@drawable/ic_error_outline"
-            app:failureImageScaleType="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:placeholderImage="@drawable/ic_image"
-            app:placeholderImageScaleType="center" />
-
 
         <Button
-            android:id="@+id/but_snapshot"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title_button_snapshot" />
-
-        <Button
-            android:id="@+id/but_submit"
+            android:id="@+id/but_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/title_button_add"
+            android:text="@string/title_end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_text_number" />
+            />
 
     </LinearLayout>
 

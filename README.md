@@ -34,7 +34,9 @@
             <div> <ul>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Разобраться с использованием JitPack </li>                
             </ul></div>
-        </div>       
+        </div>
+        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
+                    Добавить возможность фильтрации по тегам</div>       
     </dd>
     <dt><b> Визуальные плюхи: </b></dt>
     <dd>

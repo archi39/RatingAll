@@ -1,6 +1,7 @@
 package com.dogvscat.retingall
 
 import android.content.Context
+import android.content.Intent
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -18,6 +19,7 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
                 private val mContext: Context) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
+    private val REQUESTCODEEDIT: Int = 1
     private val itemsList: MutableList<Item> = items
 
     // добавил код со страницы swypelayout
@@ -65,9 +67,8 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
 
         //редактирование карточки
         holder.cardEdit.setOnClickListener {
-
-            Log.d(LOGDEBUGTAG, "Карточка id:${item.item_id},title:${item.item_title} отредактирована")
-            Snackbar.make(viewRecyclerView, "Запись ${item.item_title} отредактирована", Snackbar.LENGTH_SHORT).show()
+            mContext.startActivity(Intent(mContext,EditActivity::class.java))
+            Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления элемента")
         }
 
     }
