@@ -14,8 +14,10 @@ import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 
+
+
 class MyAdapter(private val viewRecyclerView: RecyclerView,
-                private val items: MutableList<Item>,
+                items: MutableList<Item>,
                 private val mContext: Context) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
@@ -67,8 +69,10 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
 
         //редактирование карточки
         holder.cardEdit.setOnClickListener {
-            mContext.startActivity(Intent(mContext,EditActivity::class.java))
-            Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления элемента")
+            val intent = Intent(mContext,EditActivity::class.java)
+            intent.putExtra("item_id", item.item_id)
+            Log.d(LOGDEBUGTAG, "Обработали нажатие")
+            mContext.startActivity(intent)
         }
 
     }
