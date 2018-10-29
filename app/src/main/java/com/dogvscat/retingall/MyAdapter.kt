@@ -21,7 +21,6 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
                 private val mContext: Context) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
-    private val REQUESTCODEEDIT: Int = 1
     private val itemsList: MutableList<Item> = items
 
     // добавил код со страницы swypelayout
@@ -71,7 +70,7 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
         holder.cardEdit.setOnClickListener {
             val intent = Intent(mContext,EditActivity::class.java)
             intent.putExtra("item_id", item.item_id)
-            Log.d(LOGDEBUGTAG, "Обработали нажатие")
+            Log.d(LOGDEBUGTAG, "Обработали нажатие на ${item.item_id}")
             mContext.startActivity(intent)
         }
 
