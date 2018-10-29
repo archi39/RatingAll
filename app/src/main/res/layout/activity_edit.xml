@@ -69,7 +69,7 @@
 
 
         <Button
-            android:id="@+id/but_end"
+            android:id="@+id/btn_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
