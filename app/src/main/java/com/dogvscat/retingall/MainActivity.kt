@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
     private val REQUESTCODEADD: Int = 0
+    private val REQUESTCODEEDIT: Int = 1
 
     //объявляем ссылки на элементы формы
     private lateinit var layoutMain: View
@@ -124,7 +125,6 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         refreshBD()
-
         Log.d(LOGDEBUGTAG, "Добавили новую карточку")
     }
 

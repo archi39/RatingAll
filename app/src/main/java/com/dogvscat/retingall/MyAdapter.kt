@@ -1,5 +1,6 @@
 package com.dogvscat.retingall
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
@@ -13,7 +14,6 @@ import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
-
 
 
 class MyAdapter(private val viewRecyclerView: RecyclerView,
@@ -71,9 +71,8 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
             val intent = Intent(mContext,EditActivity::class.java)
             intent.putExtra("item_id", item.item_id)
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${item.item_id}")
-            mContext.startActivity(intent)
+            (mContext as Activity).startActivityForResult(intent,1)
         }
-
     }
 
     override fun getItemCount(): Int = itemsList.size

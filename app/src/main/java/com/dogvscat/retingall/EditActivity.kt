@@ -1,6 +1,8 @@
 package com.dogvscat.retingall
 
+import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -51,7 +53,8 @@ class EditActivity : AppCompatActivity() {
                     DBHelper.KEY_ID + " = ? ",
                     arrayOf(itemId))
             database.close()
-            //закрываем активити
+            //закрываем активити возвращаемся в главное окно
+            setResult(Activity.RESULT_OK, Intent())
             finish()
         }
     }
