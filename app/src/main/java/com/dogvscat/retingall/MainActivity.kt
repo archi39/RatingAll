@@ -14,8 +14,14 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.app_bar.*
+
 
 class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
@@ -38,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         //получаем ссылки на элементы графического интерфейса
         layoutMain = findViewById(R.id.layout_activity_main)
         viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
-        val linerlLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false )
+        val linearlLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
         //https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
@@ -47,7 +53,31 @@ class MainActivity : AppCompatActivity() {
         itemAnimator.removeDuration = 500
         viewRecyclerView.setItemAnimator(itemAnimator)
 
-        viewRecyclerView.layoutManager = linerlLayoutManager
+        viewRecyclerView.layoutManager = linearlLayoutManager
+
+        //#Тестируем работу со spiner - создаем массив значений
+        val data = arrayOf("one", "two", "three", "four", "five")
+        // адаптер
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        val spinner = findViewById<View>(R.id.spinner) as Spinner
+        spinner.adapter = adapter
+        // заголовок
+        spinner.prompt = "Title"
+        // выделяем элемент
+        spinner.setSelection(2)
+        // устанавливаем обработчик нажатия
+        spinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View,
+                                        position: Int, id: Long) {
+                // показываем позиция нажатого элемента
+                Toast.makeText(baseContext, "Position = $position", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNothingSelected(arg0: AdapterView<*>) {}
+        }
+        //#конец теста со спинерами
 
 
         //наполняем экран данными из базы
@@ -86,11 +116,11 @@ class MainActivity : AppCompatActivity() {
 
             } while (cursor.moveToNext())
         } else {
-            Snackbar.make(layoutMain, getString(R.string.action_empty_db) , Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
         }
 
         //устанвливаем адаптер для RecyclerView с значениями из базы данных
-        viewRecyclerView.adapter = MyAdapter(viewRecyclerView,items,this)
+        viewRecyclerView.adapter = MyAdapter(viewRecyclerView, items, this)
 
         cursor.close()
     }
@@ -108,7 +138,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_item_clear_db -> {
                 val database: SQLiteDatabase = DBHelper(this).writableDatabase
-                database.delete(DBHelper.TABLE_ITEMS,null,null)
+                database.delete(DBHelper.TABLE_ITEMS, null, null)
                 //подобным образом происходит перерисовка view т.к. adapter = null -соответственно
                 //на экране ничего не отобразится
                 viewRecyclerView.adapter = null

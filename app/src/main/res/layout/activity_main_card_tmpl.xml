@@ -89,6 +89,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/view_text_tags"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="@string/string_test_tags"
+                android:textColor="@color/colorFontItemTag"
+                android:padding="5dp"/>
+
             <at.grabner.circleprogress.CircleProgressView
                 android:id="@+id/circle_view_card"
                 android:layout_width="match_parent"

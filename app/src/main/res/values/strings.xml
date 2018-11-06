@@ -14,6 +14,7 @@
                 Гости видят: во дворце\n
                 Царь сидит в своем венце
     </string>
+    <string name="string_test_tags">#Тестовый</string>
 
     <string name="default_view_text_number">0</string>
 
