@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     //объявляем ссылки на элементы формы
     private lateinit var layoutMain: View
     private lateinit var viewRecyclerView: RecyclerView
+    private lateinit var database: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         val itemAnimator = DefaultItemAnimator()
         itemAnimator.addDuration = 500
         itemAnimator.removeDuration = 500
-        viewRecyclerView.setItemAnimator(itemAnimator)
+        viewRecyclerView.itemAnimator = itemAnimator
 
         viewRecyclerView.layoutManager = linearlLayoutManager
 
@@ -79,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
         //#конец теста со спинерами
 
-
         //наполняем экран данными из базы
         refreshBD()
 
@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(Intent(this, AddActivity::class.java), REQUESTCODEADD)
             Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления элемента")
         }
+
     }
 
     /**
@@ -95,9 +96,11 @@ class MainActivity : AppCompatActivity() {
     private fun refreshBD() {
         //Создаем изменяемый список в который будем помещать элементы из базы
         val items = mutableListOf<Item>()
+        database = DBHelper(this).writableDatabase
+        Log.d(LOGDEBUGTAG, " --- Версия базы данных database v." + database.getVersion() + " --- ");
 
         //создаем курсор для просмотра БД
-        val cursor = DBHelper(this).writableDatabase.query(DBHelper.TABLE_ITEMS,
+        val cursor = database.query(DBHelper.TABLE_ITEMS,
                 null,
                 null,
                 null,
@@ -137,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.menu_item_clear_db -> {
-                val database: SQLiteDatabase = DBHelper(this).writableDatabase
+                database = DBHelper(this).writableDatabase
                 database.delete(DBHelper.TABLE_ITEMS, null, null)
                 //подобным образом происходит перерисовка view т.к. adapter = null -соответственно
                 //на экране ничего не отобразится
