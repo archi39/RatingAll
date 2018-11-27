@@ -36,7 +36,15 @@
             </ul></div>
         </div>
         <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
-                    Добавить возможность фильтрации по тегам</div>       
+                    Добавить возможность фильтрации по тегам</div>
+            <div> <ul>
+                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Доработать архитектуру базы данных, для хранения тэгов </li>
+                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Обновить базу без потери данных пользователя </li>
+                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Настроить корректное отображение тэгов на экране </li>
+                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Добавить возможность добавления тэгов </li>
+                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Добавить возможность редактирования тэгов </li>
+                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Добавить возможность удаления тэгов </li>
+            </ul></div>       
     </dd>
     <dt><b> Визуальные плюхи: </b></dt>
     <dd>
