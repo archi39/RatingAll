@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     //объявляем ссылки на элементы формы
     private lateinit var layoutMain: View
     private lateinit var viewRecyclerView: RecyclerView
+    private lateinit var viewSpinner: Spinner
     private lateinit var database: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         //получаем ссылки на элементы графического интерфейса
         layoutMain = findViewById(R.id.layout_activity_main)
         viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
+        viewSpinner = findViewById<View>(R.id.spinner) as Spinner
         val linearlLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
@@ -57,19 +59,19 @@ class MainActivity : AppCompatActivity() {
         viewRecyclerView.layoutManager = linearlLayoutManager
 
         //#Тестируем работу со spiner - создаем массив значений
+        /*
         val data = arrayOf("one", "two", "three", "four", "five")
         // адаптер
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val spinner = findViewById<View>(R.id.spinner) as Spinner
-        spinner.adapter = adapter
+        viewSpinner.adapter = adapter
         // заголовок
-        spinner.prompt = "Title"
+        viewSpinner.prompt = "Title"
         // выделяем элемент
-        spinner.setSelection(2)
+        viewSpinner.setSelection(2)
         // устанавливаем обработчик нажатия
-        spinner.onItemSelectedListener = object : OnItemSelectedListener {
+        viewSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View,
                                         position: Int, id: Long) {
                 // показываем позиция нажатого элемента
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onNothingSelected(arg0: AdapterView<*>) {}
         }
-        //#конец теста со спинерами
+        //#конец теста со спинерами*/
 
         //наполняем экран данными из базы
         refreshBD()
@@ -96,13 +98,22 @@ class MainActivity : AppCompatActivity() {
     private fun refreshBD() {
         //Создаем изменяемый список в который будем помещать элементы из базы
         val items = mutableListOf<Item>()
-        val tags = mutableListOf<Item>()
+        val tags = mutableListOf<Tag>()
         database = DBHelper(this).writableDatabase
 
         Log.d(LOGDEBUGTAG, " --- Версия базы данных database v." + database.getVersion() + " --- ");
 
-        //создаем курсор для просмотра БД
-        val cursor = database.query(DBHelper.TABLE_ITEMS,
+        //создаем курсор для просмотра таблицы записей
+        val cursorItem = database.query(DBHelper.TABLE_ITEMS,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null)
+
+        //создаем курсор для просмотра таблицы тэгов
+        val cursorTag = database.query(DBHelper.TABLE_TAGS,
                 null,
                 null,
                 null,
@@ -111,23 +122,39 @@ class MainActivity : AppCompatActivity() {
                 null)
 
         //пробегаем по курсору (по базе - построчно)
-        if (cursor.moveToFirst()) {
+        if (cursorItem.moveToFirst()) {
             do {
 
                 //наполняем наш список элементами
-                items.add(Item(cursor.getString(cursor.getColumnIndex(DBHelper.KEY_ID)),
-                        cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE)),
-                        cursor.getString(cursor.getColumnIndex(DBHelper.KEY_RATING)).toFloat()))
-
-            } while (cursor.moveToNext())
+                items.add(Item(cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_ID)),
+                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_TITLE)),
+                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_RATING)).toFloat()))
+            } while (cursorItem.moveToNext())
         } else {
             Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
         }
 
-        //устанвливаем адаптер для RecyclerView с значениями из базы данных
-        viewRecyclerView.adapter = MyAdapter(viewRecyclerView, items, this)
+        if (cursorTag.moveToFirst()) {
+            do {
+                //наполняем наш список элементами
+                tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
+                        cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
 
-        cursor.close()
+                Log.d(LOGDEBUGTAG, "Tag: id - " +
+                        cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)) +
+                        "title - " + cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
+            } while (cursorItem.moveToNext())
+        } else {}
+
+        //устанавливаем адаптер для спиннера
+        viewSpinner.adapter = TagAdapter(viewSpinner,tags,this)
+
+
+        //устанавливаем адаптер для RecyclerView с значениями из базы данных
+        viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
+
+        cursorItem.close()
+        cursorTag.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -16,12 +16,11 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 
 
-class MyAdapter(private val viewRecyclerView: RecyclerView,
-                items: MutableList<Item>,
-                private val mContext: Context) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
+class ItemAdapter(private val viewRecyclerView: RecyclerView,
+                  private val itemsList: MutableList<Item>,
+                  private val mContext: Context) : RecyclerView.Adapter<ItemAdapter.MyHolder>() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
-    private val itemsList: MutableList<Item> = items
 
     // добавил код со страницы swypelayout
     // https://github.com/chthai64/SwipeRevealLayout
@@ -60,7 +59,7 @@ class MyAdapter(private val viewRecyclerView: RecyclerView,
 
             database.delete(DBHelper.TABLE_ITEMS, DBHelper.KEY_ID + "=" + item.item_id, null)
             itemsList.remove(item)
-            viewRecyclerView.adapter = MyAdapter(viewRecyclerView, itemsList, mContext)
+            viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, itemsList, mContext)
 
             Log.d(LOGDEBUGTAG, "Карточка id:${item.item_id},title:${item.item_title} удалена")
             Snackbar.make(viewRecyclerView, "Запись ${item.item_title} удалена", Snackbar.LENGTH_SHORT).show()
