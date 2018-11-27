@@ -19,26 +19,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        card_view:cardBackgroundColor="@color/colorListItemDelete"
+        card_view:cardBackgroundColor="@color/colorPrimary"
         card_view:cardCornerRadius="10dp">
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="30dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:text="@string/title_tag" />
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/title_tag"
+                android:id="@+id/view_text_tag_btn"/>
 
             <Spinner
                 android:id="@+id/spinner"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 
 

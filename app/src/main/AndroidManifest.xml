@@ -42,7 +42,17 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dogvscat.retingall.MainActivity" />>
+                android:value="com.dogvscat.retingall.MainActivity" />
+            >
+        </activity>
+        <activity
+            android:name=".AddTagActivity"
+            android:label="@string/title_activity_add_tag"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dogvscat.retingall.MainActivity" />
         </activity>
     </application>
 

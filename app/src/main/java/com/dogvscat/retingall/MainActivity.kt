@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import com.facebook.drawee.backends.pipeline.Fresco
+import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 
 
@@ -55,33 +56,13 @@ class MainActivity : AppCompatActivity() {
         itemAnimator.addDuration = 500
         itemAnimator.removeDuration = 500
         viewRecyclerView.itemAnimator = itemAnimator
-
         viewRecyclerView.layoutManager = linearlLayoutManager
 
-        //#Тестируем работу со spiner - создаем массив значений
-        /*
-        val data = arrayOf("one", "two", "three", "four", "five")
-        // адаптер
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        viewSpinner.adapter = adapter
-        // заголовок
-        viewSpinner.prompt = "Title"
-        // выделяем элемент
-        viewSpinner.setSelection(2)
-        // устанавливаем обработчик нажатия
-        viewSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View,
-                                        position: Int, id: Long) {
-                // показываем позиция нажатого элемента
-                Toast.makeText(baseContext, "Position = $position", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>) {}
+        //вызываем новое активити для добавления нового тэга
+        view_text_tag_btn.setOnClickListener {
+            startActivity(Intent(this,AddTagActivity::class.java))
+            Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления тэга")
         }
-        //#конец теста со спинерами*/
-
         //наполняем экран данными из базы
         refreshBD()
 

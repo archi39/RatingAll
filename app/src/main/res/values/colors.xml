@@ -11,6 +11,7 @@
     <color name="colorListItemDelete">#FF5B27</color>
     <color name="colorFontItemTag">#FFEAAE0A</color>
 
+
     <color name="colorProgressBarText">#def3ff</color>
     <color name="btn_delete">#47c6ca</color>
 </resources>
