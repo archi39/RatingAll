@@ -96,7 +96,9 @@ class MainActivity : AppCompatActivity() {
     private fun refreshBD() {
         //Создаем изменяемый список в который будем помещать элементы из базы
         val items = mutableListOf<Item>()
+        val tags = mutableListOf<Item>()
         database = DBHelper(this).writableDatabase
+
         Log.d(LOGDEBUGTAG, " --- Версия базы данных database v." + database.getVersion() + " --- ");
 
         //создаем курсор для просмотра БД

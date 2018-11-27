@@ -31,7 +31,7 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
                         "$KEY_ITEM_ID  INTEGER NOT NULL," +
                         "$KEY_TAG_ID INTEGER NOT NULL," +
                         "FOREIGN KEY ($KEY_ITEM_ID) REFERENCES $TABLE_ITEMS($KEY_ID)" +
-                        "FOREIGN KEY ($KEY_TAG_ID) REFERENCES $TABLE_TAGS($KEY_ID)")
+                        "FOREIGN KEY ($KEY_TAG_ID) REFERENCES $TABLE_TAGS($KEY_ID))")
                 db.setTransactionSuccessful()
             } finally {
                 db.endTransaction()
@@ -50,13 +50,12 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
                 "$KEY_ID integer primary key," +
                 "$KEY_TAG text)")
 
-        db.execSQL("PRAGMA foreign_keys=on")
+        db.execSQL("PRAGMA foreign_keys=on;")
         db.execSQL("create table $TABLE_ITEMS_TAGS (" +
                 "$KEY_ITEM_ID  INTEGER NOT NULL," +
                 "$KEY_TAG_ID INTEGER NOT NULL," +
-                "FOREIGN KEY ($KEY_ITEM_ID) REFERENCES $TABLE_ITEMS($KEY_ID)" +
-                "FOREIGN KEY ($KEY_TAG_ID) REFERENCES $TABLE_TAGS($KEY_ID)"
-        )
+                "FOREIGN KEY ($KEY_ITEM_ID) REFERENCES $TABLE_ITEMS($KEY_ID) " +
+                "FOREIGN KEY ($KEY_TAG_ID) REFERENCES $TABLE_TAGS($KEY_ID))")
     }
 
     //аналог final static полей Java
