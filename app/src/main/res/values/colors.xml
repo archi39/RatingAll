@@ -9,7 +9,7 @@
     <color name="colorListItemBG">#2176a6</color>
     <color name="colorListItemEdit">#eaae0a</color>
     <color name="colorListItemDelete">#FF5B27</color>
-    <color name="colorFontItemTag">#FFEAAE0A</color>
+    <color name="colorFontItemTag">#EAAE0A</color>
 
 
     <color name="colorProgressBarText">#def3ff</color>

@@ -60,15 +60,15 @@ class MainActivity : AppCompatActivity() {
 
         //вызываем новое активити для добавления нового тэга
         view_text_tag_btn.setOnClickListener {
+            Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления тэга")
             startActivity(Intent(this,AddTagActivity::class.java))
-            Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления тэга")
         }
         //наполняем экран данными из базы
         refreshBD()
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
+            Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления элемента")
             startActivityForResult(Intent(this, AddActivity::class.java), REQUESTCODEADD)
-            Log.d(LOGDEBUGTAG, "Перешли на страницу для добавления элемента")
         }
 
     }
@@ -129,8 +129,6 @@ class MainActivity : AppCompatActivity() {
 
         //устанавливаем адаптер для спиннера
         viewSpinner.adapter = TagAdapter(viewSpinner,tags,this)
-
-
         //устанавливаем адаптер для RecyclerView с значениями из базы данных
         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
 

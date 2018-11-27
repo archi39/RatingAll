@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.support.design.widget.CoordinatorLayout.Behavior.setTag
 import android.R.attr.name
+import android.graphics.Color
+import android.support.v4.content.ContextCompat.getColor
 import android.view.LayoutInflater
 import android.widget.*
 import java.util.zip.Inflater
@@ -41,6 +43,7 @@ class TagAdapter(private val spinner: Spinner,
 
         // заполняем View в пункте списка данными из списка тэгов: наименование
         (view!!.findViewById(R.id.view_text_tag) as TextView).setText(tag.item_title)
+        if(tag.item_title.equals("Добавить")) (view.findViewById(R.id.view_text_tag) as TextView).setTextColor(Color.YELLOW)
 
         return view
     }
