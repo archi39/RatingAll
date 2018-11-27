@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private val LOGDEBUGTAG: String = "POINT"
     private val REQUESTCODEADD: Int = 0
     private val REQUESTCODEEDIT: Int = 1
+    private val REQUESTCODEADDTAG: Int = 2
 
     //объявляем ссылки на элементы формы
     private lateinit var layoutMain: View
@@ -48,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         layoutMain = findViewById(R.id.layout_activity_main)
         viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
         viewSpinner = findViewById<View>(R.id.spinner) as Spinner
-        val linearlLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
         //https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
@@ -56,12 +56,13 @@ class MainActivity : AppCompatActivity() {
         itemAnimator.addDuration = 500
         itemAnimator.removeDuration = 500
         viewRecyclerView.itemAnimator = itemAnimator
-        viewRecyclerView.layoutManager = linearlLayoutManager
+
+        viewRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         //вызываем новое активити для добавления нового тэга
         view_text_tag_btn.setOnClickListener {
             Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления тэга")
-            startActivity(Intent(this,AddTagActivity::class.java))
+            startActivityForResult(Intent(this, AddTagActivity::class.java), REQUESTCODEADDTAG)
         }
         //наполняем экран данными из базы
         refreshBD()
