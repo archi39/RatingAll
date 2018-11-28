@@ -61,7 +61,8 @@ class AddTagActivity : AppCompatActivity() {
 
         if (cursorTag.moveToFirst()) {
             do {
-                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)) != "Добавить") {
+                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)).equals("Добавить"))
+                else {
                     //наполняем наш список элементами
                     tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                             cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
