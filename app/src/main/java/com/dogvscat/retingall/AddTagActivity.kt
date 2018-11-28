@@ -1,5 +1,9 @@
 package com.dogvscat.retingall
 
+import android.app.Activity
+import android.content.ContentValues
+import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +15,12 @@ import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_add_tag.*
 import kotlinx.android.synthetic.main.app_bar.*
 import android.view.LayoutInflater
+import kotlinx.android.synthetic.main.activity_add.*
 
 
 class AddTagActivity : AppCompatActivity() {
     lateinit var viewRecyclerTags: RecyclerView
+    lateinit var database: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +32,13 @@ class AddTagActivity : AppCompatActivity() {
         //резолвим ссылки на шаблон
         viewRecyclerTags = findViewById(R.id.view_recycler_tags)
         fillTag()
+
+        but_submit_tag.setOnClickListener {
+            val contentValues = ContentValues()
+            contentValues.put(DBHelper.KEY_TAG, edit_text_title_tag.text.toString())
+            database.insert(DBHelper.TABLE_ITEMS, null, contentValues)
+            fillTag()
+        }
     }
 
     /**
@@ -35,7 +48,7 @@ class AddTagActivity : AppCompatActivity() {
         val layoutInflater = this.layoutInflater
         //список содержащий строки таблицы тэгов
         val tags = mutableListOf<Tag>()
-        val database = DBHelper(this).writableDatabase
+        database = DBHelper(this).writableDatabase
 
         //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
         val cursorTag = database.query(DBHelper.TABLE_TAGS,

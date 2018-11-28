@@ -28,7 +28,7 @@
                 android:text="@string/title_view_text_add" />
 
             <EditText
-                android:id="@+id/edit_text_title"
+                android:id="@+id/edit_text_title_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -41,7 +41,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/but_submit"
+            android:id="@+id/but_submit_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -53,7 +53,7 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:id="@+id/view_recycler_tags"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp" />
 
      </LinearLayout>
 
