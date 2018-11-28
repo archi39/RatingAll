@@ -13,9 +13,9 @@ import android.widget.*
 import java.util.zip.Inflater
 
 
-class TagAdapter(private val spinner: Spinner,
-                 private val tags: MutableList<Tag>,
-                 private val mContext: Context) : BaseAdapter() {
+class TagAdapterSpinner(private val spinner: Spinner,
+                        private val tags: MutableList<Tag>,
+                        private val mContext: Context) : BaseAdapter() {
 
 
     override fun getCount(): Int {

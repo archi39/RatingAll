@@ -28,7 +28,6 @@ class AddActivity : AppCompatActivity() {
     private val LOGDEBUGTAG: String = "POINT"
     private val TAKE_PHOTO_REQUEST: Int = 0
     private var mCurrentPhotoPath: String = "none"
-    //lateinit var dbHelper: DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +40,6 @@ class AddActivity : AppCompatActivity() {
         //не особо представляю зачем это взято из примера
         ButterKnife.bind(this)
         //работаем с базой данных
-       // dbHelper = DBHelper(this)
         val database: SQLiteDatabase = DBHelper(this).writableDatabase
         val contentValues = ContentValues()
 

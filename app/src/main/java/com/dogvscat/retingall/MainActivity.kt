@@ -14,11 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.Toast
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*
@@ -94,14 +90,14 @@ class MainActivity : AppCompatActivity() {
                 null,
                 null)
 
-        //создаем курсор для просмотра таблицы тэгов
+        //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
         val cursorTag = database.query(DBHelper.TABLE_TAGS,
                 null,
                 null,
                 null,
                 null,
                 null,
-                null)
+                DBHelper.KEY_ID + " DESC")
 
         //пробегаем по курсору (по базе - построчно)
         if (cursorItem.moveToFirst()) {
@@ -125,11 +121,11 @@ class MainActivity : AppCompatActivity() {
                 Log.d(LOGDEBUGTAG, "Tag: id - " +
                         cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)) +
                         "title - " + cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
-            } while (cursorItem.moveToNext())
+            } while (cursorTag.moveToNext())
         } else {}
 
         //устанавливаем адаптер для спиннера
-        viewSpinner.adapter = TagAdapter(viewSpinner,tags,this)
+        viewSpinner.adapter = TagAdapterSpinner(viewSpinner,tags,this)
         //устанавливаем адаптер для RecyclerView с значениями из базы данных
         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
 
