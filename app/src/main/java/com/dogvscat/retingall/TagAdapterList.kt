@@ -34,7 +34,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
     //раздули элемент из макета и вернули в адаптер ссылку на элемент
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): MyHolderTag {
 
-        val view = LayoutInflater.from(p0.context).inflate(R.layout.activity_main_tag_tmpl,
+        val view = LayoutInflater.from(p0.context).inflate(R.layout.activity_add_tag_tmpl,
                 p0, false)
         return MyHolderTag(view, mContext)
     }

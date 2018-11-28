@@ -36,7 +36,7 @@ class AddTagActivity : AppCompatActivity() {
         but_submit_tag.setOnClickListener {
             val contentValues = ContentValues()
             contentValues.put(DBHelper.KEY_TAG, edit_text_title_tag.text.toString())
-            database.insert(DBHelper.TABLE_ITEMS, null, contentValues)
+            database.insert(DBHelper.TABLE_TAGS, null, contentValues)
             fillTag()
         }
     }

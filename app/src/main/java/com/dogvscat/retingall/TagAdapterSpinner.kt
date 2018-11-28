@@ -1,16 +1,11 @@
 package com.dogvscat.retingall
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.support.design.widget.CoordinatorLayout.Behavior.setTag
-import android.R.attr.name
 import android.graphics.Color
-import android.support.v4.content.ContextCompat.getColor
 import android.view.LayoutInflater
 import android.widget.*
-import java.util.zip.Inflater
 
 
 class TagAdapterSpinner(private val spinner: Spinner,
