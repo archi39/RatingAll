@@ -3,6 +3,7 @@ package com.dogvscat.retingall
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.widget.LinearLayout
@@ -12,9 +13,8 @@ import kotlinx.android.synthetic.main.app_bar.*
 import android.view.LayoutInflater
 
 
-
 class AddTagActivity : AppCompatActivity() {
-    lateinit var linearLayoutTagsContainer: LinearLayout
+    lateinit var viewRecyclerTags: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class AddTagActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //резолвим ссылки на шаблон
-        linearLayoutTagsContainer = findViewById(R.id.linearLayoutTagsContainer)
+        viewRecyclerTags = findViewById(R.id.view_recycler_tags)
         fillTag()
     }
 
@@ -33,7 +33,7 @@ class AddTagActivity : AppCompatActivity() {
      */
     private fun fillTag() {
         val layoutInflater = this.layoutInflater
-
+        //список содержащий строки таблицы тэгов
         val tags = mutableListOf<Tag>()
         val database = DBHelper(this).writableDatabase
 
@@ -48,16 +48,17 @@ class AddTagActivity : AppCompatActivity() {
 
         if (cursorTag.moveToFirst()) {
             do {
-                //наполняем наш список элементами
-                tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
-                        cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
+                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)) != "Добавить") {
+                    //наполняем наш список элементами
+                    tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
+                            cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
+                }
+            } while (cursorTag.moveToNext())
+        }
 
-                Log.d(LOGDEBUGTAG, "Tag: id - " +
-                        cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)) +
-                        "title - " + cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
-            } while (cursorItem.moveToNext())
-        } else {}
-
+        //устанавливаем адаптер для нашего списка
+        viewRecyclerTags.adapter = TagAdapterList(viewRecyclerTags, tags, this)
+        cursorTag.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
