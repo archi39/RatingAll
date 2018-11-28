@@ -18,7 +18,6 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
                      private val tagList: MutableList<Tag>,
                      private val mContext: Context) : RecyclerView.Adapter<TagAdapterList.MyHolderTag>() {
 
-
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
 

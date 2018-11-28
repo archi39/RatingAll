@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         val tags = mutableListOf<Tag>()
         database = DBHelper(this).writableDatabase
 
-        Log.d(LOGDEBUGTAG, " --- Версия базы данных database v." + database.getVersion() + " --- ");
+        Log.d(LOGDEBUGTAG, " --- Версия базы данных database v." + database.getVersion() + " --- ")
 
         //создаем курсор для просмотра таблицы записей
         val cursorItem = database.query(DBHelper.TABLE_ITEMS,

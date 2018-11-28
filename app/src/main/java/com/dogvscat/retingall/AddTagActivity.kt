@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_add.*
 class AddTagActivity : AppCompatActivity() {
     lateinit var viewRecyclerTags: RecyclerView
     lateinit var database: SQLiteDatabase
+    private val LOGDEBUGTAG: String = "POINT"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,6 @@ class AddTagActivity : AppCompatActivity() {
      * Функция наполняет activity списком тэгов из базы
      */
     private fun fillTag() {
-        val layoutInflater = this.layoutInflater
         //список содержащий строки таблицы тэгов
         val tags = mutableListOf<Tag>()
         database = DBHelper(this).writableDatabase
@@ -64,8 +64,10 @@ class AddTagActivity : AppCompatActivity() {
                 if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)).equals("Добавить"))
                 else {
                     //наполняем наш список элементами
-                    tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
-                            cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
+                    val tag = Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
+                            cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
+                    tags.add(tag)
+                    Log.d(LOGDEBUGTAG, " --- TAG id: " + tag.item_id + ", title: " + tag.item_title)
                 }
             } while (cursorTag.moveToNext())
         }
