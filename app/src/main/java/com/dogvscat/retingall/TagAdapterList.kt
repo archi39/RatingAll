@@ -20,6 +20,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
 
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
+    private val REQUESTCODEADDTAG: Int = 2
 
     // добавил код со страницы swypelayout
     // https://github.com/chthai64/SwipeRevealLayout
@@ -55,7 +56,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
         holder.cardDelete.setOnClickListener {
             val database = DBHelper(mContext).writableDatabase
 
-            database.delete(DBHelper.TABLE_ITEMS, DBHelper.KEY_ID + "=" + tag.item_id, null)
+            database.delete(DBHelper.TABLE_TAGS, DBHelper.KEY_ID + "=" + tag.item_id, null)
             tagList.remove(tag)
             viewRecyclerView.adapter = TagAdapterList(viewRecyclerView, tagList, mContext)
 
@@ -68,7 +69,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
             val intent = Intent(mContext,EditActivity::class.java)
             intent.putExtra("item_id", tag.item_id)
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${tag.item_id}")
-            (mContext as Activity).startActivityForResult(intent,1)
+            (mContext as Activity).startActivityForResult(intent,REQUESTCODEADDTAG)
         }
     }
 
