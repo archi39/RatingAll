@@ -79,8 +79,6 @@ class MainActivity : AppCompatActivity() {
         val tags = mutableListOf<Tag>()
         database = DBHelper(this).writableDatabase
 
-        Log.d(LOGDEBUGTAG, " --- Версия базы данных database v." + database.getVersion() + " --- ")
-
         //создаем курсор для просмотра таблицы записей
         val cursorItem = database.query(DBHelper.TABLE_ITEMS,
                 null,
@@ -102,7 +100,6 @@ class MainActivity : AppCompatActivity() {
         //пробегаем по курсору (по базе - построчно)
         if (cursorItem.moveToFirst()) {
             do {
-
                 //наполняем наш список элементами
                 items.add(Item(cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_ID)),
                         cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_TITLE)),
@@ -117,10 +114,6 @@ class MainActivity : AppCompatActivity() {
                 //наполняем наш список элементами
                 tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                         cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
-
-                Log.d(LOGDEBUGTAG, "Tag: id - " +
-                        cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)) +
-                        "title - " + cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
             } while (cursorTag.moveToNext())
         } else {}
 

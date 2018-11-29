@@ -32,7 +32,6 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
 
     //раздули элемент из макета и вернули в адаптер ссылку на элемент
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): MyHolderTag {
-
         val view = LayoutInflater.from(p0.context).inflate(R.layout.activity_add_tag_tmpl,
                 p0, false)
         return MyHolderTag(view, mContext)
@@ -80,7 +79,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
      */
     class MyHolderTag(itemView: View, private val mContent: Context) : RecyclerView.ViewHolder(itemView) {
         val swipeLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout_tag)
-        val cardDelete: CardView = itemView.findViewById(R.id.card_delete_tag)
+        val cardDelete: CardView = itemView.findViewById(R.id.card_delete_tag) as CardView
         val cardEdit: CardView = itemView.findViewById(R.id.card_edit_tag)
         private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card_tag) as TextView
 

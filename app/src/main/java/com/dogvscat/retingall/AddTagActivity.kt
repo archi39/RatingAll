@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
@@ -32,6 +33,7 @@ class AddTagActivity : AppCompatActivity() {
 
         //резолвим ссылки на шаблон
         viewRecyclerTags = findViewById(R.id.view_recycler_tags)
+        viewRecyclerTags.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         fillTag()
 
         but_submit_tag.setOnClickListener {
@@ -67,10 +69,10 @@ class AddTagActivity : AppCompatActivity() {
                     val tag = Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                             cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
                     tags.add(tag)
-                    Log.d(LOGDEBUGTAG, " --- TAG id: " + tag.item_id + ", title: " + tag.item_title)
                 }
             } while (cursorTag.moveToNext())
         }
+
 
         //устанавливаем адаптер для нашего списка
         viewRecyclerTags.adapter = TagAdapterList(viewRecyclerTags, tags, this)
