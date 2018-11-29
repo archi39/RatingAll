@@ -21,6 +21,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
                   private val mContext: Context) : RecyclerView.Adapter<ItemAdapter.MyHolder>() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
+    private val REQUESTCODEEDIT: Int = 1
 
     // добавил код со страницы swypelayout
     // https://github.com/chthai64/SwipeRevealLayout
@@ -70,7 +71,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             val intent = Intent(mContext,EditActivity::class.java)
             intent.putExtra("item_id", item.item_id)
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${item.item_id}")
-            (mContext as Activity).startActivityForResult(intent,1)
+            (mContext as Activity).startActivityForResult(intent,REQUESTCODEEDIT)
         }
     }
 

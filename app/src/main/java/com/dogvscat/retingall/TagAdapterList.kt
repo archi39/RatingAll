@@ -4,9 +4,11 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.ProgressDialog.show
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings.Global.getString
+import android.provider.SyncStateContract.Helpers.update
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentManager
 import android.support.v7.widget.CardView
@@ -77,9 +79,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
             intent.putExtra("item_id", tag.item_id)
 
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${tag.item_id}")
-            showCreateCategoryDialog()
-
-            //(mContext as Activity).startActivityForResult(intent,REQUESTCODEADDTAG)
+            showCreateCategoryDialog(tag)
         }
     }
 
@@ -87,7 +87,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
      * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
      * создает собственное диалоговое окно
      */
-    fun showCreateCategoryDialog() {
+    fun showCreateCategoryDialog(tag: Tag) {
         val builder = AlertDialog.Builder(mContext)
         builder.setTitle("Редактирование")
 
@@ -107,7 +107,16 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
                 isValid = false
             }
 
-            if (isValid) Snackbar.make(viewRecyclerView, "Тэг успешно изменен на ${editText.text}", Snackbar.LENGTH_SHORT).show()
+            if (isValid) {
+                Snackbar.make(viewRecyclerView, "Тэг ${tag.item_title} успешно изменен на ${editText.text}", Snackbar.LENGTH_SHORT).show()
+                tag.item_title = editText.text.toString()
+                val database = DBHelper(mContext).writableDatabase
+                val contentValues = ContentValues()
+                contentValues.put(DBHelper.KEY_TAG,editText.text.toString())
+                // обновляем по id
+                database.update(DBHelper.TABLE_TAGS, contentValues, "_id = ?", arrayOf<String>(tag.item_id))
+                viewRecyclerView.adapter = TagAdapterList(viewRecyclerView, tagList, mContext)
+            }
             if (isValid) dialog.dismiss()
         }
 
@@ -115,7 +124,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
             dialog.cancel()
         }
 
-        builder.show();
+        builder.show()
     }
 
 
