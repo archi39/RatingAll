@@ -40,14 +40,15 @@
             <div> <ul>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Доработать архитектуру базы данных, для хранения тэгов </li>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Обновить базу без потери данных пользователя </li>
-                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Настроить корректное отображение тэгов на экране </li>
+                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Настроить корректное отображение тэгов на экране </li>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить возможность добавления тэгов </li>
                 <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Добавить возможность редактирования тэгов 
                     <ul><li>Реализовать перезагрузку данных из базы в основном окне, после выхода из активити тэга</li>
                     <li>Реализовать редактирование на базе окна диалога</li></ul>
                 </li>
                 <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Добавить возможность удаления тэгов </li>
-            </ul></div>       
+            </ul></div> 
+        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Переработать ссылку горизонтального меню "Очистка базы" с учетом новой структуры базы данных приложения</div>      
     </dd>
     <dt><b> Визуальные плюхи: </b></dt>
     <dd>
