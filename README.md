@@ -47,6 +47,7 @@
                     <li><s>Реализовать редактирование на базе окна диалога</s></li></ul>
                 </li>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить возможность удаления тэгов </li>
+                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Переписать окно редактирования элементов с возможностью выставления тэгов</li>
             </ul></div> 
         <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Переработать ссылку горизонтального меню "Очистка базы" с учетом новой структуры базы данных приложения</div>      
     </dd>
