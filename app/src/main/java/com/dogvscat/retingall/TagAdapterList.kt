@@ -1,16 +1,23 @@
 package com.dogvscat.retingall
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
+import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings.Global.getString
 import android.support.design.widget.Snackbar
+import android.support.v4.app.FragmentManager
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 
@@ -66,12 +73,51 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
 
         //редактирование карточки
         holder.cardEdit.setOnClickListener {
-            val intent = Intent(mContext,EditActivity::class.java)
+            val intent = Intent(mContext, EditActivity::class.java)
             intent.putExtra("item_id", tag.item_id)
+
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${tag.item_id}")
-            (mContext as Activity).startActivityForResult(intent,REQUESTCODEADDTAG)
+            showCreateCategoryDialog()
+
+            //(mContext as Activity).startActivityForResult(intent,REQUESTCODEADDTAG)
         }
     }
+
+    /**
+     * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
+     * создает собственное диалоговое окно
+     */
+    fun showCreateCategoryDialog() {
+        val builder = AlertDialog.Builder(mContext)
+        builder.setTitle("Редактирование")
+
+        // https://stackoverflow.com/questions/10695103/creating-custom-alertdialog-what-is-the-root-view
+        // Seems ok to inflate view with null rootView
+        val view = (mContext as Activity).layoutInflater.inflate(R.layout.dialog_tag_edit, null)
+        val editText = view.findViewById<EditText>(R.id.edit_text_title_tag_dialog)
+
+        builder.setView(view)
+
+        // set up the ok button
+        builder.setPositiveButton("Ок") { dialog, _ ->
+            val newCategory = editText.text
+            var isValid = true
+            if (newCategory.isBlank()) {
+                editText.error = "Ошибка"
+                isValid = false
+            }
+
+            if (isValid) Snackbar.make(viewRecyclerView, "Тэг успешно изменен на ${editText.text}", Snackbar.LENGTH_SHORT).show()
+            if (isValid) dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Отмена") { dialog, _ ->
+            dialog.cancel()
+        }
+
+        builder.show();
+    }
+
 
     override fun getItemCount(): Int = tagList.size
 
