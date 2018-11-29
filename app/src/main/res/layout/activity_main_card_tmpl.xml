@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:text="@string/string_test_tags"
+                android:text="@string/title_empty"
                 android:textColor="@color/colorFontItemTag"
                 android:padding="5dp"/>
 

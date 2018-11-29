@@ -9,98 +9,110 @@
 
     <include layout="@layout/app_bar" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/title_view_text_add" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/edit_text_title"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/title_view_text_add" />
+
+                <EditText
+                    android:id="@+id/edit_text_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="textPersonName"
+                    android:labelFor="@id/edit_text_title"
+                    tools:targetApi="o" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/title_view_text_respect" />
+
+                <EditText
+                    android:id="@+id/edit_text_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:labelFor="@id/edit_text_number"
+                    android:text="@string/default_view_text_number"
+                    tools:targetApi="o" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:background="@color/colorPrimaryDark"/>
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/view_simple_image"
+                android:layout_width="@dimen/photo_width"
+                android:layout_height="203dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="8dp"
+                app:failureImage="@drawable/ic_error_outline"
+                app:failureImageScaleType="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:placeholderImage="@drawable/ic_image"
+                app:placeholderImageScaleType="center" />
+
+
+            <Button
+                android:id="@+id/but_snapshot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_button_snapshot" />
+
+            <Button
+                android:id="@+id/but_submit"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
-                android:labelFor="@id/edit_text_title"
-                tools:targetApi="o" />
+                android:text="@string/title_button_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_text_number" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/title_view_text_respect" />
-
-            <EditText
-                android:id="@+id/edit_text_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:labelFor="@id/edit_text_number"
-                android:text="@string/default_view_text_number"
-                tools:targetApi="o" />
-
-        </LinearLayout>
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/view_simple_image"
-            android:layout_width="@dimen/photo_width"
-            android:layout_height="203dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="8dp"
-            app:failureImage="@drawable/ic_error_outline"
-            app:failureImageScaleType="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:placeholderImage="@drawable/ic_image"
-            app:placeholderImageScaleType="center" />
-
-
-        <Button
-            android:id="@+id/but_snapshot"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title_button_snapshot" />
-
-        <Button
-            android:id="@+id/but_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/title_button_add"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_text_number" />
-
-    </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
