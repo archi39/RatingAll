@@ -87,7 +87,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
          * Функция усланавливает значения элементов каточки - из данных переданных адаптером
          */
         fun index(str: String) {
-            viewTextCard.text = str
+            viewTextCard.text = "#" + str
         }
     }
 
