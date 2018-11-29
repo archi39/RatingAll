@@ -42,9 +42,9 @@
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Обновить базу без потери данных пользователя </li>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Настроить корректное отображение тэгов на экране </li>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить возможность добавления тэгов </li>
-                <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Добавить возможность редактирования тэгов 
-                    <ul><li>Реализовать перезагрузку данных из базы в основном окне, после выхода из активити тэга</li>
-                    <li>Реализовать редактирование на базе окна диалога</li></ul>
+                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить возможность редактирования тэгов 
+                    <ul><li><s>Реализовать перезагрузку данных из базы в основном окне, после выхода из активити тэга</s></li>
+                    <li><s>Реализовать редактирование на базе окна диалога</s></li></ul>
                 </li>
                 <li> <img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Добавить возможность удаления тэгов </li>
             </ul></div> 
