@@ -10,7 +10,11 @@ import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
+import android.view.View
 import butterknife.ButterKnife
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
@@ -28,6 +32,8 @@ class AddActivity : AppCompatActivity() {
     private val LOGDEBUGTAG: String = "POINT"
     private val TAKE_PHOTO_REQUEST: Int = 0
     private var mCurrentPhotoPath: String = "none"
+    private lateinit var viewRecyclerTagsAdd:RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,12 @@ class AddActivity : AppCompatActivity() {
         //включаем toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //resolve элементы формы
+        viewRecyclerTagsAdd = findViewById<View>(R.id.view_recycler_tags_add) as RecyclerView
+        //указываем способ компоновки данных в списке
+        viewRecyclerTagsAdd.layoutManager = GridLayoutManager(this, 3)
+        fillTag()
 
         //не особо представляю зачем это взято из примера
         ButterKnife.bind(this)
@@ -58,6 +70,38 @@ class AddActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
+    }
+
+    private fun fillTag() {
+        //список содержащий строки таблицы тэгов
+        val tags = mutableListOf<Tag>()
+        val database = DBHelper(this).writableDatabase
+
+        //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
+        val cursorTag = database.query(DBHelper.TABLE_TAGS,
+                null,
+                null,
+                null,
+                null,
+                null,
+                DBHelper.KEY_ID + " DESC")
+
+        if (cursorTag.moveToFirst()) {
+            do {
+                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)).equals("Добавить"))
+                else {
+                    //наполняем наш список элементами
+                    val tag = Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
+                            cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
+                    tags.add(tag)
+                }
+            } while (cursorTag.moveToNext())
+        }
+
+
+        //устанавливаем адаптер для нашего списка
+        viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, tags, this)
+        cursorTag.close()
     }
 
     /**

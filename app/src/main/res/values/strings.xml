@@ -26,11 +26,13 @@
     <string name="title_activity_edit">Редактирование</string>
     <string name="title_button_add">Добавить</string>
     <string name="title_button_snapshot">Добавить фото</string>
+    <string name="title_new">Новый</string>
     <string name="title_delete">Удалить</string>
     <string name="title_edit">Редактировать</string>
     <string name="title_end">Закончить</string>
     <string name="title_tag">#Тэги</string>
     <string name="title_empty">Empty</string>
+    <string name="title_set_tag">Установить #ТЭГ</string>
 
 
     <string name="title_menu_settings">Настройки</string>
