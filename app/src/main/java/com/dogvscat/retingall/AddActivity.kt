@@ -15,6 +15,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
 import butterknife.ButterKnife
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
@@ -32,7 +34,8 @@ class AddActivity : AppCompatActivity() {
     private val LOGDEBUGTAG: String = "POINT"
     private val TAKE_PHOTO_REQUEST: Int = 0
     private var mCurrentPhotoPath: String = "none"
-    private lateinit var viewRecyclerTagsAdd:RecyclerView
+    private lateinit var viewRecyclerTagsAdd: RecyclerView
+    private val tags: MutableList<Tag> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,15 +48,22 @@ class AddActivity : AppCompatActivity() {
 
         //resolve элементы формы
         viewRecyclerTagsAdd = findViewById<View>(R.id.view_recycler_tags_add) as RecyclerView
+        viewRecyclerTagsAdd.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         //указываем способ компоновки данных в списке
-        viewRecyclerTagsAdd.layoutManager = GridLayoutManager(this, 3)
-        fillTag()
+        //наполняем список элементами
+        refreshTag()
+        viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, tags, this)
 
         //не особо представляю зачем это взято из примера
         ButterKnife.bind(this)
         //работаем с базой данных
         val database: SQLiteDatabase = DBHelper(this).writableDatabase
         val contentValues = ContentValues()
+
+        //выводим список уже созданных тэгов
+        findViewById<View>(R.id.view_tag_add_list).setOnClickListener() {
+            showEditCardDialog()
+        }
 
         but_snapshot.setOnClickListener { validatePermissions() }
 
@@ -72,9 +82,47 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-    private fun fillTag() {
-        //список содержащий строки таблицы тэгов
-        val tags = mutableListOf<Tag>()
+    /**
+     * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
+     * создает собственное диалоговое окно
+     */
+    fun showEditCardDialog() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Редактирование")
+
+        // https://stackoverflow.com/questions/10695103/creating-custom-alertdialog-what-is-the-root-view
+        // Seems ok to inflate view with null rootView
+        val view = (this as Activity).layoutInflater.inflate(R.layout.dialog_add_item_tag_list, null)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.view_recycler_add_item_tags_list)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.adapter = TagAdapterCardShort(recyclerView, tags, this)
+        builder.setView(view)
+
+        // set up the ok button
+        builder.setPositiveButton("Ок") { dialog, _ ->
+
+            /* Snackbar.make(viewRecyclerTagsAdd, "Тэг ${tag.item_title} успешно изменен на ${editText.text}", Snackbar.LENGTH_SHORT).show()
+             tag.item_title = editText.text.toString()
+             val database = DBHelper(this).writableDatabase
+             val contentValues = ContentValues()
+             contentValues.put(DBHelper.KEY_TAG,editText.text.toString())
+             // обновляем по id
+             database.update(DBHelper.TABLE_TAGS, contentValues, "_id = ?", arrayOf<String>(tag.item_id))
+             viewRecyclerTagsAdd.adapter = TagAdapterList(viewRecyclerTagsAdd, tags, this)*/
+
+        }
+
+        builder.setNegativeButton("Отмена") { dialog, _ ->
+            dialog.cancel()
+        }
+
+        builder.show()
+    }
+
+    //сейчас выводит все тэги, которые есть в базе
+    private fun refreshTag() {
+        tags.clear()
+
         val database = DBHelper(this).writableDatabase
 
         //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
@@ -97,10 +145,6 @@ class AddActivity : AppCompatActivity() {
                 }
             } while (cursorTag.moveToNext())
         }
-
-
-        //устанавливаем адаптер для нашего списка
-        viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, tags, this)
         cursorTag.close()
     }
 

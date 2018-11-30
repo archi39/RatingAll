@@ -2,15 +2,10 @@ package com.dogvscat.retingall
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
-import android.app.ProgressDialog.show
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings.Global.getString
-import android.provider.SyncStateContract.Helpers.update
 import android.support.design.widget.Snackbar
-import android.support.v4.app.FragmentManager
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -19,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 
@@ -79,7 +73,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
             intent.putExtra("item_id", tag.item_id)
 
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${tag.item_id}")
-            showCreateCategoryDialog(tag)
+            showEditCardDialog(tag)
         }
     }
 
@@ -87,7 +81,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
      * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
      * создает собственное диалоговое окно
      */
-    fun showCreateCategoryDialog(tag: Tag) {
+    fun showEditCardDialog(tag: Tag) {
         val builder = AlertDialog.Builder(mContext)
         builder.setTitle("Редактирование")
 

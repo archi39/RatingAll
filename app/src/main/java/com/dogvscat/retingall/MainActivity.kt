@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         } else {}
 
         //устанавливаем адаптер для спиннера
-        viewSpinner.adapter = TagAdapterSpinner(viewSpinner,tags,this)
+        viewSpinner.adapter = TagAdapterSpinner(tags)
         //устанавливаем адаптер для RecyclerView с значениями из базы данных
         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
 

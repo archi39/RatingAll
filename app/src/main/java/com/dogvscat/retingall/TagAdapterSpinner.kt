@@ -1,6 +1,5 @@
 package com.dogvscat.retingall
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.Color
@@ -8,9 +7,7 @@ import android.view.LayoutInflater
 import android.widget.*
 
 
-class TagAdapterSpinner(private val spinner: Spinner,
-                        private val tags: MutableList<Tag>,
-                        private val mContext: Context) : BaseAdapter() {
+class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {
 
 
     override fun getCount(): Int {

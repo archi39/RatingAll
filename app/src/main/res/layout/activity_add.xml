@@ -78,7 +78,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/view_recycler_tags_add"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:background="@color/colorPrimaryDark"></android.support.v7.widget.RecyclerView>
 
 
@@ -133,16 +133,14 @@
                     android:textColor="@android:color/darker_gray"
                     android:textSize="14sp" />
 
-
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:tint="@android:color/white"
-                        app:srcCompat="@drawable/ic_list" />
-
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/view_tag_add_list"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/ic_list" />
 
             </LinearLayout>
 
