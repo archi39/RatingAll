@@ -10,15 +10,12 @@ import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import butterknife.ButterKnife
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
@@ -29,7 +26,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.activity_add.*
-import kotlinx.android.synthetic.main.activity_add_tag.*
 import kotlinx.android.synthetic.main.app_bar.*
 import java.io.File
 
@@ -38,7 +34,10 @@ class AddActivity : AppCompatActivity() {
     private val TAKE_PHOTO_REQUEST: Int = 0
     private var mCurrentPhotoPath: String = "none"
     private lateinit var viewRecyclerTagsAdd: RecyclerView
-    private val tags: MutableList<Tag> = mutableListOf()
+    //список всех тэгов в базе
+    private val dbTags: MutableList<Tag> = mutableListOf()
+    //список тэгов для возможного добавления в базу
+    private val itemTags: MutableList<Tag> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,71 +48,76 @@ class AddActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        //resolve элементы формы
+        //resolve элементы формы - сюда нужно напихивать тэги которые возможно будут добавлены в
+        // базу по нажатию на кнопку submit
         viewRecyclerTagsAdd = findViewById<View>(R.id.view_recycler_tags_add) as RecyclerView
         viewRecyclerTagsAdd.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        //указываем способ компоновки данных в списке
         //наполняем список элементами
         refreshTag()
-        viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, tags, this)
+        viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, dbTags, this)
 
         //не особо представляю зачем это взято из примера
         ButterKnife.bind(this)
         //работаем с базой данных
         val database: SQLiteDatabase = DBHelper(this).writableDatabase
+        //создаем список будующих тэгов
 
 
         //выводим список уже созданных тэгов
-        findViewById<View>(R.id.view_tag_add_list).setOnClickListener() {
+        findViewById<View>(R.id.view_tag_add_list).setOnClickListener {
             showEditCardDialog()
         }
 
         //Добавляем тэг из текстового поля
-        findViewById<View>(R.id.btn_new_tag).setOnClickListener(){
-            val contentValues = ContentValues()
+        findViewById<View>(R.id.btn_new_tag).setOnClickListener {
             //проверяем что в базе есть тэги в будующем нужно поменять на запрос последнего ид из базы
-            val tag = if(tags.size>0){
-                Tag("${(tags[0].item_id).toInt()+1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())
+            val tag = Tag("${if (dbTags.size > 0) {
+                (dbTags[0].item_id).toInt() + 1
+            } else 1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())
+            //добавляем новый тэг
+            if (tag != null) {
+                itemTags.add(tag)
             }
-            else null
-            //Log.d(LOGDEBUGTAG,"ADD TAG id: ${tag!!.item_id}, title: ${tag.item_title}")
-            //Log.d(LOGDEBUGTAG,"RESOLVE DB:")
-            contentValues.put(DBHelper.KEY_TAG, tag!!.item_title)
-            database.insert(DBHelper.TABLE_TAGS, null, contentValues)
-            refreshTag()
+            //связываем новое слово с базой
         }
 
         but_snapshot.setOnClickListener { validatePermissions() }
 
+        //все действия с изменением базы данных нужно вносить именно сюда
         but_submit.setOnClickListener {
-            val contentValues = ContentValues()
-            contentValues.put(DBHelper.KEY_TITLE, edit_text_title.text.toString())
-            contentValues.put(DBHelper.KEY_RATING, edit_text_number.text.toString().toFloat())
-            contentValues.put(DBHelper.KEY_IMAGE, mCurrentPhotoPath)
-            database.insert(DBHelper.TABLE_ITEMS, null, contentValues)
+            val contentValuesItem = ContentValues()
+            contentValuesItem.put(DBHelper.KEY_TITLE, edit_text_title.text.toString())
+            contentValuesItem.put(DBHelper.KEY_RATING, edit_text_number.text.toString().toFloat())
+            contentValuesItem.put(DBHelper.KEY_IMAGE, mCurrentPhotoPath)
+            database.insert(DBHelper.TABLE_ITEMS, null, contentValuesItem)
 
             val intent = Intent()
             intent.putExtra("title", edit_text_title.text.toString())
             intent.putExtra("respect", edit_text_number.text.toString().toFloat())
             setResult(Activity.RESULT_OK, intent)
+
+//Наполняем базу новыми тэгами и ссылками на уже существующие
+//            val contentValuesTags = ContentValues()
+//            contentValuesTags.put(DBHelper.KEY_TAG, tag!!.item_title)
+//            database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
+
             finish()
         }
     }
 
     /**
      * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
-     * создает собственное диалоговое окно
+     * создает собственное диалоговое окно - нужно писать ещё 1 адаптер для наполнения
      */
     fun showEditCardDialog() {
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Редактирование")
-
         // https://stackoverflow.com/questions/10695103/creating-custom-alertdialog-what-is-the-root-view
         // Seems ok to inflate view with null rootView
         val view = (this as Activity).layoutInflater.inflate(R.layout.dialog_add_item_tag_list, null)
         val recyclerView = view.findViewById<RecyclerView>(R.id.view_recycler_add_item_tags_list)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = TagAdapterCardShort(recyclerView, tags, this)
+        recyclerView.adapter = TagAdapterCardShort(recyclerView, dbTags, this)
         builder.setView(view)
 
         // set up the ok button
@@ -139,7 +143,7 @@ class AddActivity : AppCompatActivity() {
 
     //сейчас выводит все тэги, которые есть в базе
     private fun refreshTag() {
-        tags.clear()
+        dbTags.clear()
 
         val database = DBHelper(this).writableDatabase
 
@@ -159,10 +163,10 @@ class AddActivity : AppCompatActivity() {
                     //наполняем наш список элементами
                     val tag = Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                             cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
-                    tags.add(tag)
+                    dbTags.add(tag)
 
                     //смотрим в лог
-                    Log.d(LOGDEBUGTAG,"id: ${tag.item_id}, title: ${tag.item_title}")
+                    Log.d(LOGDEBUGTAG, "id: ${tag.item_id}, title: ${tag.item_title}")
                 }
             } while (cursorTag.moveToNext())
         }
