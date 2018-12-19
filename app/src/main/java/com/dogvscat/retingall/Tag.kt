@@ -5,6 +5,6 @@ package com.dogvscat.retingall
  */
 class Tag(private val id: String,
            private val title: String) {
-    val item_id: String = id
+    var item_id: String = id
     var item_title: String = title
 }

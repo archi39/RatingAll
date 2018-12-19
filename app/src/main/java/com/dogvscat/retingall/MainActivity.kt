@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewSpinner: Spinner
     private lateinit var database: SQLiteDatabase
 
+    val items = mutableListOf<Item>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Инициализируем библотеку для работы с фото
@@ -66,8 +68,10 @@ class MainActivity : AppCompatActivity() {
         refreshBD()
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
-            Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления элемента")
-            startActivityForResult(Intent(this, AddActivity::class.java), REQUESTCODEADD)
+            Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления элемента, последний ID: ${items[0].item_id}")
+            val intent = Intent(this, AddActivity::class.java)
+            intent.putExtra("LASTITEMID", items[0].item_id)
+            startActivityForResult(intent, REQUESTCODEADD)
         }
 
     }
@@ -76,8 +80,8 @@ class MainActivity : AppCompatActivity() {
      * Функиция перечитывает БД и присваивает новый адаптер для recyclerView
      */
     private fun refreshBD() {
-        //Создаем изменяемый список в который будем помещать элементы из базы
-        val items = mutableListOf<Item>()
+        //очищаем список элементов
+        items.clear()
         val tags = mutableListOf<Tag>()
         database = DBHelper(this).writableDatabase
 
@@ -88,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 null,
                 null,
                 null,
-                null)
+                DBHelper.KEY_ID + " DESC")
 
         //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
         val cursorTag = database.query(DBHelper.TABLE_TAGS,

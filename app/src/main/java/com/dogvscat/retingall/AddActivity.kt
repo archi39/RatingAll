@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.EditText
@@ -39,6 +40,7 @@ class AddActivity : AppCompatActivity() {
     private val dbTags: MutableList<Tag> = mutableListOf()
     //список тэгов для возможного добавления в базу
     private val itemTags: MutableList<Tag> = mutableListOf()
+    private lateinit var lastItemId: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +51,8 @@ class AddActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        lastItemId = intent.getStringExtra("LASTITEMID").toString()
+
         //resolve элементы формы - сюда нужно напихивать тэги которые возможно будут добавлены в
         // базу по нажатию на кнопку submit
         //Тэги закрепленные за элементом (изначально при запуске должно быть пусто)
@@ -57,7 +61,6 @@ class AddActivity : AppCompatActivity() {
 
         //набиваем пепременную тэгами из базы данных
         refreshDbTag()
-
 
         //не особо представляю зачем это взято из примера
         ButterKnife.bind(this)
@@ -74,9 +77,13 @@ class AddActivity : AppCompatActivity() {
         //Добавляем тэг из текстового поля
         findViewById<View>(R.id.btn_new_tag).setOnClickListener {
             //проверяем что в базе есть тэги в будующем нужно поменять на запрос последнего ид из базы
-            val tag = Tag("${if (dbTags.size > 0) {
+            //оставил - возможно проверка не потребуется, потому что добавление в базу SQLite
+            // может быть без явного указания ID
+          /*  val tag = Tag("${if (dbTags.size > 0) {
                 (dbTags[0].item_id).toInt() + 1
-            } else 1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())
+            } else 1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())*/
+
+            val tag = Tag("Null", findViewById<EditText>(R.id.view_text_tag_new).text.toString())
             //добавляем новый тэг
             if (tag != null) {
                 itemTags.add(tag)
@@ -90,29 +97,67 @@ class AddActivity : AppCompatActivity() {
 
         //все действия с изменением базы данных нужно вносить именно сюда
         but_submit.setOnClickListener {
+            //создаем новую запись в таблице TABLE_ITEMS
             val contentValuesItem = ContentValues()
             contentValuesItem.put(DBHelper.KEY_TITLE, edit_text_title.text.toString())
             contentValuesItem.put(DBHelper.KEY_RATING, edit_text_number.text.toString().toFloat())
             contentValuesItem.put(DBHelper.KEY_IMAGE, mCurrentPhotoPath)
             database.insert(DBHelper.TABLE_ITEMS, null, contentValuesItem)
 
+            //Наполняем базу новыми тэгами c проверкой на совпадения
+            if(itemTags.size>0){
+                val contentValuesTags = ContentValues()
+                for (tag in itemTags){
+                    //если в базе уже есть тэги - проверяем на совпадение
+                    if(dbTags.size > 0){
+                        var contain:Boolean = false
+                        for(dbTag in dbTags){
+                            if(tag.item_title.equals(dbTag.item_title))
+                                contain = true
+                        }
+                        if(contain){
+                            Log.d(LOGDEBUGTAG,"Элемент [${tag.item_title}] уже есть в базе")
+                        }else{
+                            contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
+                            database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
+                        }
+                    }
+                    //если тэгов нет сразу добавляем в таблицу тэгов
+                    else {
+                        contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
+                        database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
+                    }
+                }
+
+
+                //заполняем базу связкками тэг - элемент
+                val contentValuesItemsTags = ContentValues()
+                refreshDbTag()
+                for (tag in itemTags){
+                    //проставляем id для наших тэгов
+                    for(dbTag in dbTags){
+                        if(tag.item_title.equals(dbTag.item_title))
+                            tag.item_id = dbTag.item_id
+                    }
+
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt()+1)
+                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
+                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                }
+
+            }
+
             val intent = Intent()
             intent.putExtra("title", edit_text_title.text.toString())
             intent.putExtra("respect", edit_text_number.text.toString().toFloat())
             setResult(Activity.RESULT_OK, intent)
-
-//Наполняем базу новыми тэгами и ссылками на уже существующие
-//            val contentValuesTags = ContentValues()
-//            contentValuesTags.put(DBHelper.KEY_TAG, tag!!.item_title)
-//            database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
-
             finish()
         }
     }
 
     /**
      * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
-     * создает собственное диалоговое окно - нужно писать ещё 1 адаптер для наполнения
+     * создает окно для добавления существующих тэгов из базы
      */
     fun showListCardDialog() {
         val builder = android.app.AlertDialog.Builder(this)
