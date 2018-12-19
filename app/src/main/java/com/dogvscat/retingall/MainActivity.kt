@@ -106,10 +106,35 @@ class MainActivity : AppCompatActivity() {
         //пробегаем по курсору (по базе - построчно)
         if (cursorItem.moveToFirst()) {
             do {
+                //Добавить выборку из базы по внешним ключам и сформировать список тэгов
                 //наполняем наш список элементами
-                items.add(Item(cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_ID)),
-                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_TITLE)),
-                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_RATING)).toFloat()))
+                val itemId: String = cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_ID))
+                val itemTite = cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_TITLE))
+                val tags: MutableList<Tag> = mutableListOf()
+
+                val cursorItemsTag = database.rawQuery(
+                        "SELECT TT.${DBHelper.KEY_ID}, TT.${DBHelper.KEY_TAG} " +
+                                "FROM ${DBHelper.TABLE_ITEMS_TAGS} as TIT " +
+                                "JOIN ${DBHelper.TABLE_TAGS} as TT ON TIT.${DBHelper.KEY_TAG_ID}=TT.${DBHelper.KEY_ID} " +
+                                "JOIN ${DBHelper.TABLE_ITEMS} as TI ON TIT.${DBHelper.KEY_ITEM_ID}=TI.${DBHelper.KEY_ID} " +
+                                "WHERE TI.${DBHelper.KEY_ID} = '${itemId}'", null)
+                if (cursorItemsTag.moveToFirst()) {
+                    Log.d(LOGDEBUGTAG,"Элемент ${itemTite} обладает следующими тэгами:")
+                    do {
+                        val tag = Tag(cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_ID)),
+                                cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_TAG)))
+                        tags.add(tag)
+                        Log.d(LOGDEBUGTAG,"ID: ${tag.item_id}; TITLE: ${tag.item_title}")
+                    } while (cursorItemsTag.moveToNext())
+                } else {
+                    Log.d(LOGDEBUGTAG,"У ${itemTite} нет связанных тэгов")
+                }
+                cursorItemsTag.close()
+
+                items.add(Item(itemId,
+                        itemTite,
+                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_RATING)).toFloat(),
+                        tags))
             } while (cursorItem.moveToNext())
         } else {
             Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
@@ -121,7 +146,8 @@ class MainActivity : AppCompatActivity() {
                 tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                         cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
             } while (cursorTag.moveToNext())
-        } else {}
+        } else {
+        }
 
         //устанавливаем адаптер для спиннера
         viewSpinner.adapter = TagAdapterSpinner(tags)

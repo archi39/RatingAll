@@ -14,10 +14,7 @@ import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
-import com.dogvscat.retingall.DBHelper
-import com.dogvscat.retingall.EditActivity
-import com.dogvscat.retingall.Item
-import com.dogvscat.retingall.R
+import com.dogvscat.retingall.*
 
 
 class ItemAdapter(private val viewRecyclerView: RecyclerView,
@@ -56,7 +53,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
         viewBinderHelper.bind(holder.swipeLayout, item.item_id)
 
         // Меняем значения элементов шаблона в соответствии с данными для элемента адаптера
-        holder.index(item.item_title, item.item_rating)
+        holder.index(item.item_title, item.item_rating, item.item_tags)
 
         //реализуем удаление карточки
         holder.cardDelete.setOnClickListener {
@@ -75,7 +72,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             val intent = Intent(mContext, EditActivity::class.java)
             intent.putExtra("item_id", item.item_id)
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${item.item_id}")
-            (mContext as Activity).startActivityForResult(intent,REQUESTCODEEDIT)
+            (mContext as Activity).startActivityForResult(intent, REQUESTCODEEDIT)
         }
     }
 
@@ -90,14 +87,23 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
         val cardEdit: CardView = itemView.findViewById(R.id.card_edit)
         private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card) as TextView
         private val circleViewCard: CircleProgressView = itemView.findViewById<View>(R.id.circle_view_card) as CircleProgressView
-
+        private val viewTextTags: TextView = itemView.findViewById<View>(R.id.view_text_tags) as TextView
         /**
          * Функция усланавливает значения элементов каточки - из данных переданных адаптером
          */
-        fun index(str: String, rating: Float) {
+        fun index(str: String, rating: Float, itemTags: MutableList<Tag>) {
             viewTextCard.text = str
             circleViewCard.setValue(rating)
-//        отключаем возможность редактирования прогрессбара
+
+            //выводим список всех связанных тэгов
+            if (itemTags.size > 0) {
+                var tags = ""
+                for(tag in itemTags){
+                    tags += "#${tag.item_title} "
+                }
+                viewTextTags.text = tags
+            }
+            //        отключаем возможность редактирования прогрессбара
             circleViewCard.isSeekModeEnabled = false
         }
     }
