@@ -15,6 +15,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Spinner
+import com.dogvscat.retingall.adapters.ItemAdapter
+import com.dogvscat.retingall.adapters.TagAdapterSpinner
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*

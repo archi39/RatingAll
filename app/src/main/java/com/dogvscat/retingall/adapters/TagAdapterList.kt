@@ -1,4 +1,4 @@
-package com.dogvscat.retingall
+package com.dogvscat.retingall.adapters
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -16,6 +16,10 @@ import android.widget.EditText
 import android.widget.TextView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
+import com.dogvscat.retingall.DBHelper
+import com.dogvscat.retingall.EditActivity
+import com.dogvscat.retingall.R
+import com.dogvscat.retingall.Tag
 
 class TagAdapterList(private val viewRecyclerView: RecyclerView,
                      private val tagList: MutableList<Tag>,

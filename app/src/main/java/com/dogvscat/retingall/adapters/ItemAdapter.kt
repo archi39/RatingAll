@@ -1,4 +1,4 @@
-package com.dogvscat.retingall
+package com.dogvscat.retingall.adapters
 
 import android.app.Activity
 import android.content.Context
@@ -14,6 +14,10 @@ import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
+import com.dogvscat.retingall.DBHelper
+import com.dogvscat.retingall.EditActivity
+import com.dogvscat.retingall.Item
+import com.dogvscat.retingall.R
 
 
 class ItemAdapter(private val viewRecyclerView: RecyclerView,
@@ -68,7 +72,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
 
         //редактирование карточки
         holder.cardEdit.setOnClickListener {
-            val intent = Intent(mContext,EditActivity::class.java)
+            val intent = Intent(mContext, EditActivity::class.java)
             intent.putExtra("item_id", item.item_id)
             Log.d(LOGDEBUGTAG, "Обработали нажатие на ${item.item_id}")
             (mContext as Activity).startActivityForResult(intent,REQUESTCODEEDIT)

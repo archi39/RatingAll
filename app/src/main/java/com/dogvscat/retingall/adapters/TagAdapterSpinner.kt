@@ -1,10 +1,12 @@
-package com.dogvscat.retingall
+package com.dogvscat.retingall.adapters
 
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.widget.*
+import com.dogvscat.retingall.R
+import com.dogvscat.retingall.Tag
 
 
 class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {

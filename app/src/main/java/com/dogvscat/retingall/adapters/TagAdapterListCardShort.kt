@@ -1,25 +1,20 @@
-package com.dogvscat.retingall
+package com.dogvscat.retingall.adapters
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
-import com.chauthai.swipereveallayout.SwipeRevealLayout
-import com.chauthai.swipereveallayout.ViewBinderHelper
+import com.dogvscat.retingall.R
+import com.dogvscat.retingall.Tag
 
-class TagAdapterCardShort(private val viewRecyclerView: RecyclerView,
-                          private val tagList: MutableList<Tag>,
-                          private val mContext: Context) : RecyclerView.Adapter<TagAdapterCardShort.MyHolderTagCard>() {
+class TagAdapterListCardShort(private val viewRecyclerView: RecyclerView,
+                              private val itemTagList: MutableList<Tag>,
+                              private val dbTagList: MutableList<Tag>,
+                              private val mContext: Context) : RecyclerView.Adapter<TagAdapterListCardShort.MyHolderTagCard>() {
 
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
@@ -36,25 +31,18 @@ class TagAdapterCardShort(private val viewRecyclerView: RecyclerView,
      */
     override fun onBindViewHolder(holder: MyHolderTagCard, position: Int) {
         // get your data object first.
-        val tag = tagList[position]
+        val tag = dbTagList[position]
         // Меняем значения элементов шаблона в соответствии с данными для элемента адаптера
         holder.index(tag.item_title)
-
-        //реализуем удаление связи тэга с элеменгом
+        //реализуем добавление тэга с элеменгом
         holder.cardTagItem.setOnClickListener {
-            val database = DBHelper(mContext).writableDatabase
-
-            /*database.delete(DBHelper.TABLE_TAGS, DBHelper.KEY_ID + "=" + tag.item_id, null)
-            tagList.remove(tag)
-            viewRecyclerView.adapter = TagAdapterCardShort(viewRecyclerView, tagList, mContext)
-
-            Log.d(LOGDEBUGTAG, "Карточка id:${tag.item_id},title:${tag.item_title} удалена")*/
-            Snackbar.make(viewRecyclerView, "Тэг ${tag.item_title} откреплен", Snackbar.LENGTH_SHORT).show()
+            itemTagList.add(tag)
+            Snackbar.make(viewRecyclerView, "Тэг ${tag.item_title} добавлен", Snackbar.LENGTH_SHORT).show()
         }
     }
 
 
-    override fun getItemCount(): Int = tagList.size
+    override fun getItemCount(): Int = dbTagList.size
 
     /**
      * Вложенный класс, описывающий элемент RecyclerView, в нашем случае это тэги
