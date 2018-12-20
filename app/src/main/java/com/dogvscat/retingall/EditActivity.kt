@@ -66,9 +66,8 @@ class EditActivity : AppCompatActivity() {
         findViewById<View>(R.id.card_set_tag_edit).setOnClickListener {
             val tag = Tag("Null", findViewById<EditText>(R.id.view_text_edit_tag_new).text.toString())
             //добавляем новый тэг
-            if (tag != null) {
-                morfedTags.add(tag)
-            }
+            morfedTags.add(tag)
+
 
             //отображаем добавленный тэг в списке тэгов
             viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
@@ -92,16 +91,16 @@ class EditActivity : AppCompatActivity() {
             if (itemTags.size > 0) {
                 //либо ничего не поменялось, либо добавились тэги либо часть была удалена
                 if (morfedTags.size > 0) {
-                    for (tag in morfedTags){
+                    for (tag in morfedTags) {
 
                     }
                 } else {
                     //тэги были удалены - одназначно delete всех связей из itemTagы
 
                 }
-            } else{
+            } else {
                 //тэги были добавлены
-                if (morfedTags.size > 0){
+                if (morfedTags.size > 0) {
 
                 }
                 //если изначально тэгов не было и мы ничего не добавляли
@@ -182,7 +181,7 @@ class EditActivity : AppCompatActivity() {
         recyclerView.adapter = TagAdapterListCardShort(recyclerView, morfedTags, dbTags, this)
         builder.setView(view)
 
-        builder.setPositiveButton("Ок") { dialog, _ ->
+        builder.setPositiveButton("Ок") { _ , _ ->
             //обновляем список тэгов на странице
             viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
         }

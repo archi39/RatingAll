@@ -79,15 +79,14 @@ class AddActivity : AppCompatActivity() {
             //проверяем что в базе есть тэги в будующем нужно поменять на запрос последнего ид из базы
             //оставил - возможно проверка не потребуется, потому что добавление в базу SQLite
             // может быть без явного указания ID
-          /*  val tag = Tag("${if (dbTags.size > 0) {
-                (dbTags[0].item_id).toInt() + 1
-            } else 1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())*/
+            /*  val tag = Tag("${if (dbTags.size > 0) {
+                  (dbTags[0].item_id).toInt() + 1
+              } else 1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())*/
 
             val tag = Tag("Null", findViewById<EditText>(R.id.view_text_tag_new).text.toString())
             //добавляем новый тэг
-            if (tag != null) {
-                itemTags.add(tag)
-            }
+            itemTags.add(tag)
+
 
             //отображаем добавленный тэг в списке тэгов
             viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, itemTags, this)
@@ -105,19 +104,19 @@ class AddActivity : AppCompatActivity() {
             database.insert(DBHelper.TABLE_ITEMS, null, contentValuesItem)
 
             //Наполняем базу новыми тэгами c проверкой на совпадения
-            if(itemTags.size>0){
+            if (itemTags.size > 0) {
                 val contentValuesTags = ContentValues()
-                for (tag in itemTags){
+                for (tag in itemTags) {
                     //если в базе уже есть тэги - проверяем на совпадение
-                    if(dbTags.size > 0){
-                        var contain:Boolean = false
-                        for(dbTag in dbTags){
-                            if(tag.item_title.equals(dbTag.item_title))
+                    if (dbTags.size > 0) {
+                        var contain: Boolean = false
+                        for (dbTag in dbTags) {
+                            if (tag.item_title.equals(dbTag.item_title))
                                 contain = true
                         }
-                        if(contain){
-                            Log.d(LOGDEBUGTAG,"Элемент [${tag.item_title}] уже есть в базе")
-                        }else{
+                        if (contain) {
+                            Log.d(LOGDEBUGTAG, "Элемент [${tag.item_title}] уже есть в базе")
+                        } else {
                             contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
                             database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
                         }
@@ -131,14 +130,14 @@ class AddActivity : AppCompatActivity() {
                 //заполняем базу связкками тэг - элемент
                 val contentValuesItemsTags = ContentValues()
                 refreshDbTag()
-                for (tag in itemTags){
+                for (tag in itemTags) {
                     //проставляем id для наших тэгов
-                    for(dbTag in dbTags){
-                        if(tag.item_title.equals(dbTag.item_title))
+                    for (dbTag in dbTags) {
+                        if (tag.item_title.equals(dbTag.item_title))
                             tag.item_id = dbTag.item_id
                     }
 
-                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt()+1)
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt() + 1)
                     contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
                     database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
                 }
@@ -164,10 +163,10 @@ class AddActivity : AppCompatActivity() {
         val view = (this as Activity).layoutInflater.inflate(R.layout.dialog_add_item_tag_list, null)
         val recyclerView = view.findViewById<RecyclerView>(R.id.view_recycler_add_item_tags_list)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = TagAdapterListCardShort(recyclerView,itemTags, dbTags, this)
+        recyclerView.adapter = TagAdapterListCardShort(recyclerView, itemTags, dbTags, this)
         builder.setView(view)
 
-        builder.setPositiveButton("Ок") { dialog, _ ->
+        builder.setPositiveButton("Ок") { _ , _ ->
             //обновляем список тэгов на странице
             viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, itemTags, this)
         }
