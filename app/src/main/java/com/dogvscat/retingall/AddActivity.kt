@@ -136,8 +136,11 @@ class AddActivity : AppCompatActivity() {
                         if (tag.item_title.equals(dbTag.item_title))
                             tag.item_id = dbTag.item_id
                     }
-
-                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt() + 1)
+                    if (lastItemId == "Null") {
+                        contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, 0)
+                    } else {
+                        contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt() + 1)
+                    }
                     contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
                     database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
                 }
@@ -166,7 +169,7 @@ class AddActivity : AppCompatActivity() {
         recyclerView.adapter = TagAdapterListCardShort(recyclerView, itemTags, dbTags, this)
         builder.setView(view)
 
-        builder.setPositiveButton("Ок") { _ , _ ->
+        builder.setPositiveButton("Ок") { _, _ ->
             //обновляем список тэгов на странице
             viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, itemTags, this)
         }
