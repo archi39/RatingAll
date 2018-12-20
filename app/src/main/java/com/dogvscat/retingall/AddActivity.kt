@@ -128,8 +128,6 @@ class AddActivity : AppCompatActivity() {
                         database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
                     }
                 }
-
-
                 //заполняем базу связкками тэг - элемент
                 val contentValuesItemsTags = ContentValues()
                 refreshDbTag()
@@ -144,7 +142,6 @@ class AddActivity : AppCompatActivity() {
                     contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
                     database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
                 }
-
             }
 
             val intent = Intent()

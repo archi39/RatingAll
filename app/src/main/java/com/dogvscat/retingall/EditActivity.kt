@@ -25,8 +25,11 @@ class EditActivity : AppCompatActivity() {
     private lateinit var editTextTitle: EditText
     private lateinit var editTextNumber: EditText
     private lateinit var viewRecyclerTagsEdit: RecyclerView
+    //список всех тэгов в базе
     private val dbTags: MutableList<Tag> = mutableListOf()
-    //список тэгов для возможного добавления в базу
+    //список тэгов редактируемых в процессе
+    private val morfedTags: MutableList<Tag> = mutableListOf()
+    //список тэгов изначально закрепленных за элементом
     private val itemTags: MutableList<Tag> = mutableListOf()
 
 
@@ -49,6 +52,7 @@ class EditActivity : AppCompatActivity() {
         viewRecyclerTagsEdit = findViewById<View>(R.id.view_recycler_tags_edit) as RecyclerView
         viewRecyclerTagsEdit.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
+        Log.d(LOGDEBUGTAG, "Размер пустого списка [${itemTags.size}]")
         initElement()
         //набиваем пепременную тэгами из базы данных
         refreshDbTag()
@@ -60,26 +64,18 @@ class EditActivity : AppCompatActivity() {
 
         //Добавляем тэг из текстового поля
         findViewById<View>(R.id.card_set_tag_edit).setOnClickListener {
-            //проверяем что в базе есть тэги в будующем нужно поменять на запрос последнего ид из базы
-            //оставил - возможно проверка не потребуется, потому что добавление в базу SQLite
-            // может быть без явного указания ID
-            /*  val tag = Tag("${if (dbTags.size > 0) {
-                  (dbTags[0].item_id).toInt() + 1
-              } else 1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())*/
-
             val tag = Tag("Null", findViewById<EditText>(R.id.view_text_edit_tag_new).text.toString())
             //добавляем новый тэг
             if (tag != null) {
-                itemTags.add(tag)
+                morfedTags.add(tag)
             }
 
             //отображаем добавленный тэг в списке тэгов
-            viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, itemTags, this)
+            viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
         }
 
         //нужно записать изменения в базу данных и завершить активити
         findViewById<Button>(R.id.btn_end).setOnClickListener {
-            // создаем объект для данных
             val contentValues = ContentValues()
             Log.d(LOGDEBUGTAG, "--- Update ${DBHelper.TABLE_ITEMS}: ---")
             // подготовим значения для обновления
@@ -91,6 +87,51 @@ class EditActivity : AppCompatActivity() {
                     DBHelper.KEY_ID + " = ? ",
                     arrayOf(itemId))
             database.close()
+
+            //обновляем записи тэгов
+            if (itemTags.size > 0) {
+                //либо ничего не поменялось, либо добавились тэги либо часть была удалена
+                if (morfedTags.size > 0) {
+                    for (tag in morfedTags){
+
+                    }
+                } else {
+                    //тэги были удалены - одназначно delete всех связей из itemTagы
+
+                }
+            } else{
+                //тэги были добавлены
+                if (morfedTags.size > 0){
+
+                }
+                //если изначально тэгов не было и мы ничего не добавляли
+                //очевидно ничего делать не нужно
+            }
+
+            /* //если в базе уже есть тэги - проверяем на совпадение
+                    if(dbTags.size > 0){
+                        var contain:Boolean = false
+                        for(dbTag in dbTags){
+                            if(tag.item_title.equals(dbTag.item_title))
+                                contain = true
+                        }
+                        if(contain){
+                            Log.d(LOGDEBUGTAG,"Элемент [${tag.item_title}] уже есть в базе")
+                        }else{ }
+                    }
+                    //если тэгов нет сразу добавляем в таблицу тэгов
+                    else { }
+
+                //заполняем базу связкками тэг - элемент
+                for (tag in morfedTags){
+                    //проставляем id для наших тэгов
+                    for(dbTag in dbTags){
+                        if(tag.item_title.equals(dbTag.item_title))
+                            tag.item_id = dbTag.item_id
+                    }
+                }*/
+
+
             //закрываем активити возвращаемся в главное окно
             setResult(Activity.RESULT_OK, Intent())
             finish()
@@ -138,17 +179,18 @@ class EditActivity : AppCompatActivity() {
         val view = (this as Activity).layoutInflater.inflate(R.layout.dialog_add_item_tag_list, null)
         val recyclerView = view.findViewById<RecyclerView>(R.id.view_recycler_add_item_tags_list)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = TagAdapterListCardShort(recyclerView,itemTags, dbTags, this)
+        recyclerView.adapter = TagAdapterListCardShort(recyclerView, morfedTags, dbTags, this)
         builder.setView(view)
 
         builder.setPositiveButton("Ок") { dialog, _ ->
             //обновляем список тэгов на странице
-            viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, itemTags, this)
+            viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
         }
         builder.show()
     }
 
     private fun initElement() {
+        morfedTags.clear()
         itemTags.clear()
 
         val cursor = database.query(DBHelper.TABLE_ITEMS,
@@ -172,6 +214,7 @@ class EditActivity : AppCompatActivity() {
             } while (cursor.moveToNext())
         } else {
         }
+        cursor.close()
 
         //Ниже наполнение связанными тэгами
         val cursorItemsTag = database.rawQuery(
@@ -181,19 +224,19 @@ class EditActivity : AppCompatActivity() {
                         "JOIN ${DBHelper.TABLE_ITEMS} as TI ON TIT.${DBHelper.KEY_ITEM_ID}=TI.${DBHelper.KEY_ID} " +
                         "WHERE TI.${DBHelper.KEY_ID} = '${itemId}'", null)
         if (cursorItemsTag.moveToFirst()) {
-            Log.d(LOGDEBUGTAG,"Элемент ${itemTitle} обладает следующими тэгами:")
+            Log.d(LOGDEBUGTAG, "Элемент ${itemTitle} обладает следующими тэгами:")
             do {
                 val tag = Tag(cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_ID)),
                         cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_TAG)))
+                morfedTags.add(tag)
                 itemTags.add(tag)
-                Log.d(LOGDEBUGTAG,"ID: ${tag.item_id}; TITLE: ${tag.item_title}")
+                Log.d(LOGDEBUGTAG, "ID: ${tag.item_id}; TITLE: ${tag.item_title}")
             } while (cursorItemsTag.moveToNext())
         } else {
-            Log.d(LOGDEBUGTAG,"У ${itemTitle} нет связанных тэгов")
+            Log.d(LOGDEBUGTAG, "У ${itemTitle} нет связанных тэгов")
         }
         cursorItemsTag.close()
-        cursor.close()
 
-        viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, itemTags, this)
+        viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
     }
 }
