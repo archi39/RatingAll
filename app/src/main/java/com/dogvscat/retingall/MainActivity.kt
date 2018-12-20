@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     private fun refreshBD() {
         //очищаем список элементов
         items.clear()
-        val tags = mutableListOf<Tag>()
+        val dbTags = mutableListOf<Tag>()
         database = DBHelper(this).writableDatabase
 
         //создаем курсор для просмотра таблицы записей
@@ -151,14 +151,14 @@ class MainActivity : AppCompatActivity() {
         if (cursorTag.moveToFirst()) {
             do {
                 //наполняем наш список элементами
-                tags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
+                dbTags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                         cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
             } while (cursorTag.moveToNext())
         } else {
         }
 
         //устанавливаем адаптер для спиннера
-        viewSpinner.adapter = TagAdapterSpinner(tags)
+        viewSpinner.adapter = TagAdapterSpinner(dbTags)
         //устанавливаем адаптер для RecyclerView с значениями из базы данных
         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
 
