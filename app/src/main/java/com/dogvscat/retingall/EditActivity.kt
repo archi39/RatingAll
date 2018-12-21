@@ -85,7 +85,6 @@ class EditActivity : AppCompatActivity() {
                     contentValues,
                     DBHelper.KEY_ID + " = ? ",
                     arrayOf(itemId))
-            database.close()
 
             //обновляем записи тэгов
             if (itemTags.size > 0) {
@@ -95,42 +94,66 @@ class EditActivity : AppCompatActivity() {
 
                     }
                 } else {
-                    //тэги были удалены - одназначно delete всех связей из itemTagы
-
+                    //тэги были удалены - одназначно delete всех связей для itemTags
+                    for(itemTag in itemTags){
+                        database.delete(DBHelper.TABLE_ITEMS_TAGS,"${DBHelper.KEY_TAG_ID} = ${itemTag.item_id}",null)
+                        Log.d(LOGDEBUGTAG, "связка с тэгом ${itemTag.item_title} удалена")
+                    }
                 }
             } else {
-                //тэги были добавлены
+                //тэги были добавлены - нужно сделать insert в таблицу тэгов и таблицу связей
                 if (morfedTags.size > 0) {
+                    val contentValuesNewTags = ContentValues()
+                    val contentValuesItemsTags = ContentValues()
+                    //подготовим данные по id текущего элемента для добавления в таблицу связей
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemId)
+                    //пробегаем по списку отредактированных тэгов
+                    for (mTag in morfedTags) {
+                        //если в базе уже есть тэги - проверяем на совпадение
+                        if (dbTags.size > 0) {
+                            var contain = false
+                            for (dbTag in dbTags) {
+                                //поочередно сравниваем тэг с каждым тэгом из базы
+                                //находим первое совпадение и завергаем цикл
+                                if (mTag.item_title == dbTag.item_title) {
+                                    mTag.item_id = dbTag.item_id
+                                    contain = true
+                                    break
+                                }
+                            }
+                            if (contain) {
+                                Log.d(LOGDEBUGTAG, "Элемент [${mTag.item_title}] уже есть в базе тэгов")
+                                //связку всё равно нужно добавить в базу
+                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
+                                database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
 
+                            } else {
+                                contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                                database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                                //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                                refreshDbTag()
+                                //добавляем связку элемента на новый тэг
+                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id )
+                                database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                            }
+                        }
+                        //если тэгов в БД нет сразу добавляем новый тэг в таблицу тэгов и связку на него для элемента
+                        else {
+                            contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                            database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                            //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                            refreshDbTag()
+                            //добавляем связку элемента на новый тэг
+                            contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id )
+                            database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                        }
+                    }
                 }
                 //если изначально тэгов не было и мы ничего не добавляли
                 //очевидно ничего делать не нужно
             }
-
-            /* //если в базе уже есть тэги - проверяем на совпадение
-                    if(dbTags.size > 0){
-                        var contain:Boolean = false
-                        for(dbTag in dbTags){
-                            if(tag.item_title.equals(dbTag.item_title))
-                                contain = true
-                        }
-                        if(contain){
-                            Log.d(LOGDEBUGTAG,"Элемент [${tag.item_title}] уже есть в базе")
-                        }else{ }
-                    }
-                    //если тэгов нет сразу добавляем в таблицу тэгов
-                    else { }
-
-                //заполняем базу связкками тэг - элемент
-                for (tag in morfedTags){
-                    //проставляем id для наших тэгов
-                    for(dbTag in dbTags){
-                        if(tag.item_title.equals(dbTag.item_title))
-                            tag.item_id = dbTag.item_id
-                    }
-                }*/
-
-
+            //закрываем соединение с базой
+            database.close()
             //закрываем активити возвращаемся в главное окно
             setResult(Activity.RESULT_OK, Intent())
             finish()
@@ -181,7 +204,7 @@ class EditActivity : AppCompatActivity() {
         recyclerView.adapter = TagAdapterListCardShort(recyclerView, morfedTags, dbTags, this)
         builder.setView(view)
 
-        builder.setPositiveButton("Ок") { _ , _ ->
+        builder.setPositiveButton("Ок") { _, _ ->
             //обновляем список тэгов на странице
             viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
         }
