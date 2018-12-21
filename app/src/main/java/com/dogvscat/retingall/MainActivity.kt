@@ -180,9 +180,12 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_item_clear_db -> {
                 database = DBHelper(this).writableDatabase
                 database.delete(DBHelper.TABLE_ITEMS, null, null)
+                database.delete(DBHelper.TABLE_ITEMS_TAGS, null, null)
+                database.delete(DBHelper.TABLE_TAGS, null, null)
                 //подобным образом происходит перерисовка view т.к. adapter = null -соответственно
                 //на экране ничего не отобразится
                 viewRecyclerView.adapter = null
+                viewSpinner.adapter = null
 
                 Snackbar.make(layoutMain, getString(R.string.action_clear_db), Snackbar.LENGTH_SHORT).show()
                 return true
