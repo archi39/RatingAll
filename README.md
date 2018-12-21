@@ -59,6 +59,7 @@
                 </li>
             </ul></div> 
         <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Переработать ссылку горизонтального меню "Очистка базы" с учетом новой структуры базы данных приложения</div>
+        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Реализовать +/- удобную систему логирования для быстрого поиска #BUG`ов </div>
     </dd>
     <dt><b> Визуальные плюхи: </b></dt>
     <dd>
@@ -67,8 +68,12 @@
             <div> <ul>
                 <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить строковый ID для элементов списка </li>                
             </ul></div>
+            <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Продумать и внедрить адекватную систему коммитов для проекта</div>
         </div>    
     </dd>
 </dl>
 
+***
+
+<h2>  Отдельный пункт про коммиты:  </h2>
 
