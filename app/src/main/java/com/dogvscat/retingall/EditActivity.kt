@@ -90,14 +90,72 @@ class EditActivity : AppCompatActivity() {
             if (itemTags.size > 0) {
                 //либо ничего не поменялось, либо добавились тэги либо часть была удалена
                 if (morfedTags.size > 0) {
-                    for (tag in morfedTags) {
+                    //получаем список удаленных тэгов и выпиливаем их из базы
+                    val droppedTags: List<Tag> = itemTags.minus(morfedTags)
+                    if (droppedTags.isNotEmpty()) {
+                        for (dTag in droppedTags) {
+                            database.delete(DBHelper.TABLE_ITEMS_TAGS, "${DBHelper.KEY_TAG_ID} = ${dTag.item_id}", null)
+                            Log.d(LOGDEBUGTAG, "связка с тэгом ${dTag.item_title} удалена")
+                        }
+                    }
 
+                    //теперь обработаем список редактированных тэгов, и сделаем при необходимости insert
+                    val contentValuesNewTags = ContentValues()
+                    val contentValuesItemsTags = ContentValues()
+                    //подготовим данные по id текущего элемента для добавления в таблицу связей
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemId)
+
+                    for (mTag in morfedTags) {
+                        //если тэг был в списке уже добавленных, то проходим мимо
+                        if (itemTags.contains(mTag)) {
+                            Log.d(LOGDEBUGTAG, "Тэг [${mTag.item_title}] не изменился")
+                        } else {
+                            //два варианта или это новый тэг или тэг добавлен из базы
+                            //если в базе уже есть тэги - проверяем на совпадение
+                            if (dbTags.size > 0) {
+                                var contain = false
+                                for (dbTag in dbTags) {
+                                    //поочередно сравниваем тэг с каждым тэгом из базы
+                                    //находим первое совпадение и завергаем цикл
+                                    if (mTag.item_title == dbTag.item_title) {
+                                        mTag.item_id = dbTag.item_id
+                                        contain = true
+                                        break
+                                    }
+                                }
+                                if (contain) {
+                                    Log.d(LOGDEBUGTAG, "Тэг [${mTag.item_title}] уже есть в базе тэгов")
+                                    //связку всё равно нужно добавить в базу
+                                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
+                                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+
+                                } else {
+                                    contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                                    database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                                    //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                                    refreshDbTag()
+                                    //добавляем связку элемента на новый тэг
+                                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
+                                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                                }
+                            }
+                            //если тэгов в БД нет сразу добавляем новый тэг в таблицу тэгов и связку на него для элемента
+                            else {
+                                contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                                database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                                //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                                refreshDbTag()
+                                //добавляем связку элемента на новый тэг
+                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
+                                database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                            }
+                        }
                     }
                 } else {
-                    //тэги были удалены - одназначно delete всех связей для itemTags
-                    for(itemTag in itemTags){
-                        database.delete(DBHelper.TABLE_ITEMS_TAGS,"${DBHelper.KEY_TAG_ID} = ${itemTag.item_id}",null)
-                        Log.d(LOGDEBUGTAG, "связка с тэгом ${itemTag.item_title} удалена")
+                    //все тэги были удалены - delete всех связей для itemTags
+                    for (iTag in itemTags) {
+                        database.delete(DBHelper.TABLE_ITEMS_TAGS, "${DBHelper.KEY_TAG_ID} = ${iTag.item_id}", null)
+                        Log.d(LOGDEBUGTAG, "связка с тэгом ${iTag.item_title} удалена")
                     }
                 }
             } else {
@@ -122,7 +180,7 @@ class EditActivity : AppCompatActivity() {
                                 }
                             }
                             if (contain) {
-                                Log.d(LOGDEBUGTAG, "Элемент [${mTag.item_title}] уже есть в базе тэгов")
+                                Log.d(LOGDEBUGTAG, "Тэг [${mTag.item_title}] уже есть в базе тэгов")
                                 //связку всё равно нужно добавить в базу
                                 contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
                                 database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
@@ -133,7 +191,7 @@ class EditActivity : AppCompatActivity() {
                                 //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
                                 refreshDbTag()
                                 //добавляем связку элемента на новый тэг
-                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id )
+                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
                                 database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
                             }
                         }
@@ -144,7 +202,7 @@ class EditActivity : AppCompatActivity() {
                             //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
                             refreshDbTag()
                             //добавляем связку элемента на новый тэг
-                            contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id )
+                            contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
                             database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
                         }
                     }
