@@ -3,6 +3,7 @@ package com.dogvscat.retingall.adapters
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.Color
+import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.widget.*
 import com.dogvscat.retingall.R
@@ -32,12 +33,16 @@ class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {
                         parent,
                         false)
             }
-
         val tag = getItem(position)
 
         // заполняем View в пункте списка данными из списка тэгов: наименование
-        (view!!.findViewById(R.id.view_text_tag) as TextView).setText(tag.item_title)
+        val viewTextTag = view!!.findViewById(R.id.view_text_tag) as TextView
+        viewTextTag.setText(tag.item_title)
         if(tag.item_title.equals("Добавить")) (view.findViewById(R.id.view_text_tag) as TextView).setTextColor(Color.YELLOW)
+        //обрабатываем нажатие на элемент
+        viewTextTag.setOnClickListener {
+            Snackbar.make(convertView!!,"Нажат тэг ${tag.item_title}", Snackbar.LENGTH_SHORT).show()
+        }
 
         return view
     }
