@@ -13,75 +13,25 @@
 
 ***
 
-<h2>  Roadmap:  </h2>
-
-<dl>
-    <dt><b> Оснастка: </b></dt>
-    <dd>
-        <div><div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Подключить базу данных (далее - БД) к проекту</div>
-            <div> <ul>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Перейти на использование RecyclerView </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Реализовать изменение "рейтинга" заново </li>                
-            </ul></div>
-        </div>
-        <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
-            Обеспечить возможность добавления записей в БД</div>
-        <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
-            Обеспечить возможность удаления записей в БД</div>
-        <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> 
-            Обеспечить возможность редактирования записей в БД</div>
-        <div><div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Разобраться с подключением сторонних библиотек из GitHub Fork репозиториев</div>
-            <div> <ul>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Разобраться с использованием JitPack </li>                
-            </ul></div>
-        </div>
-        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> 
-                    Добавить возможность фильтрации по тегам</div>
-            <div> <ul>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Доработать архитектуру базы данных, для хранения тэгов </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Обновить базу без потери данных пользователя </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Настроить корректное отображение тэгов на экране </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить возможность добавления тэгов </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить возможность редактирования тэгов 
-                    <ul><li><s>Реализовать перезагрузку данных из базы в основном окне, после выхода из активити тэга</s></li>
-                    <li><s>Реализовать редактирование на базе окна диалога</s></li></ul>
-                </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить возможность удаления тэгов 
-                    <ul><li><s>Реализовать безопастное удаление тэга, учитывая связанные таблицы</s> (PS: походу SQLite сам реализует безопастное удаление)</li></ul>
-                </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Переписать окно добавления элементов с возможностью выставления тэгов
-                    <ul><li><s>Добавить диалоговое окно со списком уже существующих тэгов</s></li>
-                    <li><s>Добавить возможность привязки тэгов к элементу</s></li></ul>
-                </li>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Переписать окно редактирования элементов с возможностью выставления тэгов
-                    <ul><li><s>Добавить диалоговое окно со списком уже существующих тэгов</s></li>
-                    <li><s>Добавить возможность привязки тэгов к элементу</s></li></ul>
-                </li>
-            </ul></div> 
-        <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Переработать ссылку горизонтального меню "Очистка базы" с учетом новой структуры базы данных приложения</div>
-        <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Реализовать +/- удобную систему логирования для быстрого поиска #BUG`ов </div>
-    </dd>
-    <dt><b> Визуальные плюхи: </b></dt>
-    <dd>
-        <div>
-            <div><img src=".gitimage/chkbx_checked.png" height="14" width="14"> Сделать возможность удаления swype`ом</div>
-            <div> <ul>
-                <li> <img src=".gitimage/chkbx_checked.png" height="14" width="14"> Добавить строковый ID для элементов списка </li>                
-            </ul></div>
-            <div><img src=".gitimage/chkbx_unchecked.png" height="14" width="14"> Продумать и внедрить адекватную систему коммитов для проекта</div>
-        </div>    
-    </dd>
-</dl>
+<h2>Дорожная карта проекта, в силу постоянной пополняемости переехала на Trello</h2>
+<p><a>https://trello.com/b/Kwll6VHA</a></p>
 
 ***
 
 <h2>  Отдельный пункт про коммиты:  </h2>
 
 <p>Проект использует VCS <s>да ладно</s>, на 21.12.2018 коммиты в проекте слабо читаемы и мало-логичны
-- в следствии чего, в будующем могут возникнуть проблемы с чтением "старого кода", поэтому впреть
+- в следствии чего, в будующем могут возникнуть проблемы с чтением "истории", поэтому впредь
 следует придерживаться одной определенной системы применения коммитов:</p>
+отличный GUIDline описан в статье <a>https://gist.github.com/robertpainsi/b632364184e70900af4ab688decf6f53</a>
 Основная идея: "<b>Что сделать</b> + <b>для какой сущности</b> + <b>подробности (необязательно)</b>"
 Каждый commit начинается с префикса
 <div>Система префиксов:
-#F
+#FTR - (сокр. feature) - добавление нового функционала
+#FIX - исправление ошибки
+#RFT - (сокр. refactoring) изменение кода
+#DOC - (сокр. documentation) добавление описаний и анотаций
+#TST - (сокр. testing) написание тестов, тестирование кода
+
+префиксы могут дополняться по мере необходимости.
 </div>
