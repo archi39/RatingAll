@@ -27,7 +27,7 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
 
                 //вставляем запись "Добавить" в таблицу тэгов
                 db.execSQL("INSERT INTO $TABLE_TAGS ($KEY_TAG)" +
-                        "VALUES ('Добавить')")
+                        "VALUES ('Снять фильтры')")
 
                 // создаем таблицу связей
                 db.execSQL("PRAGMA foreign_keys=on")

@@ -1,11 +1,11 @@
 package com.dogvscat.retingall.adapters
 
+import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.graphics.Color
-import android.support.design.widget.Snackbar
-import android.view.LayoutInflater
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.TextView
 import com.dogvscat.retingall.R
 import com.dogvscat.retingall.Tag
 
@@ -40,9 +40,6 @@ class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {
         viewTextTag.setText(tag.item_title)
         if(tag.item_title.equals("Добавить")) (view.findViewById(R.id.view_text_tag) as TextView).setTextColor(Color.YELLOW)
         //обрабатываем нажатие на элемент
-        viewTextTag.setOnClickListener {
-            Snackbar.make(convertView!!,"Нажат тэг ${tag.item_title}", Snackbar.LENGTH_SHORT).show()
-        }
 
         return view
     }

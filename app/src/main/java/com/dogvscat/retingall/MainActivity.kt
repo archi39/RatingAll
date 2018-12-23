@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Spinner
 import com.dogvscat.retingall.adapters.ItemAdapter
 import com.dogvscat.retingall.adapters.TagAdapterSpinner
@@ -35,7 +36,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewSpinner: Spinner
     private lateinit var database: SQLiteDatabase
 
+    //список элементов и тэгов
+    val dbTags = mutableListOf<Tag>()
     val items = mutableListOf<Item>()
+    val filterItems = mutableListOf<Item>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,28 +85,49 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        viewSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                //если список элементов не пустой, проходим по списку, в каждом элементе для списка
+                //его тэгов, если он не пустой проверяем совпадает ли выбранный чек боксом тэг хотябы
+                //с одним из списка тэгов, если совпадает - добавляем элемент в список отфильтрованных элементов
+                filterItems.clear()
+                if(items.size>0){
+                    for(item in items){
+                        if(item.item_tags.isNotEmpty())
+                            for(itemTag in item.item_tags){
+                                if(itemTag.item_title == dbTags[position].item_title) {
+                                    filterItems.add(item)
+                                    break
+                                }
+                            }
+                    }
+                    viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, filterItems, layoutMain.context)
+                    Snackbar.make(layoutMain, "Отфильтровано по тэгу [${dbTags[position].item_title}]", Snackbar.LENGTH_SHORT).show()
+                }else{
+                    Snackbar.make(layoutMain, "Фильтровать нечего", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+
+        }
     }
 
     /**
      * Функиция перечитывает БД и присваивает новый адаптер для recyclerView
      */
     private fun refreshBD() {
-        //очищаем список элементов
+        //очищаем список элементов и тэгов
         items.clear()
-        val dbTags = mutableListOf<Tag>()
+        dbTags.clear()
+
         database = DBHelper(this).writableDatabase
 
         //создаем курсор для просмотра таблицы записей
         val cursorItem = database.query(DBHelper.TABLE_ITEMS,
-                null,
-                null,
-                null,
-                null,
-                null,
-                DBHelper.KEY_ID + " DESC")
-
-        //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
-        val cursorTag = database.query(DBHelper.TABLE_TAGS,
                 null,
                 null,
                 null,
@@ -147,6 +172,15 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
         }
 
+        //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
+        val cursorTag = database.query(DBHelper.TABLE_TAGS,
+                null,
+                null,
+                null,
+                null,
+                null,
+                DBHelper.KEY_ID + " DESC")
+
         if (cursorTag.moveToFirst()) {
             do {
                 //наполняем наш список элементами
@@ -157,13 +191,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         //устанавливаем адаптер для спиннера
-        viewSpinner.adapter = TagAdapterSpinner(dbTags)
+        viewSpinner.adapter =  TagAdapterSpinner(dbTags)
         //устанавливаем адаптер для RecyclerView с значениями из базы данных
         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
 
         cursorItem.close()
         cursorTag.close()
-    }
+}
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
