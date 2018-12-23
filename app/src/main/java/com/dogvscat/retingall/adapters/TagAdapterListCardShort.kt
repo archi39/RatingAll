@@ -16,9 +16,6 @@ class TagAdapterListCardShort(private val viewRecyclerView: RecyclerView,
                               private val dbTagList: MutableList<Tag>,
                               private val mContext: Context) : RecyclerView.Adapter<TagAdapterListCardShort.MyHolderTagCard>() {
 
-    //специальное поле для отлавливания логов
-    private val LOGDEBUGTAG: String = "POINT"
-
     //раздули элемент из макета и вернули в адаптер ссылку на элемент
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): MyHolderTagCard {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.activity_add_tag_short_tmpl,
@@ -41,9 +38,7 @@ class TagAdapterListCardShort(private val viewRecyclerView: RecyclerView,
         }
     }
 
-
     override fun getItemCount(): Int = dbTagList.size
-
     /**
      * Вложенный класс, описывающий элемент RecyclerView, в нашем случае это тэги
      */
