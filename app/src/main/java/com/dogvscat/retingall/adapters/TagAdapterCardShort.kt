@@ -4,22 +4,16 @@ import android.content.Context
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.dogvscat.retingall.DBHelper
 import com.dogvscat.retingall.R
 import com.dogvscat.retingall.Tag
 
 class TagAdapterCardShort(private val viewRecyclerView: RecyclerView,
                           private val tagList: MutableList<Tag>,
                           private val mContext: Context) : RecyclerView.Adapter<TagAdapterCardShort.MyHolderTagCard>() {
-
-    //специальное поле для отлавливания логов
-    private val LOGDEBUGTAG: String = "POINT"
-
     //раздули элемент из макета и вернули в адаптер ссылку на элемент
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): MyHolderTagCard {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.activity_add_tag_short_tmpl,
@@ -42,7 +36,6 @@ class TagAdapterCardShort(private val viewRecyclerView: RecyclerView,
             Snackbar.make(viewRecyclerView, "Тэг ${tag.item_title} откреплен", Snackbar.LENGTH_SHORT).show()
         }
     }
-
 
     override fun getItemCount(): Int = tagList.size
 
