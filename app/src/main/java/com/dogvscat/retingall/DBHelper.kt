@@ -3,18 +3,11 @@ package com.dogvscat.retingall
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 
 
 class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-    //специальное поле для отлавливания логов
-    private val LOGDEBUGTAG: String = "POINT"
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        Log.d(LOGDEBUGTAG, " --- onUpgrade database from " +
-                oldVersion + " to " +
-                newVersion + " version --- ")
-
         //Обновлемся с версии 1 на версию 2 ( верисия с архитектурой тегов)
         if (oldVersion == 1 && newVersion == 2) {
             //начало транзакции
