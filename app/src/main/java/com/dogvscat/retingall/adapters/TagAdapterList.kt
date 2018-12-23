@@ -27,7 +27,6 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
 
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
-    private val REQUESTCODEADDTAG: Int = 2
 
     // добавил код со страницы swypelayout
     // https://github.com/chthai64/SwipeRevealLayout
