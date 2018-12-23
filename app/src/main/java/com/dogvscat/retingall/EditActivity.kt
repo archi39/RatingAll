@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -18,7 +17,6 @@ import com.dogvscat.retingall.adapters.TagAdapterListCardShort
 import kotlinx.android.synthetic.main.app_bar.*
 
 class EditActivity : AppCompatActivity() {
-    private val LOGDEBUGTAG: String = "POINT"
     private lateinit var itemParentId: String
     private lateinit var database: SQLiteDatabase
     private lateinit var layoutActivityEdit: View
@@ -52,7 +50,6 @@ class EditActivity : AppCompatActivity() {
         viewRecyclerTagsEdit = findViewById<View>(R.id.view_recycler_tags_edit) as RecyclerView
         viewRecyclerTagsEdit.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        Log.d(LOGDEBUGTAG, "Размер пустого списка [${itemTags.size}]")
         initElement()
         //набиваем пепременную тэгами из базы данных
         refreshDbTag()
@@ -74,7 +71,6 @@ class EditActivity : AppCompatActivity() {
         //нужно записать изменения в базу данных и завершить активити
         findViewById<Button>(R.id.btn_end).setOnClickListener {
             val contentValues = ContentValues()
-            Log.d(LOGDEBUGTAG, "--- Update ${DBHelper.TABLE_ITEMS}: ---")
             // подготовим значения для обновления
             contentValues.put(DBHelper.KEY_TITLE, editTextTitle.text.toString())
             contentValues.put(DBHelper.KEY_RATING, editTextNumber.text.toString().toFloat())
@@ -93,7 +89,6 @@ class EditActivity : AppCompatActivity() {
                     if (droppedTags.isNotEmpty()) {
                         for (dTag in droppedTags) {
                             database.delete(DBHelper.TABLE_ITEMS_TAGS, "${DBHelper.KEY_TAG_ID} = ${dTag.item_id}", null)
-                            Log.d(LOGDEBUGTAG, "связка с тэгом ${dTag.item_title} удалена")
                         }
                     }
 
@@ -105,9 +100,7 @@ class EditActivity : AppCompatActivity() {
 
                     for (mTag in morfedTags) {
                         //если тэг был в списке уже добавленных, то проходим мимо
-                        if (itemTags.contains(mTag)) {
-                            Log.d(LOGDEBUGTAG, "Тэг [${mTag.item_title}] не изменился")
-                        } else {
+                        if (!itemTags.contains(mTag)) {
                             //два варианта или это новый тэг или тэг добавлен из базы
                             //если в базе уже есть тэги - проверяем на совпадение
                             if (dbTags.size > 0) {
@@ -121,8 +114,8 @@ class EditActivity : AppCompatActivity() {
                                         break
                                     }
                                 }
+                                //тэг уже есть в базе
                                 if (contain) {
-                                    Log.d(LOGDEBUGTAG, "Тэг [${mTag.item_title}] уже есть в базе тэгов")
                                     //связку всё равно нужно добавить в базу
                                     contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
                                     database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
@@ -153,7 +146,6 @@ class EditActivity : AppCompatActivity() {
                     //все тэги были удалены - delete всех связей для itemTags
                     for (iTag in itemTags) {
                         database.delete(DBHelper.TABLE_ITEMS_TAGS, "${DBHelper.KEY_TAG_ID} = ${iTag.item_id}", null)
-                        Log.d(LOGDEBUGTAG, "связка с тэгом ${iTag.item_title} удалена")
                     }
                 }
             } else {
@@ -177,8 +169,8 @@ class EditActivity : AppCompatActivity() {
                                     break
                                 }
                             }
+                            //тэг уже есть в базе
                             if (contain) {
-                                Log.d(LOGDEBUGTAG, "Тэг [${mTag.item_title}] уже есть в базе тэгов")
                                 //связку всё равно нужно добавить в базу
                                 contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
                                 database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
@@ -279,7 +271,7 @@ class EditActivity : AppCompatActivity() {
                 null,
                 null)
 
-        var itemTitle = ""
+        var itemTitle: String
         //пробегаем по курсору (по базе - построчно)
         if (cursor.moveToFirst()) {
             do {
@@ -302,16 +294,12 @@ class EditActivity : AppCompatActivity() {
                         "JOIN ${DBHelper.TABLE_ITEMS} as TI ON TIT.${DBHelper.KEY_ITEM_ID}=TI.${DBHelper.KEY_ID} " +
                         "WHERE TI.${DBHelper.KEY_ID} = '${itemParentId}'", null)
         if (cursorItemsTag.moveToFirst()) {
-            Log.d(LOGDEBUGTAG, "Элемент ${itemTitle} обладает следующими тэгами:")
             do {
                 val tag = Tag(cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_ID)),
                         cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_TAG)))
                 morfedTags.add(tag)
                 itemTags.add(tag)
-                Log.d(LOGDEBUGTAG, "ID: ${tag.item_id}; TITLE: ${tag.item_title}")
             } while (cursorItemsTag.moveToNext())
-        } else {
-            Log.d(LOGDEBUGTAG, "У ${itemTitle} нет связанных тэгов")
         }
         cursorItemsTag.close()
 
