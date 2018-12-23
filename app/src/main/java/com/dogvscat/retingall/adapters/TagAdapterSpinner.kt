@@ -12,10 +12,7 @@ import com.dogvscat.retingall.Tag
 
 class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {
 
-
-    override fun getCount(): Int {
-        return tags.size
-    }
+    override fun getCount(): Int = tags.size
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
@@ -39,8 +36,6 @@ class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {
         val viewTextTag = view!!.findViewById(R.id.view_text_tag) as TextView
         viewTextTag.setText(tag.item_title)
         if(tag.item_title.equals("Добавить")) (view.findViewById(R.id.view_text_tag) as TextView).setTextColor(Color.YELLOW)
-        //обрабатываем нажатие на элемент
-
         return view
     }
 
