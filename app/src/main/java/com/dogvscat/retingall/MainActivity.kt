@@ -1,7 +1,6 @@
 package com.dogvscat.retingall
 
 import android.content.Intent
-import android.content.res.Resources
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -22,9 +21,6 @@ import com.dogvscat.retingall.adapters.TagAdapterSpinner
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*
-
-
-
 
 class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
@@ -86,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("LASTITEMID", "Null")
                 startActivityForResult(intent, REQUESTCODEADD)
             }
-
         }
 
         switcher.setOnCheckedChangeListener { _, _ ->
@@ -242,10 +237,4 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         refreshBD()
     }
-
-    //функция приеобразования Px to Dp
-    fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
-
-    //функция преобразования Dp to Px
-    fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 }
