@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.app_bar.*
 
 class EditActivity : AppCompatActivity() {
     private val LOGDEBUGTAG: String = "POINT"
-    private lateinit var itemId: String
+    private lateinit var itemParentId: String
     private lateinit var database: SQLiteDatabase
     private lateinit var layoutActivityEdit: View
     private lateinit var editTextTitle: EditText
@@ -41,7 +41,7 @@ class EditActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        itemId = intent.getStringExtra("item_id")
+        itemParentId = intent.getStringExtra("item_id")
         database = DBHelper(this).writableDatabase
 
         //получаем ссылки на элементы графического интерфейса
@@ -67,8 +67,6 @@ class EditActivity : AppCompatActivity() {
             val tag = Tag("Null", findViewById<EditText>(R.id.view_text_edit_tag_new).text.toString())
             //добавляем новый тэг
             morfedTags.add(tag)
-
-
             //отображаем добавленный тэг в списке тэгов
             viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
         }
@@ -84,7 +82,7 @@ class EditActivity : AppCompatActivity() {
             database.update(DBHelper.TABLE_ITEMS,
                     contentValues,
                     DBHelper.KEY_ID + " = ? ",
-                    arrayOf(itemId))
+                    arrayOf(itemParentId))
 
             //обновляем записи тэгов
             if (itemTags.size > 0) {
@@ -103,7 +101,7 @@ class EditActivity : AppCompatActivity() {
                     val contentValuesNewTags = ContentValues()
                     val contentValuesItemsTags = ContentValues()
                     //подготовим данные по id текущего элемента для добавления в таблицу связей
-                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemId)
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemParentId)
 
                     for (mTag in morfedTags) {
                         //если тэг был в списке уже добавленных, то проходим мимо
@@ -164,7 +162,7 @@ class EditActivity : AppCompatActivity() {
                     val contentValuesNewTags = ContentValues()
                     val contentValuesItemsTags = ContentValues()
                     //подготовим данные по id текущего элемента для добавления в таблицу связей
-                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemId)
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemParentId)
                     //пробегаем по списку отредактированных тэгов
                     for (mTag in morfedTags) {
                         //если в базе уже есть тэги - проверяем на совпадение
@@ -276,7 +274,7 @@ class EditActivity : AppCompatActivity() {
         val cursor = database.query(DBHelper.TABLE_ITEMS,
                 null,
                 DBHelper.KEY_ID + " = ? ",
-                arrayOf(itemId),
+                arrayOf(itemParentId),
                 null,
                 null,
                 null)
@@ -302,7 +300,7 @@ class EditActivity : AppCompatActivity() {
                         "FROM ${DBHelper.TABLE_ITEMS_TAGS} as TIT " +
                         "JOIN ${DBHelper.TABLE_TAGS} as TT ON TIT.${DBHelper.KEY_TAG_ID}=TT.${DBHelper.KEY_ID} " +
                         "JOIN ${DBHelper.TABLE_ITEMS} as TI ON TIT.${DBHelper.KEY_ITEM_ID}=TI.${DBHelper.KEY_ID} " +
-                        "WHERE TI.${DBHelper.KEY_ID} = '${itemId}'", null)
+                        "WHERE TI.${DBHelper.KEY_ID} = '${itemParentId}'", null)
         if (cursorItemsTag.moveToFirst()) {
             Log.d(LOGDEBUGTAG, "Элемент ${itemTitle} обладает следующими тэгами:")
             do {
