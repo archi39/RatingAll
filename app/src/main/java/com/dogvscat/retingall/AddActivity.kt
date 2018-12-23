@@ -53,8 +53,6 @@ class AddActivity : AppCompatActivity() {
 
         lastItemId = intent.getStringExtra("LASTITEMID").toString()
 
-        //resolve элементы формы - сюда нужно напихивать тэги которые возможно будут добавлены в
-        // базу по нажатию на кнопку submit
         //Тэги закрепленные за элементом (изначально при запуске должно быть пусто)
         viewRecyclerTagsAdd = findViewById<View>(R.id.view_recycler_tags_add) as RecyclerView
         viewRecyclerTagsAdd.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -66,8 +64,6 @@ class AddActivity : AppCompatActivity() {
         ButterKnife.bind(this)
         //работаем с базой данных
         val database: SQLiteDatabase = DBHelper(this).writableDatabase
-        //создаем список будующих тэгов
-
 
         //выводим список уже созданных тэгов
         findViewById<View>(R.id.view_tag_add_list).setOnClickListener {
@@ -101,7 +97,7 @@ class AddActivity : AppCompatActivity() {
                 for (tag in itemTags) {
                     //если в базе уже есть тэги - проверяем на совпадение
                     if (dbTags.size > 0) {
-                        var contain: Boolean = false
+                        var contain = false
                         for (dbTag in dbTags) {
                             if (tag.item_title.equals(dbTag.item_title))
                                 contain = true
@@ -126,7 +122,7 @@ class AddActivity : AppCompatActivity() {
                 for (tag in itemTags) {
                     //проставляем id для наших тэгов
                     for (dbTag in dbTags) {
-                        if (tag.item_title.equals(dbTag.item_title)) {
+                        if (tag.item_title == dbTag.item_title) {
                             tag.item_id = dbTag.item_id
                             Log.d(LOGDEBUGTAG, "Будет добавлен тэг [${tag.item_title}.${tag.item_id}]")
                         }
@@ -156,7 +152,7 @@ class AddActivity : AppCompatActivity() {
      * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
      * создает окно для добавления существующих тэгов из базы
      */
-    fun showListCardDialog() {
+    private fun showListCardDialog() {
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Тэги")
         // https://stackoverflow.com/questions/10695103/creating-custom-alertdialog-what-is-the-root-view
@@ -177,7 +173,6 @@ class AddActivity : AppCompatActivity() {
     //выводит все тэги, которые есть в базе
     private fun refreshDbTag() {
         dbTags.clear()
-
         val database = DBHelper(this).writableDatabase
 
         //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
@@ -201,6 +196,7 @@ class AddActivity : AppCompatActivity() {
             } while (cursorTag.moveToNext())
         }
         cursorTag.close()
+        database.close()
     }
 
     /**
@@ -213,7 +209,6 @@ class AddActivity : AppCompatActivity() {
                     override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                         launchCamera()
                     }
-
                     override fun onPermissionRationaleShouldBeShown(permission: com.karumi.dexter.listener.PermissionRequest?, token: PermissionToken?) {
                         AlertDialog.Builder(this@AddActivity)
                                 .setTitle(
