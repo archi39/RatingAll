@@ -76,18 +76,10 @@ class AddActivity : AppCompatActivity() {
 
         //Добавляем тэг из текстового поля
         findViewById<View>(R.id.btn_new_tag).setOnClickListener {
-            //проверяем что в базе есть тэги в будующем нужно поменять на запрос последнего ид из базы
-            //оставил - возможно проверка не потребуется, потому что добавление в базу SQLite
-            // может быть без явного указания ID
-            /*  val tag = Tag("${if (dbTags.size > 0) {
-                  (dbTags[0].item_id).toInt() + 1
-              } else 1}", findViewById<EditText>(R.id.view_text_tag_new).text.toString())*/
-
             val tag = Tag("Null", findViewById<EditText>(R.id.view_text_tag_new).text.toString())
             //добавляем новый тэг
             itemTags.add(tag)
-
-
+            Log.d(LOGDEBUGTAG, "Добавлен тег к внесению в базу: ${tag.item_title}.${tag.item_id}")
             //отображаем добавленный тэг в списке тэгов
             viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, itemTags, this)
         }
@@ -129,23 +121,29 @@ class AddActivity : AppCompatActivity() {
                 }
                 //заполняем базу связкками тэг - элемент
                 val contentValuesItemsTags = ContentValues()
+
                 refreshDbTag()
                 for (tag in itemTags) {
                     //проставляем id для наших тэгов
                     for (dbTag in dbTags) {
-                        if (tag.item_title.equals(dbTag.item_title))
+                        if (tag.item_title.equals(dbTag.item_title)) {
                             tag.item_id = dbTag.item_id
+                            Log.d(LOGDEBUGTAG, "Будет добавлен тэг [${tag.item_title}.${tag.item_id}]")
+                        }
                     }
                     if (lastItemId == "Null") {
-                        contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, 0)
+                        contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, 1)
+                        Log.d(LOGDEBUGTAG, "Первый элемент в базе имеет id 1")
                     } else {
                         contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt() + 1)
                     }
                     contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
+                    Log.d(LOGDEBUGTAG, "Будет добавлена связка item_id: [${contentValuesItemsTags[DBHelper.KEY_ITEM_ID]}]" +
+                            "[${contentValuesItemsTags[DBHelper.KEY_TAG_ID]}]")
                     database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
                 }
             }
-
+            database.close()
             val intent = Intent()
             intent.putExtra("title", edit_text_title.text.toString())
             intent.putExtra("respect", edit_text_number.text.toString().toFloat())

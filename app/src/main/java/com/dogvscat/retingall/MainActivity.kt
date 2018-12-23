@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d(LOGDEBUGTAG, "ID: ${tag.item_id}; TITLE: ${tag.item_title}")
                     } while (cursorItemsTag.moveToNext())
                 } else {
-                    Log.d(LOGDEBUGTAG, "У ${itemTite} нет связанных тэгов")
+                    Log.d(LOGDEBUGTAG, "Элемент '${itemTite}' не имеет связанных тэгов")
                 }
                 cursorItemsTag.close()
 
@@ -238,11 +238,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d(LOGDEBUGTAG, "Вернулись с результатом")
+        Log.d(LOGDEBUGTAG, "Вернулись на главное активити")
         super.onActivityResult(requestCode, resultCode, data)
-
         refreshBD()
-        Log.d(LOGDEBUGTAG, "Добавили новую карточку")
     }
 
     //функция приеобразования Px to Dp

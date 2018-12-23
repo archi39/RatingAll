@@ -60,9 +60,13 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             val database = DBHelper(mContext).writableDatabase
 
             database.delete(DBHelper.TABLE_ITEMS, DBHelper.KEY_ID + "=" + item.item_id, null)
+            //удаляем связки элемента с тэгами
+            database.delete(DBHelper.TABLE_ITEMS_TAGS, DBHelper.KEY_ITEM_ID + "=" + item.item_id ,null)
+
             itemsList.remove(item)
             viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, itemsList, mContext)
 
+            database.close()
             Log.d(LOGDEBUGTAG, "Карточка id:${item.item_id},title:${item.item_title} удалена")
             Snackbar.make(viewRecyclerView, "Запись ${item.item_title} удалена", Snackbar.LENGTH_SHORT).show()
         }
