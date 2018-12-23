@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -64,7 +63,6 @@ class MainActivity : AppCompatActivity() {
 
         //вызываем новое активити для добавления нового тэга
         view_text_tag_btn.setOnClickListener {
-            Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления тэга")
             startActivityForResult(Intent(this, AddTagActivity::class.java), REQUESTCODEADDTAG)
         }
         //наполняем экран данными из базы
@@ -72,12 +70,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             if (items.size > 0) {
-                Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления элемента, последний ID: ${items[0].item_id}")
                 val intent = Intent(this, AddActivity::class.java)
                 intent.putExtra("LASTITEMID", items[0].item_id)
                 startActivityForResult(intent, REQUESTCODEADD)
             } else {
-                Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления элемента, база пустая, последний ID: Null")
                 val intent = Intent(this, AddActivity::class.java)
                 intent.putExtra("LASTITEMID", "Null")
                 startActivityForResult(intent, REQUESTCODEADD)
@@ -154,15 +150,11 @@ class MainActivity : AppCompatActivity() {
                                 "JOIN ${DBHelper.TABLE_ITEMS} as TI ON TIT.${DBHelper.KEY_ITEM_ID}=TI.${DBHelper.KEY_ID} " +
                                 "WHERE TI.${DBHelper.KEY_ID} = '${itemId}'", null)
                 if (cursorItemsTag.moveToFirst()) {
-                    Log.d(LOGDEBUGTAG, "Элемент ${itemTite} обладает следующими тэгами:")
                     do {
                         val tag = Tag(cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_ID)),
                                 cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_TAG)))
                         tags.add(tag)
-                        Log.d(LOGDEBUGTAG, "ID: ${tag.item_id}; TITLE: ${tag.item_title}")
                     } while (cursorItemsTag.moveToNext())
-                } else {
-                    Log.d(LOGDEBUGTAG, "Элемент '${itemTite}' не имеет связанных тэгов")
                 }
                 cursorItemsTag.close()
 
@@ -191,9 +183,7 @@ class MainActivity : AppCompatActivity() {
                     dbTags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                             cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
                 } while (cursorTag.moveToNext())
-            } else {
             }
-
             //устанавливаем адаптер для спиннера
             viewSpinner.adapter = TagAdapterSpinner(dbTags)
             cursorTag.close()
@@ -230,7 +220,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d(LOGDEBUGTAG, "Вернулись на главное активити")
         super.onActivityResult(requestCode, resultCode, data)
         refreshBD()
     }
