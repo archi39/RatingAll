@@ -92,9 +92,8 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
         private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card) as TextView
         private val circleViewCard: CircleProgressView = itemView.findViewById<View>(R.id.circle_view_card) as CircleProgressView
         private val viewTextTags: TextView = itemView.findViewById<View>(R.id.view_text_tags) as TextView
-        /**
-         * Функция усланавливает значения элементов каточки - из данных переданных адаптером
-         */
+
+         //Функция усланавливает значения элементов каточки - из данных переданных адаптером
         fun index(str: String, rating: Float, itemTags: MutableList<Tag>) {
             viewTextCard.text = str
             circleViewCard.setValue(rating)
