@@ -8,7 +8,6 @@ import android.content.Intent
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +23,6 @@ import com.dogvscat.retingall.Tag
 class TagAdapterList(private val viewRecyclerView: RecyclerView,
                      private val tagList: MutableList<Tag>,
                      private val mContext: Context) : RecyclerView.Adapter<TagAdapterList.MyHolderTag>() {
-
-    //специальное поле для отлавливания логов
-    private val LOGDEBUGTAG: String = "POINT"
-
     // добавил код со страницы swypelayout
     // https://github.com/chthai64/SwipeRevealLayout
     private val viewBinderHelper = ViewBinderHelper()
@@ -65,8 +60,6 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
             database.delete(DBHelper.TABLE_TAGS, DBHelper.KEY_ID + "=" + tag.item_id, null)
             tagList.remove(tag)
             viewRecyclerView.adapter = TagAdapterList(viewRecyclerView, tagList, mContext)
-
-            Log.d(LOGDEBUGTAG, "Карточка id:${tag.item_id},title:${tag.item_title} удалена")
             Snackbar.make(viewRecyclerView, "Запись ${tag.item_title} удалена", Snackbar.LENGTH_SHORT).show()
         }
 
@@ -74,8 +67,6 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
         holder.cardEdit.setOnClickListener {
             val intent = Intent(mContext, EditActivity::class.java)
             intent.putExtra("item_id", tag.item_id)
-
-            Log.d(LOGDEBUGTAG, "Обработали нажатие на ${tag.item_id}")
             showEditCardDialog(tag)
         }
     }

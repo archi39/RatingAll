@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.EditText
@@ -32,7 +31,6 @@ import kotlinx.android.synthetic.main.app_bar.*
 import java.io.File
 
 class AddActivity : AppCompatActivity() {
-    private val LOGDEBUGTAG: String = "POINT"
     private val TAKE_PHOTO_REQUEST: Int = 0
     private var mCurrentPhotoPath: String = "none"
     private lateinit var viewRecyclerTagsAdd: RecyclerView
@@ -75,7 +73,6 @@ class AddActivity : AppCompatActivity() {
             val tag = Tag("Null", findViewById<EditText>(R.id.view_text_tag_new).text.toString())
             //добавляем новый тэг
             itemTags.add(tag)
-            Log.d(LOGDEBUGTAG, "Добавлен тег к внесению в базу: ${tag.item_title}.${tag.item_id}")
             //отображаем добавленный тэг в списке тэгов
             viewRecyclerTagsAdd.adapter = TagAdapterCardShort(viewRecyclerTagsAdd, itemTags, this)
         }
@@ -102,9 +99,7 @@ class AddActivity : AppCompatActivity() {
                             if (tag.item_title.equals(dbTag.item_title))
                                 contain = true
                         }
-                        if (contain) {
-                            Log.d(LOGDEBUGTAG, "Элемент [${tag.item_title}] уже есть в базе")
-                        } else {
+                        if (!contain) {
                             contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
                             database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
                         }
@@ -124,18 +119,15 @@ class AddActivity : AppCompatActivity() {
                     for (dbTag in dbTags) {
                         if (tag.item_title == dbTag.item_title) {
                             tag.item_id = dbTag.item_id
-                            Log.d(LOGDEBUGTAG, "Будет добавлен тэг [${tag.item_title}.${tag.item_id}]")
+                            break
                         }
                     }
                     if (lastItemId == "Null") {
                         contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, 1)
-                        Log.d(LOGDEBUGTAG, "Первый элемент в базе имеет id 1")
                     } else {
                         contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt() + 1)
                     }
                     contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
-                    Log.d(LOGDEBUGTAG, "Будет добавлена связка item_id: [${contentValuesItemsTags[DBHelper.KEY_ITEM_ID]}]" +
-                            "[${contentValuesItemsTags[DBHelper.KEY_TAG_ID]}]")
                     database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
                 }
             }
