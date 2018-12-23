@@ -25,10 +25,6 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
                         "$KEY_ID integer primary key," +
                         "$KEY_TAG text)")
 
-                //вставляем запись "Добавить" в таблицу тэгов
-                db.execSQL("INSERT INTO $TABLE_TAGS ($KEY_TAG)" +
-                        "VALUES ('Снять фильтры')")
-
                 // создаем таблицу связей
                 db.execSQL("PRAGMA foreign_keys=on")
                 db.execSQL("create table $TABLE_ITEMS_TAGS (" +
@@ -53,10 +49,6 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         db.execSQL("create table $TABLE_TAGS (" +
                 "$KEY_ID integer primary key," +
                 "$KEY_TAG text)")
-
-        //вставляем запись о добавлении тэга
-        db.execSQL("INSERT INTO $TABLE_TAGS ($KEY_TAG)" +
-                "VALUES ('Добавить')")
 
 
         db.execSQL("PRAGMA foreign_keys=on;")

@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
+import android.widget.Switch
 import com.dogvscat.retingall.adapters.ItemAdapter
 import com.dogvscat.retingall.adapters.TagAdapterSpinner
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -23,11 +24,12 @@ import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 
 
+
+
 class MainActivity : AppCompatActivity() {
     //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
     private val REQUESTCODEADD: Int = 0
-    private val REQUESTCODEEDIT: Int = 1
     private val REQUESTCODEADDTAG: Int = 2
 
     //объявляем ссылки на элементы формы
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewRecyclerView: RecyclerView
     private lateinit var viewSpinner: Spinner
     private lateinit var database: SQLiteDatabase
+    private lateinit var switcher: Switch
 
     //список элементов и тэгов
     val dbTags = mutableListOf<Tag>()
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         layoutMain = findViewById(R.id.layout_activity_main)
         viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
         viewSpinner = findViewById<View>(R.id.spinner) as Spinner
+        switcher = findViewById<View>(R.id.switch_filter) as Switch
 
         //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
         //https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
@@ -60,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         itemAnimator.addDuration = 500
         itemAnimator.removeDuration = 500
         viewRecyclerView.itemAnimator = itemAnimator
-
         viewRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         //вызываем новое активити для добавления нового тэга
@@ -77,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, AddActivity::class.java)
                 intent.putExtra("LASTITEMID", items[0].item_id)
                 startActivityForResult(intent, REQUESTCODEADD)
-            }else{
+            } else {
                 Log.d(LOGDEBUGTAG, "Переходим на страницу для добавления элемента, база пустая, последний ID: Null")
                 val intent = Intent(this, AddActivity::class.java)
                 intent.putExtra("LASTITEMID", "Null")
@@ -86,33 +89,38 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        viewSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        switcher.setOnCheckedChangeListener { _, _ ->
+            refreshBD()
+        }
+
+        viewSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                //если список элементов не пустой, проходим по списку, в каждом элементе для списка
-                //его тэгов, если он не пустой проверяем совпадает ли выбранный чек боксом тэг хотябы
-                //с одним из списка тэгов, если совпадает - добавляем элемент в список отфильтрованных элементов
-                filterItems.clear()
-                if(items.size>0){
-                    for(item in items){
-                        if(item.item_tags.isNotEmpty())
-                            for(itemTag in item.item_tags){
-                                if(itemTag.item_title == dbTags[position].item_title) {
-                                    filterItems.add(item)
-                                    break
+                if (switcher.isChecked) {
+                    //если список элементов не пустой, проходим по списку, в каждом элементе для списка
+                    //его тэгов, если он не пустой проверяем совпадает ли выбранный чек боксом тэг хотябы
+                    //с одним из списка тэгов, если совпадает - добавляем элемент в список отфильтрованных элементов
+                    filterItems.clear()
+                    if (items.size > 0) {
+                        for (item in items) {
+                            if (item.item_tags.isNotEmpty())
+                                for (itemTag in item.item_tags) {
+                                    if (itemTag.item_title == dbTags[position].item_title) {
+                                        filterItems.add(item)
+                                        break
+                                    }
                                 }
-                            }
+                        }
+                        viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, filterItems, layoutMain.context)
+                        Snackbar.make(layoutMain, "Отфильтровано по тэгу [${dbTags[position].item_title}]", Snackbar.LENGTH_SHORT).show()
+                    } else {
+                        Snackbar.make(layoutMain, "Фильтровать нечего", Snackbar.LENGTH_SHORT).show()
                     }
-                    viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, filterItems, layoutMain.context)
-                    Snackbar.make(layoutMain, "Отфильтровано по тэгу [${dbTags[position].item_title}]", Snackbar.LENGTH_SHORT).show()
-                }else{
-                    Snackbar.make(layoutMain, "Фильтровать нечего", Snackbar.LENGTH_SHORT).show()
                 }
             }
-
         }
     }
 
@@ -172,32 +180,34 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
         }
 
-        //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
-        val cursorTag = database.query(DBHelper.TABLE_TAGS,
-                null,
-                null,
-                null,
-                null,
-                null,
-                DBHelper.KEY_ID + " DESC")
+        if(switcher.isChecked) {
+            //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
+            val cursorTag = database.query(DBHelper.TABLE_TAGS,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    DBHelper.KEY_ID + " DESC")
 
-        if (cursorTag.moveToFirst()) {
-            do {
-                //наполняем наш список элементами
-                dbTags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
-                        cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
-            } while (cursorTag.moveToNext())
-        } else {
+            if (cursorTag.moveToFirst()) {
+                do {
+                    //наполняем наш список элементами
+                    dbTags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
+                            cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
+                } while (cursorTag.moveToNext())
+            } else {
+            }
+
+            //устанавливаем адаптер для спиннера
+            viewSpinner.adapter = TagAdapterSpinner(dbTags)
+            cursorTag.close()
         }
-
-        //устанавливаем адаптер для спиннера
-        viewSpinner.adapter =  TagAdapterSpinner(dbTags)
         //устанавливаем адаптер для RecyclerView с значениями из базы данных
         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
 
         cursorItem.close()
-        cursorTag.close()
-}
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
