@@ -3,20 +3,18 @@ package com.dogvscat.retingall
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
-
+import com.dogvscat.retingall.adapters.TagAdapterList
 import kotlinx.android.synthetic.main.activity_add_tag.*
 import kotlinx.android.synthetic.main.app_bar.*
-import com.dogvscat.retingall.adapters.TagAdapterList
 
 
 class AddTagActivity : AppCompatActivity() {
     lateinit var viewRecyclerTags: RecyclerView
     lateinit var database: SQLiteDatabase
-    private val LOGDEBUGTAG: String = "POINT"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +72,6 @@ class AddTagActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
