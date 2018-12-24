@@ -3,10 +3,10 @@ package com.dogvscat.retingall.adapters
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +15,11 @@ import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.dogvscat.retingall.*
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.common.ResizeOptions
+import com.facebook.imagepipeline.request.ImageRequestBuilder
+import java.io.File
 
 
 class ItemAdapter(private val viewRecyclerView: RecyclerView,
@@ -75,9 +80,36 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             (mContext as Activity).startActivityForResult(intent, REQUESTCODEEDIT)
         }
 
-        //Здесь реализуем акардеон
+        //по нажатию на карточку появляется диалоговое окно
         holder.viewTextCard.setOnClickListener {
-            Log.d("POINT","А сейчас вылезет аккардион ${item.item_image}")
+            val builder = android.app.AlertDialog.Builder(mContext)
+            builder.setTitle("${item.item_title}")
+            val view = (mContext as Activity).layoutInflater.inflate(R.layout.dialog_item_detail, null)
+            val viewTextItemDetail = view.findViewById<TextView>(R.id.view_text_item_detail)
+            val imageItemDetail = view.findViewById<SimpleDraweeView>(R.id.image_item_detail)
+            viewTextItemDetail.text = item.item_image
+
+            //Получаем фото
+            val file = File(item.item_image)
+            val uri = Uri.fromFile(file)
+
+            val height = mContext.resources.getDimensionPixelSize(R.dimen.photo_height)
+            val width = mContext.resources.getDimensionPixelSize(R.dimen.photo_width)
+
+            val request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setResizeOptions(ResizeOptions(width, height))
+                    .build()
+            val controller = Fresco.newDraweeControllerBuilder()
+                    .setOldController(imageItemDetail?.controller)
+                    .setImageRequest(request)
+                    .build()
+            imageItemDetail?.controller = controller
+
+            builder.setView(view)
+            builder.setPositiveButton("Ок") { _, _ ->
+                //Ничего не делаем, просто закрываем окно
+            }
+            builder.show()
         }
     }
 
@@ -87,7 +119,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
      * Вложенный класс, описывающий элемент RecyclerView, в нашем случае это карточки
      */
     class MyHolder(itemView: View, private val mContent: Context) : RecyclerView.ViewHolder(itemView) {
-        val swipeLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout)
+        var swipeLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout)
         val cardDelete: CardView = itemView.findViewById(R.id.card_delete)
         val cardEdit: CardView = itemView.findViewById(R.id.card_edit)
         val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card) as TextView
