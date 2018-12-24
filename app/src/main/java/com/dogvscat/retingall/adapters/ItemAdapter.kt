@@ -6,6 +6,7 @@ import android.content.Intent
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +74,11 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             intent.putExtra("item_id", item.item_id)
             (mContext as Activity).startActivityForResult(intent, REQUESTCODEEDIT)
         }
+
+        //Здесь реализуем акардеон
+        holder.viewTextCard.setOnClickListener {
+            Log.d("POINT","А сейчас вылезет аккардион ${item.item_image}")
+        }
     }
 
     override fun getItemCount(): Int = itemsList.size
@@ -84,7 +90,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
         val swipeLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout)
         val cardDelete: CardView = itemView.findViewById(R.id.card_delete)
         val cardEdit: CardView = itemView.findViewById(R.id.card_edit)
-        private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card) as TextView
+        val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card) as TextView
         private val circleViewCard: CircleProgressView = itemView.findViewById<View>(R.id.circle_view_card) as CircleProgressView
         private val viewTextTags: TextView = itemView.findViewById<View>(R.id.view_text_tags) as TextView
 

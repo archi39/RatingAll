@@ -161,6 +161,7 @@ class MainActivity : AppCompatActivity() {
                 items.add(Item(itemId,
                         itemTite,
                         cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_RATING)).toFloat(),
+                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_IMAGE)),
                         tags))
             } while (cursorItem.moveToNext())
         } else {

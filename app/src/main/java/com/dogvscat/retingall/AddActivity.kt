@@ -41,6 +41,7 @@ class AddActivity : AppCompatActivity() {
     private lateinit var lastItemId: String
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
