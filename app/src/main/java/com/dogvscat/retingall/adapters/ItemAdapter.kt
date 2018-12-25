@@ -19,7 +19,9 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import kotlinx.android.synthetic.main.activity_add.*
 import java.io.File
+import java.net.URI
 
 
 class ItemAdapter(private val viewRecyclerView: RecyclerView,
@@ -90,7 +92,13 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             viewTextItemDetail.text = item.item_image
 
             //Получаем фото
-            val file = File(item.item_image)
+            val cursor = mContext.contentResolver.query(Uri.parse(item.item_image),
+                    Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
+                    null, null, null)
+            cursor!!.moveToFirst()
+            val photoPath = cursor.getString(0)
+            cursor.close()
+            val file = File(photoPath)
             val uri = Uri.fromFile(file)
 
             val height = mContext.resources.getDimensionPixelSize(R.dimen.photo_height)
