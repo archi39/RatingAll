@@ -88,11 +88,13 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             val builder = android.app.AlertDialog.Builder(mContext)
             //builder.setTitle("${item.item_title}")
             val view = (mContext as Activity).layoutInflater.inflate(R.layout.dialog_item_detail, null)
-            val viewTextItemDetail = view.findViewById<TextView>(R.id.view_text_item_detail)
+            val viewTextItemTags = view.findViewById<TextView>(R.id.view_text_item_tags)
+            val viewTextItemRating = view.findViewById<TextView>(R.id.view_text_item_rating)
             val viewTextItemTitle = view.findViewById<TextView>(R.id.view_text_item_title)
             val imageItemDetail = view.findViewById<SimpleDraweeView>(R.id.image_item_detail)
             val flButClose = view.findViewById<FloatingActionButton>(R.id.flBut_close)
 
+            viewTextItemRating.text = "Оценка: ${item.item_rating}"
             viewTextItemTitle.text = item.item_title
             //выводим информацию по тэгам
             var textItemString: String = ""
@@ -103,7 +105,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             } else{
                 textItemString += "У элемента нет тэгов"
             }
-            viewTextItemDetail.text = textItemString
+            viewTextItemTags.text = textItemString
 
             //Получаем фото
             if(item.item_image!= "none") {

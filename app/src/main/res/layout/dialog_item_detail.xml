@@ -18,15 +18,28 @@
         android:gravity="center"
         android:text="@string/string_test_short_rus"
         android:textColor="@color/colorProgressBarText"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/view_text_item_detail"
+        android:id="@+id/view_text_item_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_text_item_title" />
+
+    <TextView
+        android:id="@+id/view_text_item_tags"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:gravity="center|start"
@@ -36,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_text_item_title" />
+        app:layout_constraintTop_toBottomOf="@+id/view_text_item_rating" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_item_detail"
@@ -49,7 +62,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_text_item_detail"
+        app:layout_constraintTop_toBottomOf="@+id/view_text_item_tags"
         app:layout_constraintVertical_bias="0.0"
         app:placeholderImage="@drawable/ic_image"
         app:placeholderImageScaleType="center" />
@@ -59,8 +72,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -82,7 +95,7 @@
             android:elevation="16dp"
             android:text="@android:string/ok"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/colorSplashScreen" />
     </FrameLayout>
 
 
