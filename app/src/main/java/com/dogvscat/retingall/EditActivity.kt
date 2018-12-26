@@ -4,7 +4,11 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,7 +18,18 @@ import android.widget.EditText
 import android.widget.TextView
 import com.dogvscat.retingall.adapters.TagAdapterCardShort
 import com.dogvscat.retingall.adapters.TagAdapterListCardShort
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.common.ResizeOptions
+import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.app_bar.*
+import java.io.File
 
 class EditActivity : AppCompatActivity() {
     private lateinit var itemParentId: String
@@ -23,6 +38,8 @@ class EditActivity : AppCompatActivity() {
     private lateinit var editTextTitle: EditText
     private lateinit var editTextNumber: EditText
     private lateinit var viewRecyclerTagsEdit: RecyclerView
+    private lateinit var imageEditDetail: SimpleDraweeView
+    var itemImagePath = "none"
     //список всех тэгов в базе
     private val dbTags: MutableList<Tag> = mutableListOf()
     //список тэгов редактируемых в процессе
@@ -46,6 +63,8 @@ class EditActivity : AppCompatActivity() {
         layoutActivityEdit = findViewById(R.id.layout_activity_edit)
         editTextTitle = findViewById(R.id.edit_text_title)
         editTextNumber = findViewById(R.id.edit_text_number)
+        imageEditDetail = findViewById(R.id.image_edit_detail)
+
         //список тэгов на экране - наполнение происходит в блоке инициализации
         viewRecyclerTagsEdit = findViewById<View>(R.id.view_recycler_tags_edit) as RecyclerView
         viewRecyclerTagsEdit.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -53,6 +72,31 @@ class EditActivity : AppCompatActivity() {
         initElement()
         //набиваем пепременную тэгами из базы данных
         refreshDbTag()
+
+        //выводим изображение при его наличии
+        //Получаем фото
+        if(itemImagePath!= "none") {
+            val cursor = this.contentResolver.query(Uri.parse(itemImagePath),
+                    Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
+                    null, null, null)
+            cursor!!.moveToFirst()
+            val photoPath = cursor.getString(0)
+            cursor.close()
+            val file = File(photoPath)
+            val uri = Uri.fromFile(file)
+
+            val height = this.resources.getDimensionPixelSize(R.dimen.photo_height)
+            val width = this.resources.getDimensionPixelSize(R.dimen.photo_width)
+
+            val request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setResizeOptions(ResizeOptions(width, height))
+                    .build()
+            val controller = Fresco.newDraweeControllerBuilder()
+                    .setOldController(imageEditDetail?.controller)
+                    .setImageRequest(request)
+                    .build()
+            imageEditDetail?.controller = controller
+        }
 
         //выводим список уже созданных тэгов
         findViewById<View>(R.id.view_edit_tag_add_list).setOnClickListener {
@@ -74,6 +118,7 @@ class EditActivity : AppCompatActivity() {
             // подготовим значения для обновления
             contentValues.put(DBHelper.KEY_TITLE, editTextTitle.text.toString())
             contentValues.put(DBHelper.KEY_RATING, editTextNumber.text.toString().toFloat())
+            contentValues.put(DBHelper.KEY_IMAGE, itemImagePath)
             // обновляем по id
             database.update(DBHelper.TABLE_ITEMS,
                     contentValues,
@@ -206,6 +251,11 @@ class EditActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, Intent())
             finish()
         }
+
+        //Реализуем изменение фото
+        imageEditDetail.setOnClickListener{
+            validatePermissions()
+        }
     }
 
     //выводит все тэги, которые есть в базе
@@ -277,6 +327,7 @@ class EditActivity : AppCompatActivity() {
             do {
                 itemTitle = cursor.getString(cursor.getColumnIndex(DBHelper.KEY_TITLE))
                 val rating = cursor.getString(cursor.getColumnIndex(DBHelper.KEY_RATING))
+                itemImagePath = cursor.getString(cursor.getColumnIndex(DBHelper.KEY_IMAGE))
 
                 //наполняем наш список элементами
                 editTextTitle.setText(itemTitle, TextView.BufferType.EDITABLE)
@@ -304,5 +355,101 @@ class EditActivity : AppCompatActivity() {
         cursorItemsTag.close()
 
         viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
+    }
+
+    private fun validatePermissions() {
+        Dexter.withActivity(this)
+                .withPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(object : PermissionListener {
+                    override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                        pickImage()
+                    }
+                    override fun onPermissionRationaleShouldBeShown(permission: com.karumi.dexter.listener.PermissionRequest?, token: PermissionToken?) {
+                        AlertDialog.Builder(this@EditActivity)
+                                .setTitle(
+                                        R.string.storage_permission_rationale_title)
+                                .setMessage(
+                                        R.string.storage_permition_rationale_message)
+                                .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                                    dialog.dismiss()
+                                    token?.cancelPermissionRequest()
+                                }
+                                .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                                    dialog.dismiss()
+                                    token?.continuePermissionRequest()
+                                }
+                                .setOnDismissListener {
+                                    token?.cancelPermissionRequest()
+                                }
+                                .show()
+                    }
+
+                    override fun onPermissionDenied(
+                            response: PermissionDeniedResponse?) {
+                        Snackbar.make(layout_add_main!!,
+                                R.string.storage_permission_denied_message,
+                                Snackbar.LENGTH_LONG)
+                                .show()
+                    }
+                })
+                .check()
+    }
+
+    /**
+     * Выбираем изображение
+     */
+    private fun pickImage() {
+        val values = ContentValues(1)
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+        val fileUri = contentResolver
+                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        values)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(packageManager) != null) {
+            itemImagePath = fileUri!!.toString()
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            startActivityForResult(intent, 0)
+        }
+    }
+
+    /**
+     * Проверяем, получено ли фото
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int,
+                                  data: Intent?) {
+        if (resultCode == Activity.RESULT_OK
+                && requestCode == 0) {
+            processCapturedPhoto()
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    /**
+     * обрабатываем полученное фото
+     */
+    private fun processCapturedPhoto() {
+        val cursor = contentResolver.query(Uri.parse(itemImagePath),
+                Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
+                null, null, null)
+        cursor!!.moveToFirst()
+        val photoPath = cursor.getString(0)
+        cursor.close()
+        val file = File(photoPath)
+        val uri = Uri.fromFile(file)
+
+        val height = resources.getDimensionPixelSize(R.dimen.photo_height)
+        val width = resources.getDimensionPixelSize(R.dimen.photo_width)
+
+        val request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setResizeOptions(ResizeOptions(width, height))
+                .build()
+        val controller = Fresco.newDraweeControllerBuilder()
+                .setOldController(imageEditDetail?.controller)
+                .setImageRequest(request)
+                .build()
+        imageEditDetail?.controller = controller
     }
 }
