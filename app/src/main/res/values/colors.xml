@@ -3,8 +3,8 @@
     <color name="colorSplashScreen">#01131D</color>
 
     <color name="colorPrimary">#05677c</color>
-    <color name="colorPrimaryDark">#03334e</color>
-    <color name="colorAccent">#369fda</color>
+    <color name="colorPrimaryDark">#03334E</color>
+    <color name="colorAccent">#369FDA</color>
 
     <color name="colorListItemBG">#2176a6</color>
     <color name="colorListItemEdit">#eaae0a</color>
@@ -12,6 +12,6 @@
     <color name="colorFontItemTag">#EAAE0A</color>
 
 
-    <color name="colorProgressBarText">#def3ff</color>
+    <color name="colorProgressBarText">#DEF3FF</color>
     <color name="btn_delete">#47c6ca</color>
 </resources>
