@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.View
 import android.widget.EditText
+import at.grabner.circleprogress.CircleProgressView
 import butterknife.ButterKnife
 import com.dogvscat.retingall.adapters.TagAdapterCardShort
 import com.dogvscat.retingall.adapters.TagAdapterListCardShort
@@ -85,7 +86,7 @@ class AddActivity : AppCompatActivity() {
             //создаем новую запись в таблице TABLE_ITEMS
             val contentValuesItem = ContentValues()
             contentValuesItem.put(DBHelper.KEY_TITLE, edit_text_title.text.toString())
-            contentValuesItem.put(DBHelper.KEY_RATING, edit_text_number.text.toString().toFloat())
+            contentValuesItem.put(DBHelper.KEY_RATING, circle_view_add.currentValue)
             contentValuesItem.put(DBHelper.KEY_IMAGE, mCurrentPhotoPath)
             database.insert(DBHelper.TABLE_ITEMS, null, contentValuesItem)
 
@@ -135,7 +136,7 @@ class AddActivity : AppCompatActivity() {
             database.close()
             val intent = Intent()
             intent.putExtra("title", edit_text_title.text.toString())
-            intent.putExtra("respect", edit_text_number.text.toString().toFloat())
+            intent.putExtra("respect", circle_view_add.currentValue)
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
