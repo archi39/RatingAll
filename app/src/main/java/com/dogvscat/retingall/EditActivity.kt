@@ -28,6 +28,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.app_bar.*
 import java.io.File
 
@@ -36,7 +37,6 @@ class EditActivity : AppCompatActivity() {
     private lateinit var database: SQLiteDatabase
     private lateinit var layoutActivityEdit: View
     private lateinit var editTextTitle: EditText
-    private lateinit var editTextNumber: EditText
     private lateinit var viewRecyclerTagsEdit: RecyclerView
     private lateinit var imageEditDetail: SimpleDraweeView
     var itemImagePath = "none"
@@ -62,7 +62,6 @@ class EditActivity : AppCompatActivity() {
         //получаем ссылки на элементы графического интерфейса
         layoutActivityEdit = findViewById(R.id.layout_activity_edit)
         editTextTitle = findViewById(R.id.edit_text_title)
-        editTextNumber = findViewById(R.id.edit_text_number)
         imageEditDetail = findViewById(R.id.image_edit_detail)
 
         //список тэгов на экране - наполнение происходит в блоке инициализации
@@ -117,7 +116,7 @@ class EditActivity : AppCompatActivity() {
             val contentValues = ContentValues()
             // подготовим значения для обновления
             contentValues.put(DBHelper.KEY_TITLE, editTextTitle.text.toString())
-            contentValues.put(DBHelper.KEY_RATING, editTextNumber.text.toString().toFloat())
+            contentValues.put(DBHelper.KEY_RATING, circle_view_edit.currentValue)
             contentValues.put(DBHelper.KEY_IMAGE, itemImagePath)
             // обновляем по id
             database.update(DBHelper.TABLE_ITEMS,
@@ -331,7 +330,7 @@ class EditActivity : AppCompatActivity() {
 
                 //наполняем наш список элементами
                 editTextTitle.setText(itemTitle, TextView.BufferType.EDITABLE)
-                editTextNumber.setText(rating, TextView.BufferType.EDITABLE)
+                circle_view_edit.setValue(rating.toFloat())
             } while (cursor.moveToNext())
         } else {
         }

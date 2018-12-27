@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,6 +17,27 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <at.grabner.circleprogress.CircleProgressView
+            android:id="@+id/circle_view_edit"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            CircleProgressView:cpv_autoTextSize="true"
+            CircleProgressView:cpv_barColor="@color/colorPrimary"
+            CircleProgressView:cpv_barWidth="8dp"
+            CircleProgressView:cpv_innerContourSize="0dp"
+            CircleProgressView:cpv_maxValue="100"
+            CircleProgressView:cpv_outerContourSize="0dp"
+            CircleProgressView:cpv_rimColor="@color/colorAccent"
+            CircleProgressView:cpv_rimWidth="8dp"
+            CircleProgressView:cpv_seekMode="true"
+            CircleProgressView:cpv_showUnit="false"
+            CircleProgressView:cpv_spinColor="@color/colorPrimary"
+            CircleProgressView:cpv_textColor="@color/colorProgressBarText"
+            CircleProgressView:cpv_textScale="1"
+            CircleProgressView:cpv_value="0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,31 +64,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/title_view_text_respect" />
-
-            <EditText
-                android:id="@+id/edit_text_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:labelFor="@id/edit_text_number"
-                android:text="@string/default_view_text_number"
-                tools:targetApi="o" />
-
-        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/view_recycler_tags_edit"
