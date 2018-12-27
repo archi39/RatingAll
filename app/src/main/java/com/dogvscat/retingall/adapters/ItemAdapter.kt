@@ -136,7 +136,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             flButClose.setOnClickListener {
                 alertDialog.dismiss()
             }
-            alertDialog.getWindow().setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             alertDialog.show()
         }
     }

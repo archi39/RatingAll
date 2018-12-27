@@ -91,10 +91,10 @@ class EditActivity : AppCompatActivity() {
                     .setResizeOptions(ResizeOptions(width, height))
                     .build()
             val controller = Fresco.newDraweeControllerBuilder()
-                    .setOldController(imageEditDetail?.controller)
+                    .setOldController(imageEditDetail.controller)
                     .setImageRequest(request)
                     .build()
-            imageEditDetail?.controller = controller
+            imageEditDetail.controller = controller
         }
 
         //выводим список уже созданных тэгов
@@ -446,9 +446,9 @@ class EditActivity : AppCompatActivity() {
                 .setResizeOptions(ResizeOptions(width, height))
                 .build()
         val controller = Fresco.newDraweeControllerBuilder()
-                .setOldController(imageEditDetail?.controller)
+                .setOldController(imageEditDetail.controller)
                 .setImageRequest(request)
                 .build()
-        imageEditDetail?.controller = controller
+        imageEditDetail.controller = controller
     }
 }
