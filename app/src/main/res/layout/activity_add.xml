@@ -48,15 +48,16 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/title_view_text_add" />
 
                 <EditText
                     android:id="@+id/edit_text_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
