@@ -58,6 +58,9 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
             val database = DBHelper(mContext).writableDatabase
 
             database.delete(DBHelper.TABLE_TAGS, DBHelper.KEY_ID + "=" + tag.item_id, null)
+            //удаляем связки тэга с элементами
+            database.delete(DBHelper.TABLE_ITEMS_TAGS, DBHelper.KEY_TAG_ID + "=" + tag.item_id ,null)
+
             tagList.remove(tag)
             viewRecyclerView.adapter = TagAdapterList(viewRecyclerView, tagList, mContext)
             Snackbar.make(viewRecyclerView, "Запись ${tag.item_title} удалена", Snackbar.LENGTH_SHORT).show()

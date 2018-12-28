@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -168,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
         }
 
-        if(switcher.isChecked) {
+        if (switcher.isChecked) {
             //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
             val cursorTag = database.query(DBHelper.TABLE_TAGS,
                     null,
@@ -193,6 +194,79 @@ class MainActivity : AppCompatActivity() {
         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, items, this)
 
         cursorItem.close()
+        database.close()
+
+
+    }
+
+    /**
+     * Функция выводит в лог всю базу данных
+     */
+    private fun printDB() {
+        val databaseItemLog = DBHelper(this).writableDatabase
+        val cursorItemLog = databaseItemLog.query(DBHelper.TABLE_ITEMS,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null)
+        Log.d(LOGDEBUGTAG,"TABLE_ITEMS:")
+        if (cursorItemLog.moveToFirst()) {
+            do {
+                Log.d(LOGDEBUGTAG,
+                        "id[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_ID))}], " +
+                              "title[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_TITLE))}], " +
+                              "rating[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_RATING))}], " +
+                              "image[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_IMAGE))}]")
+            } while (cursorItemLog.moveToNext())
+        } else {
+            Log.d(LOGDEBUGTAG,"EMPTY")
+        }
+        cursorItemLog.close()
+        databaseItemLog.close()
+
+        val databaseTagLog = DBHelper(this).writableDatabase
+        val cursorTagLog = databaseTagLog.query(DBHelper.TABLE_TAGS,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null)
+        Log.d(LOGDEBUGTAG,"TABLE_TAGS:")
+        if (cursorTagLog.moveToFirst()) {
+            do {
+                Log.d(LOGDEBUGTAG,
+                        "id[${cursorTagLog.getString(cursorTagLog.getColumnIndex(DBHelper.KEY_ID))}], " +
+                              "tag[${cursorTagLog.getString(cursorTagLog.getColumnIndex(DBHelper.KEY_TAG))}]")
+            } while (cursorTagLog.moveToNext())
+        } else {
+            Log.d(LOGDEBUGTAG,"EMPTY")
+        }
+        cursorTagLog.close()
+        databaseTagLog.close()
+
+        val databaseItemTagLog = DBHelper(this).writableDatabase
+        val cursorItemTagLog = databaseItemTagLog.query(DBHelper.TABLE_ITEMS_TAGS,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null)
+        Log.d(LOGDEBUGTAG,"TABLE_ITEMS_TAGS:")
+        if (cursorItemTagLog.moveToFirst()) {
+            do {
+                Log.d(LOGDEBUGTAG,
+                    "item_id[${cursorItemTagLog.getString(cursorItemTagLog.getColumnIndex(DBHelper.KEY_ITEM_ID))}], " +
+                          "tag_id[${cursorItemTagLog.getString(cursorItemTagLog.getColumnIndex(DBHelper.KEY_TAG_ID))}]")
+            } while (cursorItemTagLog.moveToNext())
+        } else {
+            Log.d(LOGDEBUGTAG,"EMPTY")
+        }
+        cursorItemTagLog.close()
+        databaseItemTagLog.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -223,5 +297,6 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         refreshBD()
+        printDB()
     }
 }
