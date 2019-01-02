@@ -36,8 +36,10 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:importantForAutofill="no"
-                android:inputType="textPersonName"
+                android:inputType="textShortMessage"
                 android:labelFor="@id/edit_text_title"
+                android:maxLength="10"
+                android:singleLine="true"
                 tools:targetApi="o" />
 
         </LinearLayout>

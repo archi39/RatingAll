@@ -76,7 +76,7 @@
                 android:id="@+id/view_recycler_tags_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"></android.support.v7.widget.RecyclerView>
+                android:background="@color/colorPrimaryDark" />
 
 
             <LinearLayout
@@ -126,6 +126,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
+                    android:inputType="textShortMessage"
+                    android:maxLength="10"
+                    android:singleLine="true"
                     android:text="@string/title_new"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="14sp" />
