@@ -18,6 +18,9 @@ import android.widget.Spinner
 import android.widget.Switch
 import com.dogvscat.retingall.adapters.ItemAdapter
 import com.dogvscat.retingall.adapters.TagAdapterSpinner
+import com.dogvscat.retingall.dto.Item
+import com.dogvscat.retingall.dto.Tag
+import com.dogvscat.retingall.services.DBHelper
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*

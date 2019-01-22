@@ -1,4 +1,4 @@
-package com.dogvscat.retingall
+package com.dogvscat.retingall.services
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

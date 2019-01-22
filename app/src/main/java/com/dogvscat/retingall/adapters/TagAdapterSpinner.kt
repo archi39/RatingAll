@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.dogvscat.retingall.R
-import com.dogvscat.retingall.Tag
+import com.dogvscat.retingall.dto.Tag
 
 
 class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {

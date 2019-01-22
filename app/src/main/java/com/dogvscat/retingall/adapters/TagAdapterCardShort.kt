@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.dogvscat.retingall.R
-import com.dogvscat.retingall.Tag
+import com.dogvscat.retingall.dto.Tag
 
 class TagAdapterCardShort(private val viewRecyclerView: RecyclerView,
                           private val tagList: MutableList<Tag>,

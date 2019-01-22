@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import com.dogvscat.retingall.adapters.TagAdapterList
+import com.dogvscat.retingall.dto.Tag
+import com.dogvscat.retingall.services.DBHelper
 import kotlinx.android.synthetic.main.activity_add_tag.*
 import kotlinx.android.synthetic.main.app_bar.*
 

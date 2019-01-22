@@ -18,6 +18,8 @@ import android.widget.EditText
 import android.widget.TextView
 import com.dogvscat.retingall.adapters.TagAdapterCardShort
 import com.dogvscat.retingall.adapters.TagAdapterListCardShort
+import com.dogvscat.retingall.dto.Tag
+import com.dogvscat.retingall.services.DBHelper
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.common.ResizeOptions

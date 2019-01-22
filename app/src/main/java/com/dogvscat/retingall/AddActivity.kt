@@ -15,10 +15,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.View
 import android.widget.EditText
-import at.grabner.circleprogress.CircleProgressView
 import butterknife.ButterKnife
 import com.dogvscat.retingall.adapters.TagAdapterCardShort
 import com.dogvscat.retingall.adapters.TagAdapterListCardShort
+import com.dogvscat.retingall.dto.Tag
+import com.dogvscat.retingall.services.DBHelper
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder

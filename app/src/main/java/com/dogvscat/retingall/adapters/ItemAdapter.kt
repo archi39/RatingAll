@@ -18,6 +18,9 @@ import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.dogvscat.retingall.*
+import com.dogvscat.retingall.dto.Item
+import com.dogvscat.retingall.dto.Tag
+import com.dogvscat.retingall.services.DBHelper
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.common.ResizeOptions

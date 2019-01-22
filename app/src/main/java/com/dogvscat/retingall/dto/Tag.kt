@@ -1,4 +1,4 @@
-package com.dogvscat.retingall
+package com.dogvscat.retingall.dto
 
 /**
  * Класс содержит описание объекта списка
