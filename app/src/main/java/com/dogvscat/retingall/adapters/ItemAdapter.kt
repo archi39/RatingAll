@@ -33,7 +33,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
                   private val mContext: Context) : RecyclerView.Adapter<ItemAdapter.MyHolder>() {
     private val REQUESTCODEEDIT: Int = 1
 
-    // добавил код со страницы swypelayout
+    // добавил код со страницы swypelayout - реализация возможности делать свайп
     // https://github.com/chthai64/SwipeRevealLayout
     private val viewBinderHelper = ViewBinderHelper()
 
@@ -89,7 +89,8 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
         //по нажатию на карточку появляется диалоговое окно
         holder.viewTextCard.setOnClickListener {
             val builder = android.app.AlertDialog.Builder(mContext)
-            //builder.setTitle("${item.item_title}")
+
+            //создаём View из XML
             val view = (mContext as Activity).layoutInflater.inflate(R.layout.dialog_item_detail, null)
             val viewTextItemTags = view.findViewById<TextView>(R.id.view_text_item_tags)
             val viewTextItemRating = view.findViewById<TextView>(R.id.view_text_item_rating)
@@ -100,7 +101,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             viewTextItemRating.text = "Оценка: ${item.item_rating}"
             viewTextItemTitle.text = item.item_title
             //выводим информацию по тэгам
-            var textItemString: String = ""
+            var textItemString = ""
             if(item.item_tags.size > 0) {
                 for (tag in item.item_tags) {
                     textItemString += "#${tag.item_title} "
@@ -112,6 +113,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
 
             //Получаем фото
             if(item.item_image!= "none") {
+                //Делаем запрос в MediaStore с целью получить изображение по его URL
                 val cursor = mContext.contentResolver.query(Uri.parse(item.item_image),
                         Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
                         null, null, null)

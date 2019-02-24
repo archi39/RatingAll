@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         //Инициализируем библотеку для работы с фото
         Fresco.initialize(this)
         setContentView(R.layout.activity_main)
-        //add toolbar to the activity
         setSupportActionBar(toolbar)
 
         //получаем ссылки на элементы графического интерфейса
@@ -88,6 +87,7 @@ class MainActivity : AppCompatActivity() {
             refreshBD()
         }
 
+        //переопределяем обработчик выбора элемента выбора тэгов
         viewSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -95,9 +95,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (switcher.isChecked) {
-                    //если список элементов не пустой, проходим по списку, в каждом элементе для списка
-                    //его тэгов, если он не пустой проверяем совпадает ли выбранный чек боксом тэг хотябы
-                    //с одним из списка тэгов, если совпадает - добавляем элемент в список отфильтрованных элементов
+                    //если список элементов базы не пустой, проходим по нему, в каждом элементе для списка
+                    //его тэгов проверяем наличие в списке выбранного тэга,
+                    //если присутствует - добавляем элемент в список отфильтрованных элементов
                     filterItems.clear()
                     if (items.size > 0) {
                         for (item in items) {
