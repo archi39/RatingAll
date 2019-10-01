@@ -17,7 +17,8 @@ import android.widget.TextView
 import at.grabner.circleprogress.CircleProgressView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
-import com.dogvscat.retingall.*
+import com.dogvscat.retingall.EditActivity
+import com.dogvscat.retingall.R
 import com.dogvscat.retingall.dto.Item
 import com.dogvscat.retingall.dto.Tag
 import com.dogvscat.retingall.services.DBHelper
@@ -27,7 +28,9 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import java.io.File
 
-
+/**
+ * @author EvgenySamarin
+ */
 class ItemAdapter(private val viewRecyclerView: RecyclerView,
                   private val itemsList: MutableList<Item>,
                   private val mContext: Context) : RecyclerView.Adapter<ItemAdapter.MyHolder>() {

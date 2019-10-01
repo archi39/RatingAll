@@ -6,8 +6,12 @@ import android.support.v7.app.AppCompatActivity
 
 
 //экран загрузки
-class
-SplashActivity : AppCompatActivity() {
+/**
+ * Экран предзагрузки
+ *
+ * @author EvgenySamarin
+ */
+class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,6 +1,7 @@
 package com.dogvscat.retingall
 
 import android.content.Intent
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -9,7 +10,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -25,8 +25,12 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 
+/**
+ * Главное окно программы, точка входа в приложение
+ *
+ * @author EvgenySamarin
+ */
 class MainActivity : AppCompatActivity() {
-    //специальное поле для отлавливания логов
     private val LOGDEBUGTAG: String = "POINT"
     private val REQUESTCODEADD: Int = 0
     private val REQUESTCODEADDTAG: Int = 2
@@ -45,31 +49,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Инициализируем библотеку для работы с фото
-        Fresco.initialize(this)
+
+        initializeField()
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        //получаем ссылки на элементы графического интерфейса
-        layoutMain = findViewById(R.id.layout_activity_main)
-        viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
-        viewSpinner = findViewById<View>(R.id.spinner) as Spinner
-        switcher = findViewById<View>(R.id.switch_filter) as Switch
+        setListeners()
 
-        //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
-        //https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
-        val itemAnimator = DefaultItemAnimator()
-        itemAnimator.addDuration = 500
-        itemAnimator.removeDuration = 500
-        viewRecyclerView.itemAnimator = itemAnimator
-        viewRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        refreshBD() //наполняем экран данными из базы
+    }
 
+    private fun setListeners() {
         //вызываем новое активити для добавления нового тэга
         view_text_tag_btn.setOnClickListener {
             startActivityForResult(Intent(this, AddTagActivity::class.java), REQUESTCODEADDTAG)
         }
-        //наполняем экран данными из базы
-        refreshBD()
 
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             if (items.size > 0) {
@@ -89,9 +84,7 @@ class MainActivity : AppCompatActivity() {
 
         //переопределяем обработчик выбора элемента выбора тэгов
         viewSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (switcher.isChecked) {
@@ -111,52 +104,58 @@ class MainActivity : AppCompatActivity() {
                         }
                         viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, filterItems, layoutMain.context)
                         Snackbar.make(layoutMain, "Отфильтровано по тэгу [${dbTags[position].item_title}]", Snackbar.LENGTH_SHORT).show()
-                    } else {
-                        Snackbar.make(layoutMain, "Фильтровать нечего", Snackbar.LENGTH_SHORT).show()
-                    }
+                    } else Snackbar.make(layoutMain, "Фильтровать нечего", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    /**
-     * Функиция перечитывает БД и присваивает новый адаптер для recyclerView
-     */
+    private fun initializeField() {
+        //Инициализируем библотеку для работы с фото
+        Fresco.initialize(this)
+
+        //получаем ссылки на элементы графического интерфейса
+        layoutMain = findViewById(R.id.layout_activity_main)
+        viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
+        viewSpinner = findViewById<View>(R.id.spinner) as Spinner
+        switcher = findViewById<View>(R.id.switch_filter) as Switch
+
+        //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
+        //https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
+        val itemAnimator = DefaultItemAnimator()
+        itemAnimator.addDuration = 500
+        itemAnimator.removeDuration = 500
+        viewRecyclerView.itemAnimator = itemAnimator
+        viewRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
+
+    /** Функиция перечитывает БД и присваивает новый адаптер для recyclerView */
     private fun refreshBD() {
+        fun getCursor(nameDB: String) = database.query(nameDB, null, null,
+                null, null, null, DBHelper.KEY_ID + " DESC")
+
         //очищаем список элементов и тэгов
         items.clear()
         dbTags.clear()
-
         database = DBHelper(this).writableDatabase
 
         //создаем курсор для просмотра таблицы записей
-        val cursorItem = database.query(DBHelper.TABLE_ITEMS,
-                null,
-                null,
-                null,
-                null,
-                null,
-                DBHelper.KEY_ID + " DESC")
+        val cursorItem = getCursor(DBHelper.TABLE_ITEMS)
 
         //пробегаем по курсору (по базе - построчно)
         if (cursorItem.moveToFirst()) {
             do {
                 //Добавить выборку из базы по внешним ключам и сформировать список тэгов
                 //наполняем наш список элементами
-                val itemId: String = cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_ID))
-                val itemTite = cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_TITLE))
+                val itemId: String = cursorItem.getDBhelperField(DBHelper.KEY_ID)
+                val itemTite = cursorItem.getDBhelperField(DBHelper.KEY_TITLE)
                 val tags: MutableList<Tag> = mutableListOf()
 
-                val cursorItemsTag = database.rawQuery(
-                        "SELECT TT.${DBHelper.KEY_ID}, TT.${DBHelper.KEY_TAG} " +
-                                "FROM ${DBHelper.TABLE_ITEMS_TAGS} as TIT " +
-                                "JOIN ${DBHelper.TABLE_TAGS} as TT ON TIT.${DBHelper.KEY_TAG_ID}=TT.${DBHelper.KEY_ID} " +
-                                "JOIN ${DBHelper.TABLE_ITEMS} as TI ON TIT.${DBHelper.KEY_ITEM_ID}=TI.${DBHelper.KEY_ID} " +
-                                "WHERE TI.${DBHelper.KEY_ID} = '${itemId}'", null)
+                val cursorItemsTag = DBHelper(this).getItemsTagCursor(itemId)
                 if (cursorItemsTag.moveToFirst()) {
                     do {
-                        val tag = Tag(cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_ID)),
-                                cursorItemsTag.getString(cursorItemsTag.getColumnIndex(DBHelper.KEY_TAG)))
+                        val tag = Tag(cursorItemsTag.getDBhelperField(DBHelper.KEY_ID),
+                                cursorItemsTag.getDBhelperField(DBHelper.KEY_TAG))
                         tags.add(tag)
                     } while (cursorItemsTag.moveToNext())
                 }
@@ -164,31 +163,19 @@ class MainActivity : AppCompatActivity() {
 
                 items.add(Item(itemId,
                         itemTite,
-                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_RATING)).toFloat(),
-                        cursorItem.getString(cursorItem.getColumnIndex(DBHelper.KEY_IMAGE)),
+                        cursorItem.getDBhelperField(DBHelper.KEY_RATING).toFloat(),
+                        cursorItem.getDBhelperField(DBHelper.KEY_IMAGE),
                         tags))
             } while (cursorItem.moveToNext())
-        } else {
-            Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
-        }
+        } else Snackbar.make(layoutMain, getString(R.string.action_empty_db), Snackbar.LENGTH_SHORT).show()
 
         if (switcher.isChecked) {
             //создаем курсор для просмотра таблицы тэгов сортируем его по убыванию
-            val cursorTag = database.query(DBHelper.TABLE_TAGS,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    DBHelper.KEY_ID + " DESC")
-
-            if (cursorTag.moveToFirst()) {
-                do {
-                    //наполняем наш список элементами
-                    dbTags.add(Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
-                            cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG))))
-                } while (cursorTag.moveToNext())
-            }
+            val cursorTag = getCursor(DBHelper.TABLE_TAGS)
+            if (cursorTag.moveToFirst()) do { //наполняем наш список элементами
+                dbTags.add(Tag(cursorTag.getDBhelperField(DBHelper.KEY_ID),
+                        cursorTag.getDBhelperField(DBHelper.KEY_TAG)))
+            } while (cursorTag.moveToNext())
             //устанавливаем адаптер для спиннера
             viewSpinner.adapter = TagAdapterSpinner(dbTags)
             cursorTag.close()
@@ -198,76 +185,46 @@ class MainActivity : AppCompatActivity() {
 
         cursorItem.close()
         database.close()
-
-
     }
 
-    /**
-     * Функция выводит в лог всю базу данных
-     */
+    /** Функция выводит в лог всю базу данных */
     private fun printDB() {
         val databaseItemLog = DBHelper(this).writableDatabase
         val cursorItemLog = databaseItemLog.query(DBHelper.TABLE_ITEMS,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null)
-        Log.d(LOGDEBUGTAG,"TABLE_ITEMS:")
+                null, null, null, null, null, null)
+        printLog("TABLE_ITEMS:")
         if (cursorItemLog.moveToFirst()) {
             do {
-                Log.d(LOGDEBUGTAG,
-                        "id[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_ID))}], " +
-                              "title[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_TITLE))}], " +
-                              "rating[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_RATING))}], " +
-                              "image[${cursorItemLog.getString(cursorItemLog.getColumnIndex(DBHelper.KEY_IMAGE))}]")
+                printLog(
+                        "id[${cursorItemLog.getDBhelperField(DBHelper.KEY_ID)}], " +
+                                "title[${cursorItemLog.getDBhelperField(DBHelper.KEY_TITLE)}], " +
+                                "rating[${cursorItemLog.getDBhelperField(DBHelper.KEY_RATING)}], " +
+                                "image[${cursorItemLog.getDBhelperField(DBHelper.KEY_IMAGE)}]")
             } while (cursorItemLog.moveToNext())
-        } else {
-            Log.d(LOGDEBUGTAG,"EMPTY")
-        }
+        } else printLog("EMPTY")
         cursorItemLog.close()
         databaseItemLog.close()
 
         val databaseTagLog = DBHelper(this).writableDatabase
         val cursorTagLog = databaseTagLog.query(DBHelper.TABLE_TAGS,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null)
-        Log.d(LOGDEBUGTAG,"TABLE_TAGS:")
-        if (cursorTagLog.moveToFirst()) {
-            do {
-                Log.d(LOGDEBUGTAG,
-                        "id[${cursorTagLog.getString(cursorTagLog.getColumnIndex(DBHelper.KEY_ID))}], " +
-                              "tag[${cursorTagLog.getString(cursorTagLog.getColumnIndex(DBHelper.KEY_TAG))}]")
-            } while (cursorTagLog.moveToNext())
-        } else {
-            Log.d(LOGDEBUGTAG,"EMPTY")
-        }
+                null, null, null, null, null, null)
+        printLog("TABLE_TAGS:")
+        if (cursorTagLog.moveToFirst()) do printLog(
+                "id[${cursorTagLog.getString(cursorTagLog.getColumnIndex(DBHelper.KEY_ID))}], " +
+                        "tag[${cursorTagLog.getString(cursorTagLog.getColumnIndex(DBHelper.KEY_TAG))}]")
+        while (cursorTagLog.moveToNext()) else printLog("EMPTY")
         cursorTagLog.close()
         databaseTagLog.close()
 
         val databaseItemTagLog = DBHelper(this).writableDatabase
         val cursorItemTagLog = databaseItemTagLog.query(DBHelper.TABLE_ITEMS_TAGS,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null)
-        Log.d(LOGDEBUGTAG,"TABLE_ITEMS_TAGS:")
+                null, null, null, null, null, null)
+        printLog("TABLE_ITEMS_TAGS:")
         if (cursorItemTagLog.moveToFirst()) {
-            do {
-                Log.d(LOGDEBUGTAG,
-                    "item_id[${cursorItemTagLog.getString(cursorItemTagLog.getColumnIndex(DBHelper.KEY_ITEM_ID))}], " +
-                          "tag_id[${cursorItemTagLog.getString(cursorItemTagLog.getColumnIndex(DBHelper.KEY_TAG_ID))}]")
-            } while (cursorItemTagLog.moveToNext())
-        } else {
-            Log.d(LOGDEBUGTAG,"EMPTY")
-        }
+            do printLog("item_id[${cursorItemTagLog.getDBhelperField(DBHelper.KEY_ITEM_ID)}], " +
+                    "tag_id[${cursorItemTagLog.getDBhelperField(DBHelper.KEY_TAG_ID)}]")
+            while (cursorItemTagLog.moveToNext())
+        } else printLog("EMPTY")
         cursorItemTagLog.close()
         databaseItemTagLog.close()
     }
@@ -302,4 +259,10 @@ class MainActivity : AppCompatActivity() {
         refreshBD()
         printDB()
     }
+
+    private fun printLog(message: String) {
+        printLog(message)
+    }
 }
+
+fun Cursor.getDBhelperField(columnTitle: String) = this.getString(this.getColumnIndex(columnTitle))

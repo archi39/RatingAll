@@ -15,10 +15,10 @@ import android.widget.EditText
 import android.widget.TextView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
-import com.dogvscat.retingall.services.DBHelper
 import com.dogvscat.retingall.EditActivity
 import com.dogvscat.retingall.R
 import com.dogvscat.retingall.dto.Tag
+import com.dogvscat.retingall.services.DBHelper
 
 class TagAdapterList(private val viewRecyclerView: RecyclerView,
                      private val tagList: MutableList<Tag>,
@@ -39,9 +39,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
         return MyHolderTag(view, mContext)
     }
 
-    /**
-     * адаптер пробегает по списку элементов и вызывает метод указанный ниже для каждого элемента
-     */
+    /** адаптер пробегает по списку элементов и вызывает метод указанный ниже для каждого элемента */
     override fun onBindViewHolder(holder: MyHolderTag, position: Int) {
         // get your data object first.
         val tag = tagList[position]
@@ -59,7 +57,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
 
             database.delete(DBHelper.TABLE_TAGS, DBHelper.KEY_ID + "=" + tag.item_id, null)
             //удаляем связки тэга с элементами
-            database.delete(DBHelper.TABLE_ITEMS_TAGS, DBHelper.KEY_TAG_ID + "=" + tag.item_id ,null)
+            database.delete(DBHelper.TABLE_ITEMS_TAGS, DBHelper.KEY_TAG_ID + "=" + tag.item_id, null)
 
             tagList.remove(tag)
             viewRecyclerView.adapter = TagAdapterList(viewRecyclerView, tagList, mContext)
@@ -103,7 +101,7 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
                 tag.item_title = editText.text.toString()
                 val database = DBHelper(mContext).writableDatabase
                 val contentValues = ContentValues()
-                contentValues.put(DBHelper.KEY_TAG,editText.text.toString())
+                contentValues.put(DBHelper.KEY_TAG, editText.text.toString())
                 // обновляем по id
                 database.update(DBHelper.TABLE_TAGS, contentValues, "_id = ?", arrayOf<String>(tag.item_id))
                 viewRecyclerView.adapter = TagAdapterList(viewRecyclerView, tagList, mContext)

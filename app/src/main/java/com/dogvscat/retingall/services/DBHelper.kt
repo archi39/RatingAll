@@ -4,10 +4,17 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-/**
- * Класс описывает логику базы данных. Создание и обновление версий БД
- */
+/** Класс описывает логику базы данных. Создание и обновление версий БД */
 class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
+    /** получить курсор тегов для указанного элемента БД */
+    fun getItemsTagCursor(itemId: String) = this.writableDatabase.rawQuery(
+            "SELECT TT.$KEY_ID, TT.$KEY_TAG " +
+                    "FROM $TABLE_ITEMS_TAGS as TIT " +
+                    "JOIN $TABLE_TAGS as TT ON TIT.$KEY_TAG_ID=TT.$KEY_ID " +
+                    "JOIN $TABLE_ITEMS as TI ON TIT.$KEY_ITEM_ID=TI.$KEY_ID " +
+                    "WHERE TI.$KEY_ID = '${itemId}'", null)
+
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         //Обновлемся с версии 1 на версию 2 ( верисия с архитектурой тегов)
@@ -62,7 +69,7 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         const val KEY_RATING = "rating"
         const val KEY_IMAGE = "path_to_image"
         const val TABLE_ITEMS = "items"
-//Добавили новые ссылки на именя таблицы тэгов и ссылочную таблицу items_tags
+        //Добавили новые ссылки на именя таблицы тэгов и ссылочную таблицу items_tags
         const val TABLE_TAGS = "tags"
         const val TABLE_ITEMS_TAGS = "items_tags"
         const val KEY_TAG = "tag"
