@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/margin_16dp"
         CircleProgressView:cpv_autoTextSize="true"
         CircleProgressView:cpv_barColor="@color/colorPrimary"
         CircleProgressView:cpv_barWidth="8dp"
@@ -42,6 +42,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_16dp"
+            android:layout_marginEnd="@dimen/margin_16dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -53,7 +55,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:layout_marginStart="16dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/title_view_text_add" />
 
@@ -62,7 +63,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:ems="10"
                     android:importantForAutofill="no"
                     android:inputType="text"
@@ -78,13 +78,15 @@
                 android:id="@+id/view_recycler_tags_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                tools:itemCount="3"
                 android:background="@color/colorPrimaryDark" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/margin_16dp"
+                android:layout_marginEnd="@dimen/margin_16dp"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
@@ -140,7 +142,6 @@
                     android:id="@+id/view_tag_add_list"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="16dp"
                     android:tint="@android:color/white"
                     app:srcCompat="@drawable/ic_list" />
 
@@ -152,7 +153,7 @@
                 android:layout_height="@dimen/photo_height"
                 android:layout_gravity="center"
                 android:layout_marginLeft="0dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:layout_marginRight="0dp"
                 android:layout_marginBottom="8dp"
                 app:failureImage="@drawable/ic_error_outline"
@@ -168,17 +169,17 @@
                 android:id="@+id/but_snapshot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="@dimen/margin_16dp"
+                android:layout_marginEnd="@dimen/margin_16dp"
                 android:text="@string/title_button_snapshot" />
 
             <Button
                 android:id="@+id/but_submit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/margin_16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="@dimen/margin_16dp"
                 android:layout_marginBottom="220dp"
                 android:text="@string/title_button_add" />
 
