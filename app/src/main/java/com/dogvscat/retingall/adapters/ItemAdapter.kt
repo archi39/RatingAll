@@ -67,13 +67,17 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
         // Меняем значения элементов шаблона в соответствии с данными для элемента адаптера
         holder.index(item.item_title, item.item_rating, item.item_tags)
 
+        initListeners(holder, item)
+    }
+
+    private fun initListeners(holder: MyHolder, item: Item) {
         //реализуем удаление карточки
         holder.cardDelete.setOnClickListener {
             val database = DBHelper(mContext).writableDatabase
 
             database.delete(DBHelper.TABLE_ITEMS, DBHelper.KEY_ID + "=" + item.item_id, null)
             //удаляем связки элемента с тэгами
-            database.delete(DBHelper.TABLE_ITEMS_TAGS, DBHelper.KEY_ITEM_ID + "=" + item.item_id ,null)
+            database.delete(DBHelper.TABLE_ITEMS_TAGS, DBHelper.KEY_ITEM_ID + "=" + item.item_id, null)
 
             itemsList.remove(item)
             viewRecyclerView.adapter = ItemAdapter(viewRecyclerView, itemsList, mContext)
@@ -91,62 +95,60 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
 
         //по нажатию на карточку появляется диалоговое окно
         holder.viewTextCard.setOnClickListener {
-            val builder = android.app.AlertDialog.Builder(mContext)
-
-            //создаём View из XML
-            val view = (mContext as Activity).layoutInflater.inflate(R.layout.dialog_item_detail, null)
-            val viewTextItemTags = view.findViewById<TextView>(R.id.view_text_item_tags)
-            val viewTextItemRating = view.findViewById<TextView>(R.id.view_text_item_rating)
-            val viewTextItemTitle = view.findViewById<TextView>(R.id.view_text_item_title)
-            val imageItemDetail = view.findViewById<SimpleDraweeView>(R.id.image_item_detail)
-            val flButClose = view.findViewById<FloatingActionButton>(R.id.flBut_close)
-
-            viewTextItemRating.text = "Оценка: ${item.item_rating}"
-            viewTextItemTitle.text = item.item_title
-            //выводим информацию по тэгам
-            var textItemString = ""
-            if(item.item_tags.size > 0) {
-                for (tag in item.item_tags) {
-                    textItemString += "#${tag.item_title} "
-                }
-            } else{
-                textItemString += "У элемента нет тэгов"
-            }
-            viewTextItemTags.text = textItemString
-
-            //Получаем фото
-            if(item.item_image!= "none") {
-                //Делаем запрос в MediaStore с целью получить изображение по его URL
-                val cursor = mContext.contentResolver.query(Uri.parse(item.item_image),
-                        Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
-                        null, null, null)
-                cursor!!.moveToFirst()
-                val photoPath = cursor.getString(0)
-                cursor.close()
-                val file = File(photoPath)
-                val uri = Uri.fromFile(file)
-
-                val height = mContext.resources.getDimensionPixelSize(R.dimen.photo_height)
-                val width = mContext.resources.getDimensionPixelSize(R.dimen.photo_width)
-
-                val request = ImageRequestBuilder.newBuilderWithSource(uri)
-                        .setResizeOptions(ResizeOptions(width, height))
-                        .build()
-                val controller = Fresco.newDraweeControllerBuilder()
-                        .setOldController(imageItemDetail?.controller)
-                        .setImageRequest(request)
-                        .build()
-                imageItemDetail?.controller = controller
-            }
-            builder.setView(view)
-
-            val alertDialog = builder.create()
-            flButClose.setOnClickListener {
-                alertDialog.dismiss()
-            }
-            alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-            alertDialog.show()
+            showDetailInfoDialog(item)
         }
+    }
+
+    private fun showDetailInfoDialog(item: Item) {
+        val builder = android.app.AlertDialog.Builder(mContext)
+        //создаём View из XML
+        val view = (mContext as Activity).layoutInflater.inflate(R.layout.dialog_item_detail, null)
+        val viewTextItemTags = view.findViewById<TextView>(R.id.view_text_item_tags)
+        val viewTextItemRating = view.findViewById<TextView>(R.id.view_text_item_rating)
+        val viewTextItemTitle = view.findViewById<TextView>(R.id.view_text_item_title)
+        val imageItemDetail = view.findViewById<SimpleDraweeView>(R.id.image_item_detail)
+        val flButClose = view.findViewById<FloatingActionButton>(R.id.flBut_close)
+        val respect = "Оценка: ${item.item_rating}"
+        viewTextItemRating.text = respect
+        viewTextItemTitle.text = item.item_title
+        //выводим информацию по тэгам
+        var textItemString = ""
+        if (item.item_tags.size > 0) for (tag in item.item_tags) textItemString += "#${tag.item_title} "
+        else textItemString += "У элемента нет тэгов"
+        viewTextItemTags.text = textItemString
+
+        //Получаем фото
+        if (item.item_image != "none") {
+            //Делаем запрос в MediaStore с целью получить изображение по его URL
+            val cursor = mContext.contentResolver.query(Uri.parse(item.item_image),
+                    Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
+                    null, null, null)
+            cursor!!.moveToFirst()
+            val photoPath = cursor.getString(0)
+            cursor.close()
+            val file = File(photoPath)
+            val uri = Uri.fromFile(file)
+
+            val height = mContext.resources.getDimensionPixelSize(R.dimen.photo_height)
+            val width = mContext.resources.getDimensionPixelSize(R.dimen.photo_width)
+
+            val request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setResizeOptions(ResizeOptions(width, height))
+                    .build()
+            val controller = Fresco.newDraweeControllerBuilder()
+                    .setOldController(imageItemDetail?.controller)
+                    .setImageRequest(request)
+                    .build()
+            imageItemDetail?.controller = controller
+        }
+        builder.setView(view)
+
+        val alertDialog = builder.create()
+        flButClose.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
     }
 
     override fun getItemCount(): Int = itemsList.size
@@ -162,7 +164,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
         private val circleViewCard: CircleProgressView = itemView.findViewById<View>(R.id.circle_view_card) as CircleProgressView
         private val viewTextTags: TextView = itemView.findViewById<View>(R.id.view_text_tags) as TextView
 
-         //Функция усланавливает значения элементов каточки - из данных переданных адаптером
+        //Функция усланавливает значения элементов каточки - из данных переданных адаптером
         fun index(str: String, rating: Float, itemTags: MutableList<Tag>) {
             viewTextCard.text = str
             circleViewCard.setValue(rating)
@@ -170,7 +172,7 @@ class ItemAdapter(private val viewRecyclerView: RecyclerView,
             //выводим список всех связанных тэгов
             if (itemTags.size > 0) {
                 var tags = ""
-                for(tag in itemTags){
+                for (tag in itemTags) {
                     tags += "#${tag.item_title} "
                 }
                 viewTextTags.text = tags
