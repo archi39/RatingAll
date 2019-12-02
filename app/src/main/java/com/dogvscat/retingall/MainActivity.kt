@@ -265,4 +265,4 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-fun Cursor.getDBhelperField(columnTitle: String) = this.getString(this.getColumnIndex(columnTitle))
+fun Cursor.getDBhelperField(columnTitle: String) = this.getString(this.getColumnIndex(columnTitle)) ?: ""
