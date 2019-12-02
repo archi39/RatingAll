@@ -32,6 +32,12 @@ import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.app_bar.*
 import java.io.File
 
+/**
+ * Добавление нового элемента в базу данных
+ *
+ * @author EvgenySamarin [GitHub](https://github.com/EvgenySamarin)
+ * @since update 2019.12.02 v1
+ */
 class AddActivity : AppCompatActivity() {
     private val TAKE_PHOTO_REQUEST: Int = 0
     private var mCurrentPhotoPath: String = "none"
@@ -41,7 +47,6 @@ class AddActivity : AppCompatActivity() {
     //список тэгов для возможного добавления в базу
     private val itemTags: MutableList<Tag> = mutableListOf()
     private lateinit var lastItemId: String
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,9 +68,11 @@ class AddActivity : AppCompatActivity() {
 
         //не особо представляю зачем это взято из примера
         ButterKnife.bind(this)
-        //работаем с базой данных
-        val database: SQLiteDatabase = DBHelper(this).writableDatabase
 
+        initListeners()
+    }
+
+    private fun initListeners() {
         //выводим список уже созданных тэгов
         findViewById<View>(R.id.view_tag_add_list).setOnClickListener {
             showListCardDialog()
@@ -84,6 +91,8 @@ class AddActivity : AppCompatActivity() {
 
         //все действия с изменением базы данных нужно вносить именно сюда
         but_submit.setOnClickListener {
+            //работаем с базой данных
+            val database: SQLiteDatabase = DBHelper(this).writableDatabase
             //создаем новую запись в таблице TABLE_ITEMS
             val contentValuesItem = ContentValues()
             contentValuesItem.put(DBHelper.KEY_TITLE, edit_text_title.text.toString())
@@ -91,55 +100,60 @@ class AddActivity : AppCompatActivity() {
             contentValuesItem.put(DBHelper.KEY_IMAGE, mCurrentPhotoPath)
             database.insert(DBHelper.TABLE_ITEMS, null, contentValuesItem)
 
-            //Наполняем базу новыми тэгами c проверкой на совпадения
-            if (itemTags.size > 0) {
-                val contentValuesTags = ContentValues()
-                for (tag in itemTags) {
-                    //если в базе уже есть тэги - проверяем на совпадение
-                    if (dbTags.size > 0) {
-                        var contain = false
-                        for (dbTag in dbTags) {
-                            if (tag.item_title.equals(dbTag.item_title))
-                                contain = true
-                        }
-                        if (!contain) {
-                            contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
-                            database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
-                        }
-                    }
-                    //если тэгов нет сразу добавляем в таблицу тэгов
-                    else {
-                        contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
-                        database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
-                    }
-                }
-                //заполняем базу связкками тэг - элемент
-                val contentValuesItemsTags = ContentValues()
+            insertNewTagToDatabase(database)
 
-                refreshDbTag()
-                for (tag in itemTags) {
-                    //проставляем id для наших тэгов
-                    for (dbTag in dbTags) {
-                        if (tag.item_title == dbTag.item_title) {
-                            tag.item_id = dbTag.item_id
-                            break
-                        }
-                    }
-                    if (lastItemId == "Null") {
-                        contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, 1)
-                    } else {
-                        contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt() + 1)
-                    }
-                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
-                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
-                }
-            }
             database.close()
             val intent = Intent()
             intent.putExtra("title", edit_text_title.text.toString())
             intent.putExtra("respect", circle_view_add.currentValue)
             setResult(Activity.RESULT_OK, intent)
             finish()
+        }
+    }
+
+    private fun insertNewTagToDatabase(database: SQLiteDatabase) {
+        //Наполняем базу новыми тэгами c проверкой на совпадения
+        if (itemTags.size > 0) {
+            val contentValuesTags = ContentValues()
+            for (tag in itemTags) {
+                //если в базе уже есть тэги - проверяем на совпадение
+                if (dbTags.size > 0) {
+                    var contain = false
+                    for (dbTag in dbTags) {
+                        if (tag.item_title.equals(dbTag.item_title))
+                            contain = true
+                    }
+                    if (!contain) {
+                        contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
+                        database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
+                    }
+                }
+                //если тэгов нет сразу добавляем в таблицу тэгов
+                else {
+                    contentValuesTags.put(DBHelper.KEY_TAG, tag.item_title)
+                    database.insert(DBHelper.TABLE_TAGS, null, contentValuesTags)
+                }
+            }
+            //заполняем базу связкками тэг - элемент
+            val contentValuesItemsTags = ContentValues()
+
+            refreshDbTag()
+            for (tag in itemTags) {
+                //проставляем id для наших тэгов
+                for (dbTag in dbTags) {
+                    if (tag.item_title == dbTag.item_title) {
+                        tag.item_id = dbTag.item_id
+                        break
+                    }
+                }
+                if (lastItemId == "Null") {
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, 1)
+                } else {
+                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, lastItemId.toInt() + 1)
+                }
+                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, tag.item_id)
+                database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+            }
         }
     }
 
@@ -181,8 +195,7 @@ class AddActivity : AppCompatActivity() {
 
         if (cursorTag.moveToFirst()) {
             do {
-                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)).equals("Добавить"))
-                else {
+                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)) != "Добавить") {
                     //наполняем наш список элементами
                     val tag = Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                             cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
@@ -194,9 +207,7 @@ class AddActivity : AppCompatActivity() {
         database.close()
     }
 
-    /**
-     * Проверка дступных разрешенй на использвание камеры
-     */
+    /** Проверка дступных разрешенй на использвание камеры */
     private fun validatePermissions() {
         Dexter.withActivity(this)
                 .withPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -204,12 +215,11 @@ class AddActivity : AppCompatActivity() {
                     override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                         launchCamera()
                     }
+
                     override fun onPermissionRationaleShouldBeShown(permission: com.karumi.dexter.listener.PermissionRequest?, token: PermissionToken?) {
                         AlertDialog.Builder(this@AddActivity)
-                                .setTitle(
-                                        R.string.storage_permission_rationale_title)
-                                .setMessage(
-                                        R.string.storage_permition_rationale_message)
+                                .setTitle(R.string.storage_permission_rationale_title)
+                                .setMessage(R.string.storage_permition_rationale_message)
                                 .setNegativeButton(android.R.string.cancel) { dialog, _ ->
                                     dialog.dismiss()
                                     token?.cancelPermissionRequest()
@@ -235,9 +245,7 @@ class AddActivity : AppCompatActivity() {
                 .check()
     }
 
-    /**
-     * Ипользуем камеру
-     */
+    /** Ипользуем камеру */
     private fun launchCamera() {
         val values = ContentValues(1)
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
@@ -254,26 +262,21 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Проверяем, получено ли фото
-     */
+    /** Проверяем, получено ли фото */
     override fun onActivityResult(requestCode: Int, resultCode: Int,
                                   data: Intent?) {
-        if (resultCode == Activity.RESULT_OK
-                && requestCode == TAKE_PHOTO_REQUEST) {
-            processCapturedPhoto()
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+        if (resultCode == Activity.RESULT_OK && requestCode == TAKE_PHOTO_REQUEST) processCapturedPhoto()
+        else super.onActivityResult(requestCode, resultCode, data)
     }
 
-    /**
-     * обрабатываем полученное фото
-     */
+    /** обрабатываем полученное фото */
     private fun processCapturedPhoto() {
-        val cursor = contentResolver.query(Uri.parse(mCurrentPhotoPath),
-                Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
-                null, null, null)
+        val cursor = contentResolver.query(
+                Uri.parse(mCurrentPhotoPath),
+                Array(1) { MediaStore.Images.ImageColumns.DATA },
+                null,
+                null,
+                null)
         cursor!!.moveToFirst()
         val photoPath = cursor.getString(0)
         cursor.close()
