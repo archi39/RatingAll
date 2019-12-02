@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,10 +50,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         initializeField()
-
-        setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         setListeners()
@@ -261,7 +261,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printLog(message: String) {
-        printLog(message)
+        Log.d(LOGDEBUGTAG, message)
     }
 }
 

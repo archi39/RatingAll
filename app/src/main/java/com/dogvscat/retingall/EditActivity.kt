@@ -34,6 +34,12 @@ import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.app_bar.*
 import java.io.File
 
+/**
+ * Отвечает за редактирование элемента
+ *
+ * @author EvgenySamarin [GitHub](https://github.com/EvgenySamarin)
+ * @since updated 2019.12.02 v1
+ */
 class EditActivity : AppCompatActivity() {
     private lateinit var itemParentId: String
     private lateinit var database: SQLiteDatabase
@@ -76,9 +82,9 @@ class EditActivity : AppCompatActivity() {
 
         //выводим изображение при его наличии
         //Получаем фото
-        if(itemImagePath!= "none") {
+        if (itemImagePath != "none") {
             val cursor = this.contentResolver.query(Uri.parse(itemImagePath),
-                    Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
+                    Array(1) { MediaStore.Images.ImageColumns.DATA },
                     null, null, null)
             cursor!!.moveToFirst()
             val photoPath = cursor.getString(0)
@@ -99,6 +105,11 @@ class EditActivity : AppCompatActivity() {
             imageEditDetail.controller = controller
         }
 
+        initClickListeners()
+    }
+
+    /** 2019.12.02 v1 устанавливаем обработчики */
+    private fun initClickListeners() {
         //выводим список уже созданных тэгов
         findViewById<View>(R.id.view_edit_tag_add_list).setOnClickListener {
             showListCardDialog()
@@ -107,8 +118,7 @@ class EditActivity : AppCompatActivity() {
         //Добавляем тэг из текстового поля
         findViewById<View>(R.id.card_set_tag_edit).setOnClickListener {
             val tag = Tag("Null", findViewById<EditText>(R.id.view_text_edit_tag_new).text.toString())
-            //добавляем новый тэг
-            morfedTags.add(tag)
+            morfedTags.add(tag) //добавляем новый тэг
             //отображаем добавленный тэг в списке тэгов
             viewRecyclerTagsEdit.adapter = TagAdapterCardShort(viewRecyclerTagsEdit, morfedTags, this)
         }
@@ -121,141 +131,144 @@ class EditActivity : AppCompatActivity() {
             contentValues.put(DBHelper.KEY_RATING, circle_view_edit.currentValue)
             contentValues.put(DBHelper.KEY_IMAGE, itemImagePath)
             // обновляем по id
-            database.update(DBHelper.TABLE_ITEMS,
-                    contentValues,
-                    DBHelper.KEY_ID + " = ? ",
-                    arrayOf(itemParentId))
+            database.update(
+                    DBHelper.TABLE_ITEMS, contentValues, DBHelper.KEY_ID + " = ? ", arrayOf(itemParentId))
 
             //обновляем записи тэгов
             if (itemTags.size > 0) {
                 //либо ничего не поменялось, либо добавились тэги либо часть была удалена
                 if (morfedTags.size > 0) {
-                    //получаем список удаленных тэгов и выпиливаем их из базы
-                    val droppedTags: List<Tag> = itemTags.minus(morfedTags)
-                    if (droppedTags.isNotEmpty()) {
-                        for (dTag in droppedTags) {
-                            database.delete(DBHelper.TABLE_ITEMS_TAGS, "${DBHelper.KEY_TAG_ID} = ${dTag.item_id}", null)
-                        }
-                    }
-
-                    //теперь обработаем список редактированных тэгов, и сделаем при необходимости insert
-                    val contentValuesNewTags = ContentValues()
-                    val contentValuesItemsTags = ContentValues()
-                    //подготовим данные по id текущего элемента для добавления в таблицу связей
-                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemParentId)
-
-                    for (mTag in morfedTags) {
-                        //если тэг был в списке уже добавленных, то проходим мимо
-                        if (!itemTags.contains(mTag)) {
-                            //два варианта или это новый тэг или тэг добавлен из базы
-                            //если в базе уже есть тэги - проверяем на совпадение
-                            if (dbTags.size > 0) {
-                                var contain = false
-                                for (dbTag in dbTags) {
-                                    //поочередно сравниваем тэг с каждым тэгом из базы
-                                    //находим первое совпадение и завергаем цикл
-                                    if (mTag.item_title == dbTag.item_title) {
-                                        mTag.item_id = dbTag.item_id
-                                        contain = true
-                                        break
-                                    }
-                                }
-                                //тэг уже есть в базе
-                                if (contain) {
-                                    //связку всё равно нужно добавить в базу
-                                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
-                                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
-
-                                } else {
-                                    contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
-                                    database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
-                                    //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
-                                    refreshDbTag()
-                                    //добавляем связку элемента на новый тэг
-                                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
-                                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
-                                }
-                            }
-                            //если тэгов в БД нет сразу добавляем новый тэг в таблицу тэгов и связку на него для элемента
-                            else {
-                                contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
-                                database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
-                                //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
-                                refreshDbTag()
-                                //добавляем связку элемента на новый тэг
-                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
-                                database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
-                            }
-                        }
-                    }
+                    deleteTagMarkedAsDropped()
+                    insertMorfedTagBoundToDatabase()
                 } else {
                     //все тэги были удалены - delete всех связей для itemTags
-                    for (iTag in itemTags) {
+                    for (iTag in itemTags)
                         database.delete(DBHelper.TABLE_ITEMS_TAGS, "${DBHelper.KEY_TAG_ID} = ${iTag.item_id}", null)
-                    }
                 }
             } else {
-                //тэги были добавлены - нужно сделать insert в таблицу тэгов и таблицу связей
-                if (morfedTags.size > 0) {
-                    val contentValuesNewTags = ContentValues()
-                    val contentValuesItemsTags = ContentValues()
-                    //подготовим данные по id текущего элемента для добавления в таблицу связей
-                    contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemParentId)
-                    //пробегаем по списку отредактированных тэгов
-                    for (mTag in morfedTags) {
-                        //если в базе уже есть тэги - проверяем на совпадение
-                        if (dbTags.size > 0) {
-                            var contain = false
-                            for (dbTag in dbTags) {
-                                //поочередно сравниваем тэг с каждым тэгом из базы
-                                //находим первое совпадение и завергаем цикл
-                                if (mTag.item_title == dbTag.item_title) {
-                                    mTag.item_id = dbTag.item_id
-                                    contain = true
-                                    break
-                                }
-                            }
-                            //тэг уже есть в базе
-                            if (contain) {
-                                //связку всё равно нужно добавить в базу
-                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
-                                database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
-
-                            } else {
-                                contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
-                                database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
-                                //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
-                                refreshDbTag()
-                                //добавляем связку элемента на новый тэг
-                                contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
-                                database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
-                            }
-                        }
-                        //если тэгов в БД нет сразу добавляем новый тэг в таблицу тэгов и связку на него для элемента
-                        else {
-                            contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
-                            database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
-                            //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
-                            refreshDbTag()
-                            //добавляем связку элемента на новый тэг
-                            contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
-                            database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
-                        }
-                    }
-                }
-                //если изначально тэгов не было и мы ничего не добавляли
-                //очевидно ничего делать не нужно
+                addNewTagToDatabase()
+                //если изначально тэгов не было и мы ничего не добавляли очевидно ничего делать не нужно
             }
-            //закрываем соединение с базой
-            database.close()
-            //закрываем активити возвращаемся в главное окно
-            setResult(Activity.RESULT_OK, Intent())
+            database.close() //закрываем соединение с базой
+            setResult(Activity.RESULT_OK, Intent()) //закрываем активити возвращаемся в главное окно
             finish()
         }
 
-        //Реализуем изменение фото
-        imageEditDetail.setOnClickListener{
+        imageEditDetail.setOnClickListener {
+            //Реализуем изменение фото
             validatePermissions()
+        }
+    }
+
+    private fun addNewTagToDatabase() {
+        //тэги были добавлены - нужно сделать insert в таблицу тэгов и таблицу связей
+        if (morfedTags.size > 0) {
+            val contentValuesNewTags = ContentValues()
+            val contentValuesItemsTags = ContentValues()
+            //подготовим данные по id текущего элемента для добавления в таблицу связей
+            contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemParentId)
+            //пробегаем по списку отредактированных тэгов
+            for (mTag in morfedTags) {
+                //если в базе уже есть тэги - проверяем на совпадение
+                if (dbTags.size > 0) {
+                    var contain = false
+                    for (dbTag in dbTags) {
+                        //поочередно сравниваем тэг с каждым тэгом из базы
+                        //находим первое совпадение и завергаем цикл
+                        if (mTag.item_title == dbTag.item_title) {
+                            mTag.item_id = dbTag.item_id
+                            contain = true
+                            break
+                        }
+                    }
+                    //тэг уже есть в базе
+                    if (contain) {
+                        //связку всё равно нужно добавить в базу
+                        contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
+                        database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+
+                    } else {
+                        contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                        database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                        //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                        refreshDbTag()
+                        //добавляем связку элемента на новый тэг
+                        contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
+                        database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                    }
+                }
+                //если тэгов в БД нет сразу добавляем новый тэг в таблицу тэгов и связку на него для элемента
+                else {
+                    contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                    database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                    //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                    refreshDbTag()
+                    //добавляем связку элемента на новый тэг
+                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
+                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                }
+            }
+        }
+    }
+
+    private fun insertMorfedTagBoundToDatabase() {
+        //теперь обработаем список редактированных тэгов, и сделаем при необходимости insert
+        val contentValuesNewTags = ContentValues()
+        val contentValuesItemsTags = ContentValues()
+        //подготовим данные по id текущего элемента для добавления в таблицу связей
+        contentValuesItemsTags.put(DBHelper.KEY_ITEM_ID, itemParentId)
+
+        for (mTag in morfedTags) {
+            //если тэг был в списке уже добавленных, то проходим мимо
+            if (!itemTags.contains(mTag)) {
+                //два варианта или это новый тэг или тэг добавлен из базы если в базе уже есть тэги - проверяем на совпадение
+                if (dbTags.size > 0) {
+                    var contain = false
+                    for (dbTag in dbTags) {
+                        //поочередно сравниваем тэг с каждым тэгом из базы находим первое совпадение и завергаем цикл
+                        if (mTag.item_title == dbTag.item_title) {
+                            mTag.item_id = dbTag.item_id
+                            contain = true
+                            break
+                        }
+                    }
+                    //тэг уже есть в базе
+                    if (contain) {
+                        //связку всё равно нужно добавить в базу
+                        contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, mTag.item_id)
+                        database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+
+                    } else {
+                        contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                        database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                        //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                        refreshDbTag()
+                        //добавляем связку элемента на новый тэг
+                        contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
+                        database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                    }
+                }
+                //если тэгов в БД нет сразу добавляем новый тэг в таблицу тэгов и связку на него для элемента
+                else {
+                    contentValuesNewTags.put(DBHelper.KEY_TAG, mTag.item_title)
+                    database.insert(DBHelper.TABLE_TAGS, null, contentValuesNewTags)
+                    //обновляем список тэгов в базе, наш новый тэг получил свой ID и встал в первую позицию списка
+                    refreshDbTag()
+                    //добавляем связку элемента на новый тэг
+                    contentValuesItemsTags.put(DBHelper.KEY_TAG_ID, dbTags[0].item_id)
+                    database.insert(DBHelper.TABLE_ITEMS_TAGS, null, contentValuesItemsTags)
+                }
+            }
+        }
+    }
+
+    private fun deleteTagMarkedAsDropped() {
+        //получаем список удаленных тэгов и выпиливаем их из базы
+        val droppedTags: List<Tag> = itemTags.minus(morfedTags)
+        if (droppedTags.isNotEmpty()) {
+            for (dTag in droppedTags) {
+                database.delete(DBHelper.TABLE_ITEMS_TAGS, "${DBHelper.KEY_TAG_ID} = ${dTag.item_id}", null)
+            }
         }
     }
 
@@ -276,8 +289,7 @@ class EditActivity : AppCompatActivity() {
 
         if (cursorTag.moveToFirst()) {
             do {
-                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)).equals("Добавить"))
-                else {
+                if (cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)) != "Добавить") {
                     //наполняем наш список элементами
                     val tag = Tag(cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_ID)),
                             cursorTag.getString(cursorTag.getColumnIndex(DBHelper.KEY_TAG)))
@@ -292,7 +304,7 @@ class EditActivity : AppCompatActivity() {
      * метод взят с ресурса: https://code.luasoftware.com/tutorials/android/android-text-input-dialog-with-inflated-view-kotlin/
      * создает окно для добавления существующих тэгов из базы
      */
-    fun showListCardDialog() {
+    private fun showListCardDialog() {
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Тэги")
         // https://stackoverflow.com/questions/10695103/creating-custom-alertdialog-what-is-the-root-view
@@ -334,7 +346,6 @@ class EditActivity : AppCompatActivity() {
                 editTextTitle.setText(itemTitle, TextView.BufferType.EDITABLE)
                 circle_view_edit.setValue(rating.toFloat())
             } while (cursor.moveToNext())
-        } else {
         }
         cursor.close()
 
@@ -365,12 +376,11 @@ class EditActivity : AppCompatActivity() {
                     override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                         pickImage()
                     }
+
                     override fun onPermissionRationaleShouldBeShown(permission: com.karumi.dexter.listener.PermissionRequest?, token: PermissionToken?) {
                         AlertDialog.Builder(this@EditActivity)
-                                .setTitle(
-                                        R.string.storage_permission_rationale_title)
-                                .setMessage(
-                                        R.string.storage_permition_rationale_message)
+                                .setTitle(R.string.storage_permission_rationale_title)
+                                .setMessage(R.string.storage_permition_rationale_message)
                                 .setNegativeButton(android.R.string.cancel) { dialog, _ ->
                                     dialog.dismiss()
                                     token?.cancelPermissionRequest()
@@ -396,15 +406,12 @@ class EditActivity : AppCompatActivity() {
                 .check()
     }
 
-    /**
-     * Выбираем изображение
-     */
+    /** Выбираем изображение */
     private fun pickImage() {
         val values = ContentValues(1)
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
         val fileUri = contentResolver
-                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        values)
+                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent.resolveActivity(packageManager) != null) {
             itemImagePath = fileUri!!.toString()
@@ -415,25 +422,16 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Проверяем, получено ли фото
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int,
-                                  data: Intent?) {
-        if (resultCode == Activity.RESULT_OK
-                && requestCode == 0) {
-            processCapturedPhoto()
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+    /** Проверяем, получено ли фото */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 0) processCapturedPhoto()
+        else super.onActivityResult(requestCode, resultCode, data)
     }
 
-    /**
-     * обрабатываем полученное фото
-     */
+    /** обрабатываем полученное фото */
     private fun processCapturedPhoto() {
         val cursor = contentResolver.query(Uri.parse(itemImagePath),
-                Array(1) { android.provider.MediaStore.Images.ImageColumns.DATA },
+                Array(1) { MediaStore.Images.ImageColumns.DATA },
                 null, null, null)
         cursor!!.moveToFirst()
         val photoPath = cursor.getString(0)
