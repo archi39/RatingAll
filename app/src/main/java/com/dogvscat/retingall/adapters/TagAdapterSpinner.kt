@@ -14,13 +14,9 @@ class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {
 
     override fun getCount(): Int = tags.size
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun getItem(position: Int): Tag {
-        return tags[position]
-    }
+    override fun getItem(position: Int): Tag = tags[position]
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         // используем созданные, но не используемые view
@@ -38,5 +34,4 @@ class TagAdapterSpinner(private val tags: MutableList<Tag>) : BaseAdapter() {
         if(tag.item_title.equals("Добавить")) (view.findViewById(R.id.view_text_tag) as TextView).setTextColor(Color.YELLOW)
         return view
     }
-
 }

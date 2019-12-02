@@ -39,19 +39,16 @@ class TagAdapterListCardShort(private val viewRecyclerView: RecyclerView,
     }
 
     override fun getItemCount(): Int = dbTagList.size
-    /**
-     * Вложенный класс, описывающий элемент RecyclerView, в нашем случае это тэги
-     */
+
+    /** Вложенный класс, описывающий элемент RecyclerView, в нашем случае это тэги */
     class MyHolderTagCard(itemView: View, private val mContent: Context) : RecyclerView.ViewHolder(itemView) {
         val cardTagItem: CardView = itemView.findViewById(R.id.card_tag_item) as CardView
         private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card_tag_item) as TextView
 
-        /**
-         * Функция усланавливает значения элементов каточки - из данных переданных адаптером
-         */
+        /** Функция усланавливает значения элементов каточки - из данных переданных адаптером */
         fun index(str: String) {
-            viewTextCard.text = "#" + str
+            val text = "#" + str
+            viewTextCard.text = text
         }
     }
-
 }

@@ -29,6 +29,8 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import java.io.File
 
 /**
+ * Отвечает за формирование элементов списка для отображения на экране
+ *
  * @author EvgenySamarin
  */
 class ItemAdapter(private val viewRecyclerView: RecyclerView,

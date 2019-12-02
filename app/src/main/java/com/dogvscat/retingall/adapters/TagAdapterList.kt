@@ -112,28 +112,22 @@ class TagAdapterList(private val viewRecyclerView: RecyclerView,
         builder.setNegativeButton("Отмена") { dialog, _ ->
             dialog.cancel()
         }
-
         builder.show()
     }
 
-
     override fun getItemCount(): Int = tagList.size
 
-    /**
-     * Вложенный класс, описывающий элемент RecyclerView, в нашем случае это тэги
-     */
+    /** Вложенный класс, описывающий элемент RecyclerView, в нашем случае это тэги */
     class MyHolderTag(itemView: View, private val mContent: Context) : RecyclerView.ViewHolder(itemView) {
         val swipeLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout_tag)
         val cardDelete: CardView = itemView.findViewById(R.id.card_delete_tag) as CardView
         val cardEdit: CardView = itemView.findViewById(R.id.card_edit_tag)
         private val viewTextCard: TextView = itemView.findViewById<View>(R.id.view_text_card_tag) as TextView
 
-        /**
-         * Функция усланавливает значения элементов каточки - из данных переданных адаптером
-         */
+        /** Функция усланавливает значения элементов каточки - из данных переданных адаптером */
         fun index(str: String) {
-            viewTextCard.text = "#" + str
+            val text ="#" + str
+            viewTextCard.text = text
         }
     }
-
 }
