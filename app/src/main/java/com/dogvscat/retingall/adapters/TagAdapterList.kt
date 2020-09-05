@@ -5,20 +5,20 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.dogvscat.retingall.EditActivity
 import com.dogvscat.retingall.R
 import com.dogvscat.retingall.dto.Tag
 import com.dogvscat.retingall.services.DBHelper
+import com.google.android.material.snackbar.Snackbar
 
 class TagAdapterList(private val viewRecyclerView: RecyclerView,
                      private val tagList: MutableList<Tag>,

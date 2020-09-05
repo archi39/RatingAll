@@ -3,10 +3,10 @@ package com.dogvscat.retingall
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dogvscat.retingall.adapters.TagAdapterList
 import com.dogvscat.retingall.dto.Tag
 import com.dogvscat.retingall.services.DBHelper

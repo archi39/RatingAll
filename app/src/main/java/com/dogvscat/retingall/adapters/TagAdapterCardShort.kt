@@ -1,15 +1,15 @@
 package com.dogvscat.retingall.adapters
 
 import android.content.Context
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import com.dogvscat.retingall.R
 import com.dogvscat.retingall.dto.Tag
+import com.google.android.material.snackbar.Snackbar
 
 class TagAdapterCardShort(private val viewRecyclerView: RecyclerView,
                           private val tagList: MutableList<Tag>,

@@ -4,12 +4,6 @@ import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -17,12 +11,19 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
 import android.widget.Switch
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dogvscat.retingall.adapters.ItemAdapter
 import com.dogvscat.retingall.adapters.TagAdapterSpinner
 import com.dogvscat.retingall.dto.Item
 import com.dogvscat.retingall.dto.Tag
 import com.dogvscat.retingall.services.DBHelper
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.android.synthetic.main.activity_content_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewRecyclerView: RecyclerView
     private lateinit var viewSpinner: Spinner
     private lateinit var database: SQLiteDatabase
-    private lateinit var switcher: Switch
+    private lateinit var switcher: SwitchMaterial
 
     //список элементов и тэгов
     val dbTags = mutableListOf<Tag>()
@@ -118,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         layoutMain = findViewById(R.id.layout_activity_main)
         viewRecyclerView = findViewById<View>(R.id.view_recycler) as RecyclerView
         viewSpinner = findViewById<View>(R.id.spinner) as Spinner
-        switcher = findViewById<View>(R.id.switch_filter) as Switch
+        switcher = findViewById<View>(R.id.switch_filter) as SwitchMaterial
 
         //поидее должна заработать анимация, тока чёт не работает - пример брал с ресурса
         //https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
